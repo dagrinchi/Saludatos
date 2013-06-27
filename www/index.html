@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="themes/retoSalud.css" />
+        <link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css" />
+
+        <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.3.1.min.js"></script>
+        <title>SALUDATOS</title>
+    </head>
+    <body>
+        <div data-role="page" id="home" data-theme="a"> 
+            <div data-role="header" data-position="fixed">
+                <h1>SALUDATOS</h1>
+            </div>
+            <div data-role="content" class="ui-grid-b">     
+                <div class="list ui-block-a" style="margin-top: 5px; background-color: white !important;">
+                    <div id="homelogo" style="width: 350px; display: block; margin: auto;">
+                        <img id="homelogoimg" src="themes/images/main.jpg" style="width: 55%; margin-top: 170px; margin-left: 8px;">
+                    </div>          
+                </div>
+                <div class="sidebar ui-block-b">
+                    <div class="ui-grid-b" >
+                        <div class="ui-block-a btn_primario">
+                            <a href="#cat" data-rel="dialog" style="background-color: #09c6c9; text-align: center;">
+                                <span style="font-size: 11px;">CATEGORÍAS<br/>DE SALUD<br/></span>
+                                <img src="themes/images/health_end.png" width="45px" height="45px">
+                            </a>
+                        </div>
+                        <div class="ui-block-a btn_primario">
+                            <a href="#ubicaciones" data-transition="slide" style="background-color: #e8005d; text-align: center;">
+                                <span style="font-size: 11px;">UBICACIÓN<br/>GEOGRÁFICA<br/></span>
+                                <img src="themes/images/location_end.png" width="40px" height="45px">
+                            </a>                            
+                        </div>
+                        <div class="ui-block-a btn_primario">
+                            <a href="#demografia" data-transition="slide" style="background-color: #edd200; text-align: center;">
+                                <span style="font-size: 11px;">INFORMACIÓN<br/>DEMOGRÁFIA<br/></span>
+                                <img src="themes/images/person_end.png" width="40px" height="45px">
+                            </a>
+                        </div>
+                     </div>
+                </div>
+            </div>
+            <div data-role="footer" data-position="fixed">
+                <div class="ui-grid-d">
+                    <div class="ui-block-a">
+                        <a href="#" class="btn_secundario icon_cake"></a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="#" class="btn_secundario icon_line"></a>
+                    </div>
+                    <div class="ui-block-c">
+                        <a href="#" class="btn_secundario icon_bars"></a>
+                    </div>
+                    <div class="ui-block-d">
+                        <a href="#" data-rel="dialog" class="btn_secundario icon_map"></a>
+                    </div>
+                    <div class="ui-block-e">
+                        <a href="#" class="btn_secundario icon_num"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- START DIALOG CATEGORIAS -->
+        <div data-role="dialog" id="cat" data-theme="a">
+            <div data-role="header" data-position="fixed">                
+                <h1>Categorías</h1>
+            </div>
+            <div data-role="content">                
+                <fieldset data-role="controlgroup" id="indList">
+                    <legend>Seleccione una categoría para evaluar:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG CATEGORIAS -->
+        <!-- START PAGE UBICACIONES -->
+        <div data-role="page" id="ubicaciones" data-theme="a"> 
+            <div data-role="header" data-position="fixed">
+                <a href="#" data-rel="back" class="ui-btn-left" data-icon="back">Volver</a>           
+                <h1>Ubicaciones</h1>        
+            </div>
+            <div data-role="content">
+                <p>Seleccione una o varias ubicaciones para evaluar:</p>
+                <ul id="ubiList" data-role="listview" data-inset="true">           
+                    <li>
+                        <a href="#region" data-rel="dialog"><h1>Región</h1><span id="regionCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#subregion" data-rel="dialog"><h1>Subregión</h1><span id="subregionCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#departamento" data-rel="dialog"><h1>Departamento</h1><span id="departamentoCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#municipio" data-rel="dialog"><h1>Municipio</h1><span id="municipioCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#zona" data-rel="dialog"><h1>Zona</h1><span id="zonaCount" class="ui-li-count"></span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- END PAGE UBICACIONES -->
+        <!-- START DIALOG REGIONES -->
+        <div data-role="dialog" id="region" data-theme="a">
+            <div data-role="header">
+                <h1>Región</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="regList">
+                    <legend>Seleccione uno varias regiones para evaluar:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG REGIONES -->
+        <!-- START DIALOG SUBREGIONES -->
+        <div data-role="dialog" id="subregion" data-theme="a">
+            <div data-role="header">
+                <h1>Subregión</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="subregList">
+                    <legend>Seleccione uno varias subregiones para evaluar:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG SUBREGIONES -->
+        <!-- START DIALOG DEPARTAMENTO -->
+        <div data-role="dialog" id="departamento" data-theme="a">
+            <div data-role="header">
+                <h1>Departamento</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="depList">
+                    <legend>Seleccione uno varios departamentos para evaluar:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG DEPARTAMENTO -->
+        <!-- START DIALOG MUNICIPIO -->
+        <div data-role="dialog" id="municipio" data-theme="a">
+            <div data-role="header">
+                <h1>Municipio</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="munList">
+                    <legend>Seleccione uno varios municipios para evaluar:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG MUNICIPIO -->
+        <!-- START DIALOG ZONA -->
+        <div data-role="dialog" id="zona" data-theme="a">
+            <div data-role="header">
+                <h1>Zona</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="zonList">
+                    <legend>Seleccione uno varias zonas para evaluar:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG ZONA -->
+        <!-- START PAGE DEMOGRAFÍA -->
+        <div data-role="page" id="demografia" data-theme="a"> 
+            <div data-role="header" data-position="fixed">
+                <a href="#" data-rel="back" class="ui-btn-left" data-icon="back">Volver</a>
+                <h1>Demografía</h1>        
+            </div>
+            <div data-role="content">
+                <p>Seleccione una o varias clasificaciones demográficas para evaluar:</p>
+                <ul id="demList" data-role="listview" data-inset="true">           
+                    <li>
+                        <a href="#educacion" data-rel="dialog"><h1>Educación</h1><span id="eduCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#ocupacion" data-rel="dialog"><h1>Ocupación</h1><span id="ocuCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#edad" data-rel="dialog"><h1>Edad</h1><span id="edaCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#estadocivil" data-rel="dialog"><h1>Estado civil</h1><span id="estCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#genero" data-rel="dialog"><h1>Género</h1><span id="genCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#etnia" data-rel="dialog"><h1>Etnia</h1><span id="etnCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#eps" data-rel="dialog"><h1>EPS</h1><span id="epsCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#ips" data-rel="dialog"><h1>IPS</h1><span id="ipsCount" class="ui-li-count"></span></a>
+                    </li>
+                    <li>
+                        <a href="#regimen" data-rel="dialog"><h1>Régimen</h1><span id="regiCount" class="ui-li-count"></span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- END PAGE DEMOGRAFÍA -->
+        <!-- START DIALOG EDUCACION -->
+        <div data-role="dialog" id="educacion" data-theme="a">
+            <div data-role="header">
+                <h1>Educación</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="eduList">
+                    <legend>Seleccione uno varias categorías de educación:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG EDUCACION -->
+        <!-- START DIALOG OCUPACION -->
+        <div data-role="dialog" id="ocupacion" data-theme="a">
+            <div data-role="header">
+                <h1>Ocupación</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="ocuList">
+                    <legend>Seleccione uno varias categorías de ocupación:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG OCUPACION -->
+        <!-- START DIALOG EDAD -->
+        <div data-role="dialog" id="edad" data-theme="a">
+            <div data-role="header">
+                <h1>Edad</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="edaList">
+                    <legend>Seleccione uno varias categorías de edad:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG EDAD -->
+        <!-- START DIALOG ESTADOCIVIL -->
+        <div data-role="dialog" id="estadocivil" data-theme="a">
+            <div data-role="header">
+                <h1>Estado civil</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="estList">
+                    <legend>Seleccione uno varias categorías de estado civil:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG ESTADOCIVIL -->
+        <!-- START DIALOG GENERO -->
+        <div data-role="dialog" id="genero" data-theme="a">
+            <div data-role="header">
+                <h1>Género</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="genList">
+                    <legend>Seleccione uno varias categorías de género:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG GENERO -->
+        <!-- START DIALOG ETNIA -->
+        <div data-role="dialog" id="etnia" data-theme="a">
+            <div data-role="header">
+                <h1>Etnia</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="etnList">
+                    <legend>Seleccione uno varias categorías de etnia:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG ETNIA -->
+        <!-- START DIALOG EPS -->
+        <div data-role="dialog" id="eps" data-theme="a">
+            <div data-role="header">
+                <h1>EPS</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="epsList">
+                    <legend>Seleccione uno varias EPS:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG EPS -->
+        <!-- START DIALOG IPS -->
+        <div data-role="dialog" id="ips" data-theme="a">
+            <div data-role="header">
+                <h1>IPS</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="ipsList">
+                    <legend>Seleccione uno varias IPS:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG IPS -->
+        <!-- START DIALOG REGIMEN -->
+        <div data-role="dialog" id="regimen" data-theme="a">
+            <div data-role="header">
+                <h1>Régimen</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="regimenList">
+                    <legend>Seleccione uno varias categorías de régimen:</legend>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END DIALOG REGIMEN -->
+        <script type="text/javascript" src="cordova-2.7.0.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript">
+            app.init();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,272 @@
+var app = {
+
+  id: "#app",
+
+  version: 1.0,
+
+  count: 0,
+
+  data: [],
+
+  checkConnection: function() {
+    var networkState = navigator.connection.type;
+    if (networkState == Connection.NONE || networkState == Connection.UNKNOWN) {
+      console.log("No hay internet!");
+      return false;
+    } else {
+      console.log("Si hay internet!");
+      return true;
+    }
+  },
+
+  showLoadingBox: function(txt) {
+    $.mobile.loading('show', {
+      text: txt,
+      textVisible: true,
+      theme: 'a'
+    });
+  },
+
+  hideLoadingBox: function() {
+    $.mobile.loading('hide');
+  },
+
+  checkUpdatedData: function() {
+    var s = new Date();
+    s.setMonth(s.getMonth() - 6);
+    var updated = window.localStorage.getItem("updated");
+    var u = new Date(updated);
+    if (updated && u > s) {
+      console.log("Los datos están actualizados! " + updated);
+      return true;
+    } else {
+      console.log("Los datos no están actualizados!");
+      return false;
+    }
+  },
+
+  onDeviceReady: function() {
+    console.log("Dispositivo listo!");
+    if (this.checkUpdatedData()) {
+      //this.openDB();
+    } else {
+      if (app.checkConnection()) {
+        navigator.splashscreen.hide();
+        app.showLoadingBox("Actualizando información!");
+        app.load();
+      }
+    }
+  },
+
+  createDB: function() {
+    console.log("Creando base de datos!");
+    var db = window.openDatabase("saludatos", "1.0", "Saludatos", 3145728);
+    db.transaction(this.populateDB, this.errorCB, this.successCB);
+  },
+
+  openDB: function() {
+    var db = window.openDatabase("saludatos", "1.0", "Saludatos", 209715200);
+    //db.transaction(this.populateDB, this.errorCB, this.successCB);
+  },
+
+  populateDB: function(tx) {
+    console.log("Creando tabla!");
+    var fields = new array();
+    $.each(app.data[0], function(k, v) {
+      fields.push(k);
+    });
+    var dbFields = fields.join();
+    tx.executeSql('DROP TABLE IF EXISTS datos');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS datos (' + dbFields + ')');
+
+    console.log("Insertando registros en la base!");
+    $.each(app.data, function(k1, v1) {
+      var values = new array();
+      $.each(v1, function(k2, v2) {
+        values.push(v2);
+      });
+      var dbValues = values.join();
+      tx.executeSql('INSERT INTO datos (' + dbFields + ') VALUES (' + dbValues + ')');
+    });
+  },
+
+  errorCB: function(tx, err) {
+    this.hideLoadingBox();
+    alert("Error: " + err);
+  },
+
+  successCB: function() {
+    this.hideLoadingBox();
+  },
+
+  queryDB: function(tx) {
+    tx.executeSql('SELECT * FROM saludatos', [], app.querySuccess, app.errorCB);
+  },
+
+  querySuccess: function(tx, results) {
+    console.log("Returned rows = " + results.rows.length);
+    if (!results.rowsAffected) {
+      console.log('No rows affected!');
+      return false;
+    }
+    console.log("Last inserted row ID = " + results.insertId);
+  },
+
+  load: function() {
+    var url = "http://servicedatosabiertoscolombia.cloudapp.net/v1/Ministerio_de_Salud/indicadoresdesalud?$format=json&$filter=id>" + this.count;
+    var xhr = this.getJson(url);
+    xhr.success(function(r) {
+      $.each(r.d, function(k, v) {
+        app.data.push(v);
+      });
+      if (r.d.length == 1000) {
+        app.count = app.count + 1000;
+        app.load();
+      } else {
+        console.log("Se descargaron los datos completos de open data!");
+        app.createDB();
+      }
+    });
+    console.log("Cargando: " + url);
+  },
+
+  getJson: function(url) {
+    return $.ajax({
+      type: "GET",
+      url: url,
+      dataType: 'jsonp',
+      error: function() {
+        alert('Error');
+      }
+    });
+  },
+
+  maindata: [],
+
+  objs: [{
+      list: "#appList",
+      arg: "ind",
+      col: "nom_indicador",
+      itemid: "d_indicador"
+    }, {
+      list: "#regList",
+      arg: "reg",
+      col: "nom_region",
+      itemid: "id_region"
+    }, {
+      list: "#subList",
+      arg: "sub",
+      col: "nom_subregion",
+      itemid: "id_subregion"
+    }, {
+      list: "#depList",
+      arg: "dep",
+      col: "nom_depto",
+      itemid: "id_depto"
+    }, {
+      list: "#munList",
+      arg: "mun",
+      col: "nom_mpio",
+      itemid: "id_mpio"
+    }, {
+      list: "#zonList",
+      arg: "zon",
+      col: "nom_zona",
+      itemid: "id_zona"
+    }, {
+      list: "#eduList",
+      arg: "edu",
+      col: "nom_educacion",
+      itemid: "id_educacion"
+    }, {
+      list: "#ocuList",
+      arg: "ocu",
+      col: "nom_ocupacion",
+      itemid: "id_ocupacion"
+    }, {
+      list: "#edaList",
+      arg: "eda",
+      col: "nom_edad",
+      itemid: "id_edad"
+    }, {
+      list: "#estList",
+      arg: "est",
+      col: "nom_estado_civil",
+      itemid: "id_estado_civil"
+    }, {
+      list: "#genList",
+      arg: "gen",
+      col: "nom_sexo",
+      itemid: "id_sexo"
+    }, {
+      list: "#etnList",
+      arg: "etn",
+      col: "nom_etnia",
+      itemid: "id_etnia"
+    }, {
+      list: "#epsList",
+      arg: "eps",
+      col: "nom_eps",
+      itemid: "id_eps"
+    }, {
+      list: "#ipsList",
+      arg: "ips",
+      col: "nom_ips",
+      itemid: "id_ips"
+    }, {
+      list: "#rgiList",
+      arg: "rgi",
+      col: "nom_regimen",
+      itemid: "id_regimen"
+    }
+  ],
+
+  dep: {
+    list_id: "#dep"
+  },
+
+  setItems: function(data, obj) {
+    $.each(data, function(i, item) {
+      var col = '<h1>' + item[obj.col] + '</h1>';
+      var list = $(obj.list).prepend($('<li/>', {
+        html: $('<a/>', {
+          'data-type': 'arg',
+          'data-listid': item[obj.itemid],
+          html: col
+        })
+      }));
+
+      app.listButtons(list);
+      // if (i == 0) {
+      //  list.listview('refresh');
+      // }
+    });
+  },
+
+  getData: function() {
+    for (var i = 0; i < app.objs.length; i++) {
+      app.setItems(app.maindata[i], app.objs[i]);
+    }
+  },
+
+  buttonHeight: function() {
+    var wh = $(window).height() - 80;
+    $("#homelogo").height(wh + 10);
+    $.each($(".btn_primario a"), function(i, item) {
+      $(item).height(wh / 3);
+    });
+  },
+
+  listButtons: function(list) {
+
+    //    $('#listAddr li').on('click', function () {
+    //     $('#listAddr li').attr("data-theme", "c").removeClass("ui-btn-up-b").removeClass('ui-btn-hover-b').addClass("ui-btn-up-c").addClass('ui-btn-hover-c');
+    //     $(this).attr("data-theme", "b").removeClass("ui-btn-up-c").removeClass('ui-btn-hover-c').addClass("ui-btn-up-b").addClass('ui-btn-hover-b');
+    // });
+  },
+
+  init: function() {
+    console.log("Iniciando app!");
+    document.addEventListener("deviceready", app.onDeviceReady, false);
+  }
+};
