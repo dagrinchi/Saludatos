@@ -17,6 +17,10 @@ body {
 	font-family: 'Open Sans' !important;
 }
 
+fieldset label {
+	text-transform: uppercase;
+}
+
 .icon_cake {
 	background: url('images/Ponque.png') no-repeat center;
 	background-size: 38px 38px;

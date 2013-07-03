@@ -10,6 +10,88 @@ var app = {
 
   data: [],
 
+  selection: {
+    indicador: {
+      cols: {
+        idindicador: ""
+      }
+    },
+    region: {
+      cols: {
+        idregion: []
+      }
+    },
+    subregion: {
+      relations: [],
+      cols: {
+        idsubregion: []
+      }
+    },
+    departamento: {
+      relations: [],
+      cols: {
+        iddepto: []
+      }
+    },
+    municipio: {
+      relations: ["departamento"],
+      cols: {
+        idmpio: []
+      }
+    },
+    zona: {
+      relations: [],
+      cols: {
+        idzona: []
+      }
+    },
+    educacion: {
+      cols: {
+        ideducacion: []
+      }
+    },
+    ocupacion: {
+      cols: {
+        idocupacion: []
+      }
+    },
+    edad: {
+      cols: {
+        idedad: []
+      }
+    },
+    estadocivil: {
+      cols: {
+        idestadocivil: []
+      }
+    },
+    sexo: {
+      cols: {
+        idsexo: []
+      }
+    },
+    etnia: {
+      cols: {
+        idetnia: []
+      }
+    },
+    eps: {
+      cols: {
+        ideps: []
+      }
+    },
+    ips: {
+      cols: {
+        idips: []
+      }
+    },
+    regimen: {
+      cols: {
+        idregimen: []
+      }
+    }
+  },
+
   checkConnection: function() {
     var networkState = navigator.connection.type;
     if (networkState == Connection.NONE || networkState == Connection.UNKNOWN) {
@@ -53,8 +135,9 @@ var app = {
     app.showLoadingBox(msg);
     console.log(msg);
     if (app.checkUpdatedData()) {
-      app.openDB();
+      app.openDB(app.queryDB);
       app.pageEvents();
+      app.btnsEvents();
     } else {
       if (app.checkConnection()) {
         navigator.splashscreen.hide();
@@ -64,13 +147,46 @@ var app = {
     }
   },
 
-  pageEvents : function() {
-    var pages = ["#ubicaciones", "#demografia"];
-    $("#ubicaciones").on("pagebeforeshow", function() {
-      $.each(app.selection["region"], function(k, v) {
-        console.log("Ud. ha seleccionado: " + v);
+  btnsEvents: function() {
+    var btns = ["#pieBtn", "#linealBtn", "#barsBtn", "#mapsBtn", "#tableBtn"];
+    $.each(btns, function(k1, v1) {
+      $(v1).on("click", function(e) {
+        console.log("Ud hizo click en: " +  v1);
       });
     });
+  },
+
+  pageEvents: function() {
+    $("#ubicaciones").on("pagebeforeshow", function() {
+      app.openDB(app.queryUbicaciones);
+    });
+  },
+
+  buildSQL: function(entity) {
+    var fields = [];
+    var sql = "SELECT * FROM " + entity;
+    $.each(app.selection[entity]["relations"], function(kr, vr) {
+      fields.push(app.selection[vr]["cols"]);
+    });
+    $.each(fields, function(k1, v1) {
+      $.each(v1, function(k2, v2) {
+        $.each(v2, function(k3, v3) {
+          if (k3 === 0) {
+            sql += " WHERE " + k2 + " = '" + v3 + "'";
+          } else {
+            sql += " OR " + k2 + " = '" + v3 + "'";
+          }
+        });
+      });
+    });
+    sql += " LIMIT 250";
+    return sql;
+  },
+
+  queryUbicaciones: function(tx) {
+    var msg = "Consultando ubicaciones!";
+    console.log(msg);
+    tx.executeSql(app.buildSQL("municipio"), [], app.ent.municipio, app.errorCB);
   },
 
   createDB: function() {
@@ -81,12 +197,12 @@ var app = {
     db.transaction(app.populateDB, app.errorCB, app.successCB);
   },
 
-  openDB: function() {
+  openDB: function(queryDB) {
     var msg = "Abriendo base de datos!";
     app.showLoadingBox(msg);
     console.log(msg);
     var db = window.openDatabase("saludatos", "1.0", "Saludatos", 3145728);
-    db.transaction(app.queryDB, app.errorCB);
+    db.transaction(queryDB, app.errorCB);
   },
 
   populateDB: function(tx) {
@@ -146,7 +262,7 @@ var app = {
     var updated = new Date();
     window.localStorage.setItem("updated", updated);
     app.hideLoadingBox();
-    app.openDB();
+    app.openDB(app.queryDB);
   },
 
   queryDB: function(tx) {
@@ -166,43 +282,32 @@ var app = {
     tx.executeSql('SELECT * FROM region', [], app.ent.region, app.errorCB);
     tx.executeSql('SELECT * FROM subregion', [], app.ent.subregion, app.errorCB);
     tx.executeSql('SELECT * FROM departamento', [], app.ent.departamento, app.errorCB);
-    tx.executeSql('SELECT * FROM municipio', [], app.ent.municipio, app.errorCB);
+    //tx.executeSql('SELECT * FROM municipio', [], app.ent.municipio, app.errorCB);
     tx.executeSql('SELECT * FROM zona', [], app.ent.zona, app.errorCB);
     app.hideLoadingBox();
   },
 
-  selection : {
-    region : [],
-    subregion : [],
-    departamento : [],
-    municipio : [],
-    zona : [],
-    educacion : [],
-    ocupacion : [],
-    edad : [],
-    estadocivil : [],
-    genero : [],
-    etnia : [],
-    eps : [],
-    ips : [],
-    regimen : []
-  },
-
-  registerCheckboxes : function(list) {
-    $(list + " :checkbox").on("click", app.eventCheckboxes);
-  },
-
-  eventCheckboxes : function(e) {
-    var $this = $(this);
-    if ($this.is(':checked')) {
-      app.selection[$this.data("name")].push($this.val());
+  registerInputs: function(list, type) {
+    if (type === "checkbox") {
+      $(list + " :" + type).on("click", app.eventCheckboxes);
     } else {
-      app.selection[$this.data("name")].splice(app.selection[$this.data("name")].indexOf($this.val()),1);
+      $(list + " :" + type).on("click", app.eventRadios);
     }
   },
 
-  queryLocations : function() {
+  eventRadios: function(e) {
+    var $this = $(this);
+    app.selection[$this.attr("name")]["cols"][$this.data("col")] = $this.val();
+    $("#cat").dialog('close');
+  },
 
+  eventCheckboxes: function(e) {
+    var $this = $(this);
+    if ($this.is(':checked')) {
+      app.selection[$this.data("vista")]["cols"][$this.data("col")].push($this.val());
+    } else {
+      app.selection[$this.data("vista")]["cols"][$this.data("col")].splice(app.selection[$this.data("vista")]["cols"][$this.data("col")].indexOf($this.val()), 1);
+    }
   },
 
   load: function() {
@@ -239,181 +344,183 @@ var app = {
 
   ent: {
     indicador: function(tx, results) {
+      var list = "#indList";
       var len = results.rows.length;
       for (var i = 0; i < len; i++) {
-        var input = '<input type="radio" name="indicador" id="indicador-' + results.rows.item(i).idindicador + '" value="' + results.rows.item(i).idindicador + '" />';
+        var input = '<input type="radio" name="indicador" data-col="idindicador" id="indicador-' + results.rows.item(i).idindicador + '" value="' + results.rows.item(i).idindicador + '" />';
         var label = '<label for="indicador-' + results.rows.item(i).idindicador + '">' + results.rows.item(i).nomindicador + '</label>';
-        $("#indList").append(input);
-        $("#indList").append(label);
+        $(list).append(input);
+        $(list).append(label);
       }
+      app.registerInputs(list, "radio");
     },
     region: function(tx, results) {
       var list = "#regList";
       var len = results.rows.length;
       $("#regionCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="region" name="region-' + results.rows.item(i).idregion + '" id="region-' + results.rows.item(i).idregion + '" value="'+results.rows.item(i).idregion+'"/>';
+        var input = '<input type="checkbox" data-vista="region" data-col="idregion" name="region-' + results.rows.item(i).idregion + '" id="region-' + results.rows.item(i).idregion + '" value="' + results.rows.item(i).idregion + '"/>';
         var label = '<label for="region-' + results.rows.item(i).idregion + '">' + results.rows.item(i).nomregion + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     subregion: function(tx, results) {
       var list = "#subregList";
       var len = results.rows.length;
       $("#subregionCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="subregion" name="subregion-' + results.rows.item(i).idsubregion + '" id="subregion-' + results.rows.item(i).idsubregion + '" value="'+results.rows.item(i).idsubregion+'"/>';
+        var input = '<input type="checkbox" data-vista="subregion" data-col="idsubregion" name="subregion-' + results.rows.item(i).idsubregion + '" id="subregion-' + results.rows.item(i).idsubregion + '" value="' + results.rows.item(i).idsubregion + '"/>';
         var label = '<label for="subregion-' + results.rows.item(i).idsubregion + '">' + results.rows.item(i).nomsubregion + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     departamento: function(tx, results) {
       var list = "#depList";
       var len = results.rows.length;
       $("#departamentoCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="departamento" name="departamento-' + results.rows.item(i).iddepto + '" id="departamento-' + results.rows.item(i).iddepto + '" value="'+results.rows.item(i).iddepto+'"/>';
+        var input = '<input type="checkbox" data-vista="departamento" data-col="iddepto" name="departamento-' + results.rows.item(i).iddepto + '" id="departamento-' + results.rows.item(i).iddepto + '" value="' + results.rows.item(i).iddepto + '"/>';
         var label = '<label for="departamento-' + results.rows.item(i).iddepto + '">' + results.rows.item(i).nomdepto + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     municipio: function(tx, results) {
       var list = "#munList";
       var len = results.rows.length;
+      var html = "<legend>Seleccione uno varios municipios para evaluar:</legend> \n";
       $("#municipioCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="municipio" name="municipio-' + results.rows.item(i).idmpio + '" id="municipio-' + results.rows.item(i).idmpio + '" value="'+results.rows.item(i).idmpio+'"/>';
-        var label = '<label for="municipio-' + results.rows.item(i).idmpio + '">' + results.rows.item(i).nommpio + '</label>';
-        $(list).append(input);
-        $(list).append(label);
+        html += '<input type="checkbox" data-vista="municipio" data-col="idmpio" name="municipio-' + results.rows.item(i).idmpio + '" id="municipio-' + results.rows.item(i).idmpio + '" value="' + results.rows.item(i).idmpio + '"/> \n';
+        html += '<label for="municipio-' + results.rows.item(i).idmpio + '">' + results.rows.item(i).nommpio + '</label> \n';
       }
-      app.registerCheckboxes(list);
+      $(list).html(html).trigger('create');
+      app.registerInputs(list, "checkbox");
     },
     zona: function(tx, results) {
       var list = "#zonList";
       var len = results.rows.length;
       $("#zonaCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="zona" name="zona-' + results.rows.item(i).idzona + '" id="zona-' + results.rows.item(i).idzona + '" value="'+results.rows.item(i).idzona+'"/>';
+        var input = '<input type="checkbox" data-vista="zona" data-col="idzona" name="zona-' + results.rows.item(i).idzona + '" id="zona-' + results.rows.item(i).idzona + '" value="' + results.rows.item(i).idzona + '"/>';
         var label = '<label for="zona-' + results.rows.item(i).idzona + '">' + results.rows.item(i).nomzona + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     educacion: function(tx, results) {
       var list = "#eduList";
       var len = results.rows.length;
       $("#eduCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="educacion" name="educacion-' + results.rows.item(i).ideducacion + '" id="educacion-' + results.rows.item(i).ideducacion + '" value="'+results.rows.item(i).ideducacion+'"/>';
+        var input = '<input type="checkbox" data-vista="educacion" data-col="ideducacion" name="educacion-' + results.rows.item(i).ideducacion + '" id="educacion-' + results.rows.item(i).ideducacion + '" value="' + results.rows.item(i).ideducacion + '"/>';
         var label = '<label for="educacion-' + results.rows.item(i).ideducacion + '">' + results.rows.item(i).nomeducacion + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     ocupacion: function(tx, results) {
       var list = "#ocuList";
       var len = results.rows.length;
       $("#ocuCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="ocupacion" name="ocupacion-' + results.rows.item(i).idocupacion + '" id="ocupacion-' + results.rows.item(i).idocupacion + '" value="'+results.rows.item(i).idocupacion+'"/>';
+        var input = '<input type="checkbox" data-vista="ocupacion" data-col="idocupacion" name="ocupacion-' + results.rows.item(i).idocupacion + '" id="ocupacion-' + results.rows.item(i).idocupacion + '" value="' + results.rows.item(i).idocupacion + '"/>';
         var label = '<label for="ocupacion-' + results.rows.item(i).idocupacion + '">' + results.rows.item(i).nomocupacion + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     edad: function(tx, results) {
       var list = "#edaList";
       var len = results.rows.length;
       $("#edaCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="edad" name="edad-' + results.rows.item(i).idedad + '" id="edad-' + results.rows.item(i).idedad + '" value="'+results.rows.item(i).idedad+'"/>';
+        var input = '<input type="checkbox" data-vista="edad" data-col="idedad" name="edad-' + results.rows.item(i).idedad + '" id="edad-' + results.rows.item(i).idedad + '" value="' + results.rows.item(i).idedad + '"/>';
         var label = '<label for="edad-' + results.rows.item(i).idedad + '">' + results.rows.item(i).nomedad + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     estadocivil: function(tx, results) {
       var list = "#estList";
       var len = results.rows.length;
       $("#estCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="estadocivil" name="estadocivil-' + results.rows.item(i).idestadocivil + '" id="estadocivil-' + results.rows.item(i).idestadocivil + '" value="'+results.rows.item(i).idestadocivil+'"/>';
+        var input = '<input type="checkbox" data-vista="estadocivil" data-col="idestadocivil" name="estadocivil-' + results.rows.item(i).idestadocivil + '" id="estadocivil-' + results.rows.item(i).idestadocivil + '" value="' + results.rows.item(i).idestadocivil + '"/>';
         var label = '<label for="estadocivil-' + results.rows.item(i).idestadocivil + '">' + results.rows.item(i).nomestadocivil + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     genero: function(tx, results) {
       var list = "#genList";
       var len = results.rows.length;
       $("#genCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="genero" name="genero-' + results.rows.item(i).idsexo + '" id="genero-' + results.rows.item(i).idsexo + '" value="'+results.rows.item(i).idsexo+'"/>';
+        var input = '<input type="checkbox" data-vista="sexo" data-col="idsexo" name="genero-' + results.rows.item(i).idsexo + '" id="genero-' + results.rows.item(i).idsexo + '" value="' + results.rows.item(i).idsexo + '"/>';
         var label = '<label for="genero-' + results.rows.item(i).idsexo + '">' + results.rows.item(i).nomsexo + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     etnia: function(tx, results) {
       var list = "#etnList";
       var len = results.rows.length;
       $("#etnCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="etnia" name="etnia-' + results.rows.item(i).idetnia + '" id="etnia-' + results.rows.item(i).idetnia + '" value="'+results.rows.item(i).idetnia+'"/>';
+        var input = '<input type="checkbox" data-vista="etnia" data-col="idetnia" name="etnia-' + results.rows.item(i).idetnia + '" id="etnia-' + results.rows.item(i).idetnia + '" value="' + results.rows.item(i).idetnia + '"/>';
         var label = '<label for="etnia-' + results.rows.item(i).idetnia + '">' + results.rows.item(i).nometnia + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     eps: function(tx, results) {
       var list = "#epsList";
       var len = results.rows.length;
       $("#epsCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="eps" name="eps-' + results.rows.item(i).ideps + '" id="eps-' + results.rows.item(i).ideps + '" value="'+results.rows.item(i).ideps+'"/>';
+        var input = '<input type="checkbox" data-vista="eps" data-col="ideps" name="eps-' + results.rows.item(i).ideps + '" id="eps-' + results.rows.item(i).ideps + '" value="' + results.rows.item(i).ideps + '"/>';
         var label = '<label for="eps-' + results.rows.item(i).ideps + '">' + results.rows.item(i).nomeps + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     ips: function(tx, results) {
       var list = "#ipsList";
       var len = results.rows.length;
       $("#ipsCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="ips" name="ips-' + results.rows.item(i).idips + '" id="ips-' + results.rows.item(i).idips + '" value="'+results.rows.item(i).idips+'"/>';
+        var input = '<input type="checkbox" data-vista="ips" data-col="idips" name="ips-' + results.rows.item(i).idips + '" id="ips-' + results.rows.item(i).idips + '" value="' + results.rows.item(i).idips + '"/>';
         var label = '<label for="ips-' + results.rows.item(i).idips + '">' + results.rows.item(i).nomips + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     },
     regimen: function(tx, results) {
       var list = "#regimenList";
       var len = results.rows.length;
       $("#regiCount").html(len);
       for (var i = 0; i < len; i++) {
-        var input = '<input type="checkbox" data-name="regimen" name="regimen-' + results.rows.item(i).idregimen + '" id="regimen-' + results.rows.item(i).idregimen + '" value="'+results.rows.item(i).idregimen+'"/>';
+        var input = '<input type="checkbox" data-vista="regimen" data-col="idregimen" name="regimen-' + results.rows.item(i).idregimen + '" id="regimen-' + results.rows.item(i).idregimen + '" value="' + results.rows.item(i).idregimen + '"/>';
         var label = '<label for="regimen-' + results.rows.item(i).idregimen + '">' + results.rows.item(i).nomregimen + '</label>';
         $(list).append(input);
         $(list).append(label);
       }
-      app.registerCheckboxes(list);
+      app.registerInputs(list, "checkbox");
     }
   },
 

@@ -21,7 +21,7 @@
             <div data-role="content" class="ui-grid-b">     
                 <div class="list ui-block-a" style="margin-top: 5px; background-color: white !important;">
                     <div id="homelogo" style="width: 350px; display: block; margin: auto;">
-                        <img id="homelogoimg" src="themes/images/main.jpg" style="width: 55%; margin-top: 170px; margin-left: 8px;">
+                        <!-- <img id="homelogoimg" src="themes/images/main.jpg" style="width: 55%; margin-top: 170px; margin-left: 8px;"> -->
                     </div>          
                 </div>
                 <div class="sidebar ui-block-b">
@@ -50,40 +50,40 @@
             <div data-role="footer" data-position="fixed">
                 <div class="ui-grid-d">
                     <div class="ui-block-a">
-                        <a href="#" class="btn_secundario icon_cake"></a>
+                        <a href="#pie" class="btn_secundario icon_cake"></a>
                     </div>
                     <div class="ui-block-b">
-                        <a href="#" class="btn_secundario icon_line"></a>
+                        <a href="#lineal" class="btn_secundario icon_line"></a>
                     </div>
                     <div class="ui-block-c">
-                        <a href="#" class="btn_secundario icon_bars"></a>
+                        <a href="#bars" class="btn_secundario icon_bars"></a>
                     </div>
                     <div class="ui-block-d">
-                        <a href="#" data-rel="dialog" class="btn_secundario icon_map"></a>
+                        <a href="#maps" class="btn_secundario icon_map"></a>
                     </div>
                     <div class="ui-block-e">
-                        <a href="#" class="btn_secundario icon_num"></a>
+                        <a href="#table" class="btn_secundario icon_num"></a>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- START DIALOG CATEGORIAS -->
+        <!-- START DIALOG INDICADORES -->
         <div data-role="dialog" id="cat" data-theme="a">
             <div data-role="header" data-position="fixed">                
-                <h1>Categorías</h1>
+                <h1>Categorías de Salud</h1>
             </div>
             <div data-role="content">                
                 <fieldset data-role="controlgroup" id="indList">
-                    <legend>Seleccione una categoría para evaluar:</legend>
+                    <legend>Seleccione un indicador para evaluar:</legend>
                 </fieldset>
             </div>
         </div>
-        <!-- END DIALOG CATEGORIAS -->
+        <!-- END DIALOG INDICADORES -->
         <!-- START PAGE UBICACIONES -->
         <div data-role="page" id="ubicaciones" data-theme="a"> 
             <div data-role="header" data-position="fixed">
                 <a href="#" data-rel="back" class="ui-btn-left" data-icon="back">Volver</a>           
-                <h1>Ubicaciones</h1>        
+                <h1>Ubicación Geográfica</h1>        
             </div>
             <div data-role="content">
                 <p>Seleccione una o varias ubicaciones para evaluar:</p>
@@ -149,9 +149,7 @@
                 <h1>Municipio</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="munList">
-                    <legend>Seleccione uno varios municipios para evaluar:</legend>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="munList"></fieldset>
             </div>
         </div>
         <!-- END DIALOG MUNICIPIO -->
@@ -171,7 +169,7 @@
         <div data-role="page" id="demografia" data-theme="a"> 
             <div data-role="header" data-position="fixed">
                 <a href="#" data-rel="back" class="ui-btn-left" data-icon="back">Volver</a>
-                <h1>Demografía</h1>        
+                <h1>Información Demográfica</h1>        
             </div>
             <div data-role="content">
                 <p>Seleccione una o varias clasificaciones demográficas para evaluar:</p>
@@ -315,6 +313,166 @@
             </div>
         </div>
         <!-- END DIALOG REGIMEN -->
+        <!-- START PAGE PIE -->
+        <div data-role="page" id="pie" data-theme="a"> 
+            <div data-role="header" data-position="fixed">
+                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
+                <select class="ui-btn-right share">
+                    <option value="email">Email</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="twitter">Twitter</option>
+                </select>
+            </div>
+            <div data-role="content"></div>
+            <div data-role="footer" data-position="fixed">
+                <div class="ui-grid-d">
+                    <div class="ui-block-a">
+                        <a href="#pie" class="btn_secundario icon_cake"></a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="#lineal" class="btn_secundario icon_line"></a>
+                    </div>
+                    <div class="ui-block-c">
+                        <a href="#bars" class="btn_secundario icon_bars"></a>
+                    </div>
+                    <div class="ui-block-d">
+                        <a href="#maps" class="btn_secundario icon_map"></a>
+                    </div>
+                    <div class="ui-block-e">
+                        <a href="#table" class="btn_secundario icon_num"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE PIE -->
+        <!-- START PAGE LINEAL -->
+        <div data-role="page" id="lineal" data-theme="a"> 
+            <div data-role="header" data-position="fixed">
+                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
+                <select class="ui-btn-right share">
+                    <option value="email">Email</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="twitter">Twitter</option>
+                </select>
+            </div>
+            <div data-role="content"></div>
+            <div data-role="footer" data-position="fixed">
+                <div class="ui-grid-d">
+                    <div class="ui-block-a">
+                        <a href="#pie" class="btn_secundario icon_cake"></a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="#lineal" class="btn_secundario icon_line"></a>
+                    </div>
+                    <div class="ui-block-c">
+                        <a href="#bars" class="btn_secundario icon_bars"></a>
+                    </div>
+                    <div class="ui-block-d">
+                        <a href="#maps" class="btn_secundario icon_map"></a>
+                    </div>
+                    <div class="ui-block-e">
+                        <a href="#table" class="btn_secundario icon_num"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE LINEAL -->
+        <!-- START PAGE BARS -->
+        <div data-role="page" id="bars" data-theme="a"> 
+            <div data-role="header" data-position="fixed">
+                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
+                <select class="ui-btn-right share">
+                    <option value="email">Email</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="twitter">Twitter</option>
+                </select>
+            </div>
+            <div data-role="content"></div>
+            <div data-role="footer" data-position="fixed">
+                <div class="ui-grid-d">
+                    <div class="ui-block-a">
+                        <a href="#pie" class="btn_secundario icon_cake"></a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="#lineal" class="btn_secundario icon_line"></a>
+                    </div>
+                    <div class="ui-block-c">
+                        <a href="#bars" class="btn_secundario icon_bars"></a>
+                    </div>
+                    <div class="ui-block-d">
+                        <a href="#maps" class="btn_secundario icon_map"></a>
+                    </div>
+                    <div class="ui-block-e">
+                        <a href="#table" class="btn_secundario icon_num"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE BARS -->
+        <!-- START PAGE MAP -->
+        <div data-role="page" id="maps" data-theme="a"> 
+            <div data-role="header" data-position="fixed">
+                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
+                <select class="ui-btn-right share">
+                    <option value="email">Email</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="twitter">Twitter</option>
+                </select>
+            </div>
+            <div data-role="content"></div>
+            <div data-role="footer" data-position="fixed">
+                <div class="ui-grid-d">
+                    <div class="ui-block-a">
+                        <a href="#pie" class="btn_secundario icon_cake"></a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="#lineal" class="btn_secundario icon_line"></a>
+                    </div>
+                    <div class="ui-block-c">
+                        <a href="#bars" class="btn_secundario icon_bars"></a>
+                    </div>
+                    <div class="ui-block-d">
+                        <a href="#maps" class="btn_secundario icon_map"></a>
+                    </div>
+                    <div class="ui-block-e">
+                        <a href="#table" class="btn_secundario icon_num"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE MAP -->
+        <!-- START PAGE TABLE -->
+        <div data-role="page" id="table" data-theme="a"> 
+            <div data-role="header" data-position="fixed">
+                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
+                <select class="ui-btn-right share">
+                    <option value="email">Email</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="twitter">Twitter</option>
+                </select>
+            </div>
+            <div data-role="content"></div>
+            <div data-role="footer" data-position="fixed">
+                <div class="ui-grid-d">
+                    <div class="ui-block-a">
+                        <a href="#pie" class="btn_secundario icon_cake"></a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="#lineal" class="btn_secundario icon_line"></a>
+                    </div>
+                    <div class="ui-block-c">
+                        <a href="#bars" class="btn_secundario icon_bars"></a>
+                    </div>
+                    <div class="ui-block-d">
+                        <a href="#maps" class="btn_secundario icon_map"></a>
+                    </div>
+                    <div class="ui-block-e">
+                        <a href="#table" class="btn_secundario icon_num"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE TABLE -->
         <script type="text/javascript" src="cordova-2.7.0.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript">
