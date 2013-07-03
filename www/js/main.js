@@ -13,7 +13,7 @@ var app = {
   selection: {
     indicador: {
       cols: {
-        idindicador: ""
+        idindicador: []
       }
     },
     region: {
@@ -148,11 +148,9 @@ var app = {
   },
 
   btnsEvents: function() {
-    var btns = ["#pieBtn", "#linealBtn", "#barsBtn", "#mapsBtn", "#tableBtn"];
-    $.each(btns, function(k1, v1) {
-      $(v1).on("click", function(e) {
-        console.log("Ud hizo click en: " +  v1);
-      });
+    $(".btn_secundario").on("click", function(e) {
+      var $this = $(this);
+      app.openDB(app.finalQuery);
     });
   },
 
@@ -162,31 +160,46 @@ var app = {
     });
   },
 
-  buildSQL: function(entity) {
+  buildSQL: function(entity, operator, limit, relations) {
     var fields = [];
     var sql = "SELECT * FROM " + entity;
-    $.each(app.selection[entity]["relations"], function(kr, vr) {
-      fields.push(app.selection[vr]["cols"]);
-    });
+    if (relations) {
+      console.log("Consultando relaciones!");
+      $.each(app.selection[entity]["relations"], function(kr, vr) {
+        fields.push(app.selection[vr]["cols"]);
+      });
+    } else {
+      console.log("Consultando entidades!");
+      $.each(app.selection, function(kr, vr) {
+        fields.push(app.selection[kr]["cols"]);
+      });
+    }
     $.each(fields, function(k1, v1) {
       $.each(v1, function(k2, v2) {
         $.each(v2, function(k3, v3) {
-          if (k3 === 0) {
+          if (k1 === 0 && k3 === 0) {
             sql += " WHERE " + k2 + " = '" + v3 + "'";
           } else {
-            sql += " OR " + k2 + " = '" + v3 + "'";
+            sql += " " + operator + " " + k2 + " = '" + v3 + "'";
           }
         });
       });
     });
-    sql += " LIMIT 250";
+    sql += " LIMIT " + limit;
+    console.log(sql);
     return sql;
+  },
+
+  finalQuery: function(tx) {
+    var msg = "Consultando indicadores!";
+    console.log(msg);
+    tx.executeSql(app.buildSQL("datos", "AND", "250", false), [], app.buildGraphs, app.errorCB);
   },
 
   queryUbicaciones: function(tx) {
     var msg = "Consultando ubicaciones!";
     console.log(msg);
-    tx.executeSql(app.buildSQL("municipio"), [], app.ent.municipio, app.errorCB);
+    tx.executeSql(app.buildSQL("municipio", "OR", "250", true), [], app.ent.municipio, app.errorCB);
   },
 
   createDB: function() {
@@ -297,7 +310,7 @@ var app = {
 
   eventRadios: function(e) {
     var $this = $(this);
-    app.selection[$this.attr("name")]["cols"][$this.data("col")] = $this.val();
+    app.selection[$this.attr("name")]["cols"][$this.data("col")].push($this.val());
     $("#cat").dialog('close');
   },
 
@@ -521,6 +534,14 @@ var app = {
         $(list).append(label);
       }
       app.registerInputs(list, "checkbox");
+    }
+  },
+
+  buildGraphs: function(tx, results) {
+    var len = results.rows.length;
+    console.log(len);
+    for (var i = 0; i < len; i++) {
+      console.log("indicador : " + results.rows.item(i).idindicador);
     }
   },
 
