@@ -186,14 +186,13 @@ var app = {
       });
     });
     sql += " LIMIT " + limit;
-    console.log(sql);
     return sql;
   },
 
   finalQuery: function(tx) {
     var msg = "Consultando indicadores!";
     console.log(msg);
-    tx.executeSql(app.buildSQL("datos", "AND", "250", false), [], app.buildGraphs, app.errorCB);
+    tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], app.buildGraphs, app.errorCB);
   },
 
   queryUbicaciones: function(tx) {
@@ -541,7 +540,7 @@ var app = {
     var len = results.rows.length;
     console.log(len);
     for (var i = 0; i < len; i++) {
-      console.log("indicador : " + results.rows.item(i).idindicador);
+      console.log("indicador: " + results.rows.item(i).idindicador + " año 2005: " + results.rows.item(i).yea2005);
     }
   },
 
