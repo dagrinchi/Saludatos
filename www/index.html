@@ -11,13 +11,45 @@
 
         <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="js/jquery.mobile-1.3.1.min.js"></script>
+        <script type="text/javascript" src="motion_mb/embed/senchaAnimatorEmbed.js"></script>
+        
+        <style type="text/css">
+        .animation-size-for-iframe {
+            /* Note that the width and height should match the dimensions of your animation to display correctly */
+            width: 80%;
+            height: 70%;
+        }
+        iframe {
+            border-width: 0;
+        }
+        </style>
         <title>SALUDATOS</title>
     </head>
     <body>
-        <!-- <div data-role="page" id="opening_page" data-theme="a"> 
-           
-            
-        </div> -->
+        <!-- inicio intro -->
+        <div data-role="page" id="opening_page" data-theme="a"> 
+          <!--  <div data-role="content" id="anim-div"> -->
+               <!-- <div id='manual-animation' style="100%;"></div> -->
+               <!-- <div data-sencha-anim-url="motion_mb/"></div>  -->
+               <iframe id='manual-animation-2' class="animation-size-for-iframe" src='motion_mb2/motion.html'></iframe> 
+         <!--    </div> -->
+        </div>
+        <script type="text/javascript">
+        var manualAnimationDiv = AN.PageManager.loadAnimation('manual-animation', "motion_mb/", {
+            onBeforeRun: function(instance, config) {
+                console.log('-------- before run div ---------');
+            },
+            onLoad: function(instance) {
+                console.log('-------- on load div ---------');
+            },
+            onError: function() {
+               console.log('-------- on error div ---------');
+            }
+        });
+        </script>
+        <!-- fin intro-->
+
+        <!-- inicio Interfaz grafica-->
         <div data-role="page" id="home" data-theme="a"> 
             <div data-role="header" data-position="fixed">
                 <h1>SALUDATOS</h1>
@@ -25,7 +57,7 @@
             <div data-role="content" class="ui-grid-b">     
                 <div class="list ui-block-a" style="margin-top: 5px; background-color: white !important;">
                     <div id="homelogo" style="width: 350px; display: block; margin: auto;">
-                        <!-- <img id="homelogoimg" src="themes/images/main.jpg" style="width: 55%; margin-top: 170px; margin-left: 8px;"> -->
+                         <img id="homelogoimg" src="themes/images/main.jpg" style="width: 55%; margin-top: 170px; margin-left: 8px;">
                     </div>          
                 </div>
                 <div class="sidebar ui-block-b">
