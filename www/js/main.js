@@ -131,6 +131,8 @@ var app = {
 
   onDeviceReady: function() {
     //window.localStorage.removeItem("updated");
+
+
     var msg = "Dispositivo listo!";
     app.showLoadingBox(msg);
     console.log(msg);
@@ -151,6 +153,14 @@ var app = {
     $(".btn_secundario").on("click", function(e) {
       var $this = $(this);
       app.openDB(app.finalQuery);
+      console.log($this.data("graph"));
+      //Seleccion de tipo de gráfico
+      switch($this.data("graph")){
+        case "pie":
+        console.log("Hace lo que haga el pie");
+        break;
+      }
+
     });
   },
 
@@ -186,6 +196,7 @@ var app = {
       });
     });
     sql += " LIMIT " + limit;
+    console.log(sql);
     return sql;
   },
 
@@ -537,11 +548,68 @@ var app = {
   },
 
   buildGraphs: function(tx, results) {
+    
+    
     var len = results.rows.length;
-    console.log(len);
-    for (var i = 0; i < len; i++) {
-      console.log("indicador: " + results.rows.item(i).idindicador + " año 2005: " + results.rows.item(i).yea2005);
+    // console.log(len);
+    // for (var i = 0; i < len; i++) {
+    //   console.log("indicador: " + results.rows.item(i).idindicador + " año 2005: " + results.rows.item(i).yea2005);
+    // }
+    var datafromresults = [];
+
+    var header = ['Departamento','2005','2006'];
+    datafromresults.push(header);
+     for (var i = 0; i < len; i++) {
+      console.log("Elemento "+i+"\n");
+      datafromresults.push(
+          [
+            results.rows.item(i).nomdepto,
+            parseFloat(results.rows.item(i).yea2005),
+            parseFloat(results.rows.item(i).yea2006)
+            ]);
+      console.log("departamento "+results.rows.item(i).nomdepto);
+      console.log("2005 "+results.rows.item(i).yea2005);
+      console.log("2006 "+results.rows.item(i).yea2006);
     }
+    
+
+    
+   
+
+    // function drawRegionsMap() {
+        var data = google.visualization.arrayToDataTable(datafromresults);
+    console.log("paso2");
+        var options = {
+            region: 'CO',
+            resolution: 'provinces',
+            displayMode: 'markers',
+            magnifyingGlass: {enable: "true", zoomFactor: "10.0"},
+            colorAxis: {colors: ['green', 'red']},
+            width: 'auto'
+        };
+
+        var optionscolumns = {
+          hAxis: {title:"y2005 y2006"},
+          vAxis: {title:"miles"}
+        };
+
+        var optionspie = {}
+
+    console.log("paso3"); 
+        var chart = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
+        var pie = new google.visualization.PieChart(document.getElementById('piechartdiv'));
+        var column = new google.visualization.ColumnChart(document.getElementById('columnchartdiv'));
+        //var table = new google.visualization.Table(document.getElementById('tablediv'));
+    console.log("paso4");
+        chart.draw(data, options);
+        pie.draw(data);
+        column.draw(data);
+        //table.draw(data,null);
+    console.log("paso5");
+        
+    //};
+
+
   },
 
   buttonHeight: function() {
