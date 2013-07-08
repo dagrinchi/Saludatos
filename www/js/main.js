@@ -93,6 +93,7 @@ var app = {
   },
 
   checkConnection: function() {
+    console.log("Comprobando conectividad a internet!");
     var networkState = navigator.connection.type;
     if (networkState == Connection.NONE || networkState == Connection.UNKNOWN) {
       console.log("No hay internet!");
@@ -132,35 +133,55 @@ var app = {
   onDeviceReady: function() {
     //window.localStorage.removeItem("updated");
 
+    console.log("Dispositivo listo!");
+    if (app.checkConnection()) {
+      console.log("Cargando google js!");
+      app.initGoogleLoader();
+    }
+  },
 
-    var msg = "Dispositivo listo!";
-    app.showLoadingBox(msg);
-    console.log(msg);
+  startApp: function() {
     if (app.checkUpdatedData()) {
       app.openDB(app.queryDB);
       app.pageEvents();
       app.btnsEvents();
     } else {
-      if (app.checkConnection()) {
-        navigator.splashscreen.hide();
-        app.showLoadingBox("Descargando información");
-        app.load();
-      }
+      navigator.splashscreen.hide();
+      app.showLoadingBox("Descargando información");
+      app.load();
     }
+  },
+
+  initGoogleLoader: function() {
+    navigator.splashscreen.show();
+
+    WebFontConfig = {
+      google: {
+        families: ['Open+Sans:300,400:latin']
+      }
+    };
+
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+
+    var script = document.createElement("script");
+    script.src = "https://www.google.com/jsapi?callback=app.startApp";
+    script.type = "text/javascript";
+    document.getElementsByTagName("head")[0].appendChild(script);
+
+    script.addEventListener("error", function(e) {
+      console.log("Error: " + e);
+    }, false);
   },
 
   btnsEvents: function() {
     $(".btn_secundario").on("click", function(e) {
       var $this = $(this);
-      app.openDB(app.finalQuery);
-      console.log($this.data("graph"));
-      //Seleccion de tipo de gráfico
-      switch($this.data("graph")){
-        case "pie":
-        console.log("Hace lo que haga el pie");
-        break;
-      }
-
+      app.openDB(app.ent[$this.data("graph")]);
     });
   },
 
@@ -198,12 +219,6 @@ var app = {
     sql += " LIMIT " + limit;
     console.log(sql);
     return sql;
-  },
-
-  finalQuery: function(tx) {
-    var msg = "Consultando indicadores!";
-    console.log(msg);
-    tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], app.buildGraphs, app.errorCB);
   },
 
   queryUbicaciones: function(tx) {
@@ -307,6 +322,7 @@ var app = {
     tx.executeSql('SELECT * FROM departamento', [], app.ent.departamento, app.errorCB);
     //tx.executeSql('SELECT * FROM municipio', [], app.ent.municipio, app.errorCB);
     tx.executeSql('SELECT * FROM zona', [], app.ent.zona, app.errorCB);
+    tx.executeSql('SELECT COUNT(*) AS counter FROM datos', [], app.ent.counter, app.errorCB);
     app.hideLoadingBox();
   },
 
@@ -320,6 +336,7 @@ var app = {
 
   eventRadios: function(e) {
     var $this = $(this);
+    app.selection[$this.attr("name")]["cols"][$this.data("col")].length = 0;
     app.selection[$this.attr("name")]["cols"][$this.data("col")].push($this.val());
     $("#cat").dialog('close');
   },
@@ -366,6 +383,26 @@ var app = {
   },
 
   ent: {
+
+    counter: function(tx, results) {
+      jQuery({
+        value: 0
+      }).animate({
+        value: results.rows.item(0).counter
+      }, {
+        duration: 1000,
+        easing: 'swing',
+        step: function() {
+          $('#counter').text(Math.ceil(this.value));
+        },
+        complete: function() {
+          $('#counter').css({
+            color: '#ddd'
+          });
+        }
+      });
+    },
+
     indicador: function(tx, results) {
       var list = "#indList";
       var len = results.rows.length;
@@ -377,6 +414,7 @@ var app = {
       }
       app.registerInputs(list, "radio");
     },
+
     region: function(tx, results) {
       var list = "#regList";
       var len = results.rows.length;
@@ -389,6 +427,7 @@ var app = {
       }
       app.registerInputs(list, "checkbox");
     },
+
     subregion: function(tx, results) {
       var list = "#subregList";
       var len = results.rows.length;
@@ -413,6 +452,7 @@ var app = {
       }
       app.registerInputs(list, "checkbox");
     },
+
     municipio: function(tx, results) {
       var list = "#munList";
       var len = results.rows.length;
@@ -425,6 +465,7 @@ var app = {
       $(list).html(html).trigger('create');
       app.registerInputs(list, "checkbox");
     },
+
     zona: function(tx, results) {
       var list = "#zonList";
       var len = results.rows.length;
@@ -437,6 +478,7 @@ var app = {
       }
       app.registerInputs(list, "checkbox");
     },
+
     educacion: function(tx, results) {
       var list = "#eduList";
       var len = results.rows.length;
@@ -449,6 +491,7 @@ var app = {
       }
       app.registerInputs(list, "checkbox");
     },
+
     ocupacion: function(tx, results) {
       var list = "#ocuList";
       var len = results.rows.length;
@@ -461,6 +504,7 @@ var app = {
       }
       app.registerInputs(list, "checkbox");
     },
+
     edad: function(tx, results) {
       var list = "#edaList";
       var len = results.rows.length;
@@ -485,6 +529,7 @@ var app = {
       }
       app.registerInputs(list, "checkbox");
     },
+
     genero: function(tx, results) {
       var list = "#genList";
       var len = results.rows.length;
@@ -497,6 +542,7 @@ var app = {
       }
       app.registerInputs(list, "checkbox");
     },
+
     etnia: function(tx, results) {
       var list = "#etnList";
       var len = results.rows.length;
@@ -509,6 +555,7 @@ var app = {
       }
       app.registerInputs(list, "checkbox");
     },
+
     eps: function(tx, results) {
       var list = "#epsList";
       var len = results.rows.length;
@@ -521,6 +568,7 @@ var app = {
       }
       app.registerInputs(list, "checkbox");
     },
+
     ips: function(tx, results) {
       var list = "#ipsList";
       var len = results.rows.length;
@@ -533,6 +581,7 @@ var app = {
       }
       app.registerInputs(list, "checkbox");
     },
+
     regimen: function(tx, results) {
       var list = "#regimenList";
       var len = results.rows.length;
@@ -544,85 +593,131 @@ var app = {
         $(list).append(label);
       }
       app.registerInputs(list, "checkbox");
-    }
-  },
+    },
 
-  buildGraphs: function(tx, results) {
-    
-    
-    var len = results.rows.length;
-    // console.log(len);
-    // for (var i = 0; i < len; i++) {
-    //   console.log("indicador: " + results.rows.item(i).idindicador + " año 2005: " + results.rows.item(i).yea2005);
-    // }
-    var datafromresults = [];
+    pie: function(tx) {
 
-    var header = ['Departamento','2005','2006'];
-    datafromresults.push(header);
-     for (var i = 0; i < len; i++) {
-      console.log("Elemento "+i+"\n");
-      datafromresults.push(
-          [
-            results.rows.item(i).nomdepto,
-            parseFloat(results.rows.item(i).yea2005),
-            parseFloat(results.rows.item(i).yea2006)
-            ]);
-      console.log("departamento "+results.rows.item(i).nomdepto);
-      console.log("2005 "+results.rows.item(i).yea2005);
-      console.log("2006 "+results.rows.item(i).yea2006);
-    }
-    
+      tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
 
-    
-   
+      function buildGraph(tx, results) {
 
-    // function drawRegionsMap() {
-        var data = google.visualization.arrayToDataTable(datafromresults);
-    console.log("paso2");
-        var options = {
-            region: 'CO',
-            resolution: 'provinces',
-            displayMode: 'markers',
-            magnifyingGlass: {enable: "true", zoomFactor: "10.0"},
-            colorAxis: {colors: ['green', 'red']},
-            width: 'auto'
-        };
+        var datafromresults = [];
+        var header = ['Departamento', '2005', '2006'];
 
-        var optionscolumns = {
-          hAxis: {title:"y2005 y2006"},
-          vAxis: {title:"miles"}
-        };
+        datafromresults.push(header);
 
-        var optionspie = {}
+        var len = results.rows.length;
+        for (var i = 0; i < len; i++) {
+          datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
+        }
 
-    console.log("paso3"); 
-        var chart = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
-        var pie = new google.visualization.PieChart(document.getElementById('piechartdiv'));
-        var column = new google.visualization.ColumnChart(document.getElementById('columnchartdiv'));
-        //var table = new google.visualization.Table(document.getElementById('tablediv'));
-    console.log("paso4");
-        chart.draw(data, options);
-        pie.draw(data);
-        column.draw(data);
-        //table.draw(data,null);
-    console.log("paso5");
-        
-    //};
+        google.load("visualization", "1", {
+          packages: ["corechart"],
+          callback: googleChart
+        });
 
+        function googleChart() {
+          var data = google.visualization.arrayToDataTable(datafromresults);
+          var pie = new google.visualization.PieChart(document.getElementById('piechartdiv'));
+          var options = {
+            legend : {
+              position : "bottom",
+              textStyle : {
+                color : '#fff'
+              }
+            },
+            backgroundColor: {
+              fill: "transparent"
+            }
+          };
+          pie.draw(data, options);
+        }
+      }
 
+    },
+
+    lineal: function(tx, results) {
+
+    },
+
+    bars: function(tx) {
+
+      tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
+
+      function buildGraph(tx, results) {
+
+        var datafromresults = [];
+        var header = ['Departamento', '2005', '2006'];
+
+        datafromresults.push(header);
+
+        var len = results.rows.length;
+        for (var i = 0; i < len; i++) {
+          datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
+        }
+
+        google.load("visualization", "1", {
+          packages: ["corechart"],
+          callback: googleChart
+        });
+
+        function googleChart() {
+          var data = google.visualization.arrayToDataTable(datafromresults);
+          var bars = new google.visualization.ColumnChart(document.getElementById('columnchartdiv'));
+          var options = {
+            hAxis: {
+              title: "y2005 y2006"
+            },
+            vAxis: {
+              title: "miles"
+            }
+          };
+          bars.draw(data, options);
+        }
+      }
+    },
+
+    maps: function(tx, results) {
+      var datafromresults = [];
+      var header = ['Departamento', '2005', '2006'];
+
+      datafromresults.push(header);
+      for (var i = 0; i < len; i++) {
+        var item = results.rows.item(i);
+        datafromresults.push([item.nomdepto, parseFloat(item.yea2005), parseFloat(item.yea2006)]);
+      }
+      var data = google.visualization.arrayToDataTable(datafromresults);
+      var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
+      var options = {
+        region: 'CO',
+        resolution: 'provinces',
+        displayMode: 'markers',
+        magnifyingGlass: {
+          enable: "true",
+          zoomFactor: "10.0"
+        },
+        colorAxis: {
+          colors: ['green', 'red']
+        }
+      };
+
+      map.draw(data, options);
+    },
+
+    table: function(tx, results) {}
   },
 
   buttonHeight: function() {
-    var wh = $(window).height() - 150;
-    $("#homelogo").height(wh + 10);
-    $.each($(".btn_primario a"), function(i, item) {
+    console.log("Ajustando el alto de los botones!");
+    var wh = $("#home").height() - 180;
+    $.each($(".sidebar a"), function(i, item) {
       $(item).height(wh / 3);
     });
   },
 
   init: function() {
     console.log("Iniciando app!");
-    document.addEventListener("deviceready", app.onDeviceReady, false);
     app.buttonHeight();
+    document.addEventListener("deviceready", app.onDeviceReady, false);
   }
 };

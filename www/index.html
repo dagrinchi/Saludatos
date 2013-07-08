@@ -2,49 +2,33 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="themes/retoSalud.css" />
-        <link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css" />
+        <link rel="stylesheet" href="css/main.css" />
+        <link rel="stylesheet" href="css/saludatos.css" />
+        <link rel="stylesheet" href="css/jquery.mobile.structure-1.3.1.min.css" />
 
         <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="js/jquery.mobile-1.3.1.min.js"></script>
-        <title>SALUDATOS</title>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+        <title>Saludatos</title>
     </head>
     <body>
-        <div data-role="page" id="home" data-theme="a"> 
+        <div data-role="page" id="home"> 
             <div data-role="header" data-position="fixed">
-                <h1>SALUDATOS</h1>
+                <a href="#acerca" class="ui-btn-left" data-icon="info" data-rel="dialog">Acerca</a>
+                <h1>Saludatos</h1>
             </div>
-            <div data-role="content" class="ui-grid-b">     
-                <div class="list ui-block-a" style="margin-top: 5px; background-color: white !important;">
-                    <div id="homelogo" style="width: 350px; display: block; margin: auto;">
-                         <img id="homelogoimg" src="themes/images/main.jpg" style="width: 55%; margin-top: 170px; margin-left: 8px;">
-                    </div>          
+            <div data-role="content" class="ui-grid-a">
+                <div class="ui-block-a">
+                    <span id="counter">0</span>
+                    <p>Lorem ipsum dolore</p>
                 </div>
-                <div class="sidebar ui-block-b">
-                    <div class="ui-grid-b" >
-                        <div class="ui-block-a btn_primario">
-                            <a href="#cat" data-rel="dialog" style="background-color: #09c6c9; text-align: center;">
-                                <span style="font-size: 11px;">CATEGORÍAS<br/>DE SALUD<br/></span>
-                                <img src="themes/images/health_end.png" width="45px" height="45px">
-                            </a>
-                        </div>
-                        <div class="ui-block-a btn_primario">
-                            <a href="#ubicaciones" data-transition="slide" style="background-color: #e8005d; text-align: center;">
-                                <span style="font-size: 11px;">UBICACIÓN<br/>GEOGRÁFICA<br/></span>
-                                <img src="themes/images/location_end.png" width="40px" height="45px">
-                            </a>                            
-                        </div>
-                        <div class="ui-block-a btn_primario">
-                            <a href="#demografia" data-transition="slide" style="background-color: #edd200; text-align: center;">
-                                <span style="font-size: 11px;">INFORMACIÓN<br/>DEMOGRÁFIA<br/></span>
-                                <img src="themes/images/person_end.png" width="40px" height="45px">
-                            </a>
-                        </div>
-                     </div>
+                <div class="ui-block-b sidebar">
+                    <a href="#cat" class="icon_health" data-rel="dialog">CATEGORÍAS<br/>DE SALUD<br/></a>
+                    <a href="#ubicaciones" class="icon_location" data-transition="slide">UBICACIÓN<br/>GEOGRÁFICA<br/></a>
+                    <a href="#demografia" class="icon_person" data-transition="slide">INFORMACIÓN<br/>DEMOGRÁFICA<br/></a>
                 </div>
             </div>
             <div data-role="footer" data-position="fixed">
@@ -68,21 +52,21 @@
             </div>
         </div>
         <!-- START DIALOG INDICADORES -->
-        <div data-role="dialog" id="cat" data-theme="a">
-            <div data-role="header" data-position="fixed">                
+        <div data-role="dialog" id="cat" data-theme="b">
+            <div data-role="header" data-position="fixed" data-theme="b">
                 <h1>Categorías de Salud</h1>
             </div>
-            <div data-role="content">                
-                <fieldset data-role="controlgroup" id="indList">
+            <div data-role="content" data-theme="b">
+                <fieldset data-role="controlgroup" id="indList" data-theme="b">
                     <legend>Seleccione un indicador para evaluar:</legend>
                 </fieldset>
             </div>
         </div>
         <!-- END DIALOG INDICADORES -->
         <!-- START PAGE UBICACIONES -->
-        <div data-role="page" id="ubicaciones" data-theme="a"> 
-            <div data-role="header" data-position="fixed">
-                <a href="#" data-rel="back" class="ui-btn-left" data-icon="back">Volver</a>           
+        <div data-role="page" id="ubicaciones" data-theme="c"> 
+            <div data-role="header" data-position="fixed" data-theme="c">
+                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>           
                 <h1>Ubicación Geográfica</h1>        
             </div>
             <div data-role="content">
@@ -108,8 +92,8 @@
         </div>
         <!-- END PAGE UBICACIONES -->
         <!-- START DIALOG REGIONES -->
-        <div data-role="dialog" id="region" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="region">
+            <div data-role="header" data-theme="c">
                 <h1>Región</h1>
             </div>
             <div data-role="content">
@@ -120,8 +104,8 @@
         </div>
         <!-- END DIALOG REGIONES -->
         <!-- START DIALOG SUBREGIONES -->
-        <div data-role="dialog" id="subregion" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="subregion">
+            <div data-role="header" data-theme="c">
                 <h1>Subregión</h1>
             </div>
             <div data-role="content">
@@ -132,8 +116,8 @@
         </div>
         <!-- END DIALOG SUBREGIONES -->
         <!-- START DIALOG DEPARTAMENTO -->
-        <div data-role="dialog" id="departamento" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="departamento">
+            <div data-role="header" data-theme="c">
                 <h1>Departamento</h1>
             </div>
             <div data-role="content">
@@ -144,8 +128,8 @@
         </div>
         <!-- END DIALOG DEPARTAMENTO -->
         <!-- START DIALOG MUNICIPIO -->
-        <div data-role="dialog" id="municipio" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="municipio">
+            <div data-role="header" data-theme="c">
                 <h1>Municipio</h1>
             </div>
             <div data-role="content">
@@ -154,8 +138,8 @@
         </div>
         <!-- END DIALOG MUNICIPIO -->
         <!-- START DIALOG ZONA -->
-        <div data-role="dialog" id="zona" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="zona">
+            <div data-role="header" data-theme="c">
                 <h1>Zona</h1>
             </div>
             <div data-role="content">
@@ -166,9 +150,9 @@
         </div>
         <!-- END DIALOG ZONA -->
         <!-- START PAGE DEMOGRAFÍA -->
-        <div data-role="page" id="demografia" data-theme="a"> 
-            <div data-role="header" data-position="fixed">
-                <a href="#" data-rel="back" class="ui-btn-left" data-icon="back">Volver</a>
+        <div data-role="page" id="demografia"> 
+            <div data-role="header" data-position="fixed" data-theme="d">
+                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
                 <h1>Información Demográfica</h1>        
             </div>
             <div data-role="content">
@@ -206,8 +190,8 @@
         </div>
         <!-- END PAGE DEMOGRAFÍA -->
         <!-- START DIALOG EDUCACION -->
-        <div data-role="dialog" id="educacion" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="educacion">
+            <div data-role="header" data-theme="d">
                 <h1>Educación</h1>
             </div>
             <div data-role="content">
@@ -218,8 +202,8 @@
         </div>
         <!-- END DIALOG EDUCACION -->
         <!-- START DIALOG OCUPACION -->
-        <div data-role="dialog" id="ocupacion" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="ocupacion">
+            <div data-role="header" data-theme="d">
                 <h1>Ocupación</h1>
             </div>
             <div data-role="content">
@@ -230,8 +214,8 @@
         </div>
         <!-- END DIALOG OCUPACION -->
         <!-- START DIALOG EDAD -->
-        <div data-role="dialog" id="edad" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="edad">
+            <div data-role="header" data-theme="d">
                 <h1>Edad</h1>
             </div>
             <div data-role="content">
@@ -242,8 +226,8 @@
         </div>
         <!-- END DIALOG EDAD -->
         <!-- START DIALOG ESTADOCIVIL -->
-        <div data-role="dialog" id="estadocivil" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="estadocivil">
+            <div data-role="header" data-theme="d">
                 <h1>Estado civil</h1>
             </div>
             <div data-role="content">
@@ -254,8 +238,8 @@
         </div>
         <!-- END DIALOG ESTADOCIVIL -->
         <!-- START DIALOG GENERO -->
-        <div data-role="dialog" id="genero" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="genero">
+            <div data-role="header" data-theme="d">
                 <h1>Género</h1>
             </div>
             <div data-role="content">
@@ -266,8 +250,8 @@
         </div>
         <!-- END DIALOG GENERO -->
         <!-- START DIALOG ETNIA -->
-        <div data-role="dialog" id="etnia" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="etnia">
+            <div data-role="header" data-theme="d">
                 <h1>Etnia</h1>
             </div>
             <div data-role="content">
@@ -278,8 +262,8 @@
         </div>
         <!-- END DIALOG ETNIA -->
         <!-- START DIALOG EPS -->
-        <div data-role="dialog" id="eps" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="eps">
+            <div data-role="header" data-theme="d">
                 <h1>EPS</h1>
             </div>
             <div data-role="content">
@@ -290,8 +274,8 @@
         </div>
         <!-- END DIALOG EPS -->
         <!-- START DIALOG IPS -->
-        <div data-role="dialog" id="ips" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="ips">
+            <div data-role="header" data-theme="d">
                 <h1>IPS</h1>
             </div>
             <div data-role="content">
@@ -302,8 +286,8 @@
         </div>
         <!-- END DIALOG IPS -->
         <!-- START DIALOG REGIMEN -->
-        <div data-role="dialog" id="regimen" data-theme="a">
-            <div data-role="header">
+        <div data-role="dialog" id="regimen">
+            <div data-role="header" data-theme="d">
                 <h1>Régimen</h1>
             </div>
             <div data-role="content">
@@ -314,7 +298,7 @@
         </div>
         <!-- END DIALOG REGIMEN -->
         <!-- START PAGE PIE -->
-        <div data-role="page" id="pie" data-theme="a"> 
+        <div data-role="page" id="pie"> 
             <div data-role="header" data-position="fixed">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
                 <select class="ui-btn-right share">
@@ -324,7 +308,7 @@
                 </select>
             </div>
             <div data-role="content">
-                <div id="piechartdiv"></div>
+                <div id="piechartdiv" style="width: 100%; height: 200px;"></div>
             </div>
             <div data-role="footer" data-position="fixed">
                 <div class="ui-grid-d">
@@ -348,7 +332,7 @@
         </div>
         <!-- END PAGE PIE -->
         <!-- START PAGE LINEAL -->
-        <div data-role="page" id="lineal" data-theme="a"> 
+        <div data-role="page" id="lineal"> 
             <div data-role="header" data-position="fixed">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
                 <select class="ui-btn-right share">
@@ -380,7 +364,7 @@
         </div>
         <!-- END PAGE LINEAL -->
         <!-- START PAGE BARS -->
-        <div data-role="page" id="bars" data-theme="a"> 
+        <div data-role="page" id="bars"> 
             <div data-role="header" data-position="fixed">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
                 <select class="ui-btn-right share">
@@ -389,9 +373,7 @@
                     <option value="twitter">Twitter</option>
                 </select>
             </div>
-            <div data-role="content">
-                <div id="columnchartdiv" style="height:600px; margin-top:40px;"></div>
-            </div>
+            <div data-role="content" id="columnchartdiv"></div>
             <div data-role="footer" data-position="fixed">
                 <div class="ui-grid-d">
                     <div class="ui-block-a">
@@ -414,7 +396,7 @@
         </div>
         <!-- END PAGE BARS -->
         <!-- START PAGE MAP -->
-        <div data-role="page" id="maps" data-theme="a"> 
+        <div data-role="page" id="maps"> 
             <div data-role="header" data-position="fixed">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
                 <select class="ui-btn-right share">
@@ -423,9 +405,7 @@
                     <option value="twitter">Twitter</option>
                 </select>
             </div>
-            <div data-role="content">
-                <div id="geochartdiv" style="height:600px; margin-top:40px;"></div>
-            </div>
+            <div data-role="content" id="geochartdiv"></div>
             <div data-role="footer" data-position="fixed">
                 <div class="ui-grid-d">
                     <div class="ui-block-a">
@@ -448,7 +428,7 @@
         </div>
         <!-- END PAGE MAP -->
         <!-- START PAGE TABLE -->
-        <div data-role="page" id="table" data-theme="a"> 
+        <div data-role="page" id="table"> 
             <div data-role="header" data-position="fixed">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
                 <select class="ui-btn-right share">
@@ -457,9 +437,7 @@
                     <option value="twitter">Twitter</option>
                 </select>
             </div>
-            <div data-role="content">
-                <div id="tablediv" style="height:600px; margin-top:40px;"></div>
-            </div>
+            <div data-role="content" id="tablediv"></div>
             <div data-role="footer" data-position="fixed">
                 <div class="ui-grid-d">
                     <div class="ui-block-a">
@@ -481,17 +459,33 @@
             </div>
         </div>
         <!-- END PAGE TABLE -->
+        <!-- START DIALOG ACERCA DE -->
+        <div data-role="dialog" id="acerca">
+            <div data-role="header" data-position="fixed">
+                <h1>Acerca de...</h1>
+            </div>
+            <div data-role="content">
+                <h1>Saludatos <span style="color: #AAA; font-size: 0.5em;">v1.0</span></h1>
+                <p>Ministerio de Salud y Protección Social</p>
+                <p>&copy;2013 - Derechos reservados</p>
+                <p>Tenga en cuenta que esta aplicación requiere acceso a internet y puede consumir recursos de su plan de datos.</p>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <img src="img/logo-minSalud.png" alt="Ministerio de Salud y Protección Social" style="width: 95%" />
+                    </div>
+                    <div class="ui-block-b">
+                        <img src="img/mintic.png" alt="Ministerio de Tecnologías de la Información y Comunicaciones" style="width: 100%" />
+                    </div>
+                </div>
+                <p>Paola Vanegas, Alejandro Zarate, Marcos Aguilera y David Alméciga</p>
+                <p>COOL<b>4CODE</b>.com</p>
+            </div>
+        </div>
+        <!-- END DIALOG ACERCA DE -->
         <script type="text/javascript" src="cordova-2.7.0.js"></script>
-        <script type='text/javascript' src='https://www.google.com/jsapi'></script>
-
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript">
-        console.log("Cargando google");
-        google.load('visualization', '1', {'packages': ['corechart']});
-        google.load('visualization', '1', {'packages': ['geochart']});
-        google.load('visualization', '1', {'packages': ['table']});
-        google.setOnLoadCallback(app.init);
-        //app.init();
+            app.init();
         </script>
     </body>
 </html>
