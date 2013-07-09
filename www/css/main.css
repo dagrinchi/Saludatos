@@ -6,8 +6,8 @@ html, body {
 @media screen and (device-aspect-ratio: 2/3) {
 	/*.animation-size-for-iframe {
 	width: 330px;
-	height: 342px;
-	margin: 0px 33.3% 0px 23.3% !important;
+	height: 355px;
+	margin: 0px 25.3% 0px 23.3% !important;
 	}*/
 }
 /*iPhone 5:*/
@@ -15,16 +15,16 @@ html, body {
 	.animation-size-for-iframe {
 	width: 330px;
 	height: 355px;
-	margin: 0px 33.3% 0px 23.3% !important;
+	margin: 0px 60% 0px 0px !important;
 	}
 }
 /*iPad:*/
 @media screen and (device-aspect-ratio: 3/4) {
-	.animation-size-for-iframe {
+	/*.animation-size-for-iframe {
 	width: 330px;
 	height: 355px;
 	margin: 0px 33.3% 0px 28.3% !important;
-	}
+	}*/
 }
 /* Smartphones (portrait and landscape) ———– */
 @media only screen and (min-width : 320px) and (max-width : 480px) {
@@ -42,30 +42,29 @@ html, body {
 /* iPads (portrait and landscape) ———– */
 @media only screen and (min-width : 768px) and (max-width : 1024px) {
 /* Styles */
-	.animation-size-for-iframe {
+	/*.animation-size-for-iframe {
 	width: 330px;
 	height: 355px;
 	margin: 0px 33.3% 0px 28.3% !important;
-	}
+	}*/
 }
 /* iPads (landscape) ———– */
 @media only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : landscape) {
 /* Styles */
-	.animation-size-for-iframe {
+	/*.animation-size-for-iframe {
 	width: 330px;
 	height: 355px;
 	margin: 0px 33.3% 0px 23.3% !important;
-	}
-
+	}*/
 }
 /* iPads (portrait) ———– */
 @media only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : portrait) {
 /* Styles */
-   .animation-size-for-iframe {
+   /*.animation-size-for-iframe {
 	width: 330px;
 	height: 355px;
 	margin: 0px 33.3% 0px 23.3% !important;
-	}
+	}*/
 }
 /* Desktops and laptops ———– */
 @media only screen and (min-width : 1224px) {
@@ -80,11 +79,11 @@ html, body {
 /* iPhone 4 ———– */
 @media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
 /* Styles */
-	.animation-size-for-iframe {
+	/*.animation-size-for-iframe {
 	width: 330px;
 	height: 355px;
 	margin: 0px 33.3% 0px 23.3% !important;
-	}  
+	} */ 
 }
 /*no erase pls*/
 /*.animation-size-for-iframe {
@@ -92,9 +91,7 @@ html, body {
 	height: 342px;
 	margin: 0px 33.3% 0px 33.3% !important;
 }*/
-
 /*****End Media types******/
-
 
 iframe {
 	border-width: 0;
