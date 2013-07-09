@@ -10,11 +10,16 @@
 
         <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="js/jquery.mobile-1.3.1.min.js"></script>
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="motion/embed/senchaAnimatiorEmbed.js"></script>
 
         <title>Saludatos</title>
     </head>
     <body>
+        <!-- START DIALOG HOME -->
+        <div data-role="page" id="opening_page">
+            <iframe id="manual-animation-2" class="animation-size-for-iframe" src="motion/motion.html" frameborder="0"></iframe>
+        </div>
+        <!-- START DIALOG HOME -->
         <div data-role="page" id="home"> 
             <div data-role="header" data-position="fixed">
                 <a href="#acerca" class="ui-btn-left" data-icon="info" data-rel="dialog">Acerca</a>
@@ -22,8 +27,12 @@
             </div>
             <div data-role="content" class="ui-grid-a">
                 <div class="ui-block-a">
-                    <span id="counter">0</span>
-                    <p>Lorem ipsum dolore</p>
+                    <p>Número de Registros:</p>
+                    <span id="counter-reg">0</span>
+                    <p>Número de Regiones:</p>
+                    <span id="counter-regi">0</span>
+                    <p>Número de Municipios:</p>
+                    <span id="counter-mun">0</span>
                 </div>
                 <div class="ui-block-b sidebar">
                     <a href="#cat" class="icon_health" data-rel="dialog">CATEGORÍAS<br/>DE SALUD<br/></a>
@@ -51,6 +60,7 @@
                 </div>
             </div>
         </div>
+        <!-- END DIALOG HOME -->
         <!-- START DIALOG INDICADORES -->
         <div data-role="dialog" id="cat" data-theme="b">
             <div data-role="header" data-position="fixed" data-theme="b">
@@ -307,9 +317,7 @@
                     <option value="twitter">Twitter</option>
                 </select>
             </div>
-            <div data-role="content">
-                <div id="piechartdiv" style="width: 100%; height: 200px;"></div>
-            </div>
+            <div data-role="content" id="piechartdiv"></div>
             <div data-role="footer" data-position="fixed">
                 <div class="ui-grid-d">
                     <div class="ui-block-a">

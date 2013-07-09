@@ -2,6 +2,15 @@ html, body {
     height : 100%;
 }
 
+.animation-size-for-iframe {
+	width: 80%;
+	height: 70%;
+}
+
+iframe {
+	border-width: 0;
+}
+
 fieldset label {
 	text-transform: uppercase;
 }
@@ -80,7 +89,16 @@ fieldset label {
 	background-size: 40%;
 }
 
-#counter {
+#home .ui-content p {
+	margin: 0;
+	padding: 0;
+}
+
+#counter-reg, #counter-regi, #counter-mun {
 	font-size: 350%;
 	color: #ccc;
+}
+
+#pie .ui-content, #lineal .ui-content, #bars .ui-content, #maps .ui-content, #table .ui-content {
+	padding: 40px 0 70px 0;
 }

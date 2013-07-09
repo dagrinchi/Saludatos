@@ -10,6 +10,12 @@ var app = {
 
   data: [],
 
+  counters : {
+    "counter-reg" : 0,
+    "counter-regi" : 0,
+    "counter-mun" : 0
+  },
+
   selection: {
     indicador: {
       cols: {
@@ -137,14 +143,26 @@ var app = {
     if (app.checkConnection()) {
       console.log("Cargando google js!");
       app.initGoogleLoader();
+    } else {
+      navigator.notification.alert(
+          'No hay una conexión a internet!',
+          function() {
+            navigator.app.exitApp();
+          },
+          'Atención',
+          'Aceptar'
+      );
     }
   },
 
   startApp: function() {
     if (app.checkUpdatedData()) {
-      app.openDB(app.queryDB);
       app.pageEvents();
       app.btnsEvents();
+      app.openDB(app.queryDB);
+      setTimeout(function() {
+        $.mobile.changePage("#home");
+      }, 7000);
     } else {
       navigator.splashscreen.hide();
       app.showLoadingBox("Descargando información");
@@ -153,7 +171,8 @@ var app = {
   },
 
   initGoogleLoader: function() {
-    navigator.splashscreen.show();
+
+    app.showLoadingBox("Cargando aplicación!");
 
     WebFontConfig = {
       google: {
@@ -188,6 +207,12 @@ var app = {
   pageEvents: function() {
     $("#ubicaciones").on("pagebeforeshow", function() {
       app.openDB(app.queryUbicaciones);
+    });
+
+    $("#home").on("pagebeforeshow", function() {
+      $.each(app.counters, function(k, v) {
+        app.counterAnim("#"+k, v);
+      });
     });
   },
 
@@ -322,8 +347,22 @@ var app = {
     tx.executeSql('SELECT * FROM departamento', [], app.ent.departamento, app.errorCB);
     //tx.executeSql('SELECT * FROM municipio', [], app.ent.municipio, app.errorCB);
     tx.executeSql('SELECT * FROM zona', [], app.ent.zona, app.errorCB);
-    tx.executeSql('SELECT COUNT(*) AS counter FROM datos', [], app.ent.counter, app.errorCB);
+    tx.executeSql('SELECT COUNT(*) AS counter FROM datos', [], reg, app.errorCB);
+    tx.executeSql('SELECT COUNT(*) AS counter FROM region', [], regi, app.errorCB);
+    tx.executeSql('SELECT COUNT(*) AS counter FROM municipio', [], mun, app.errorCB);
     app.hideLoadingBox();
+
+    function reg(tx, results) {
+      app.counters["counter-reg"] = results.rows.item(0).counter;
+    }
+
+    function regi(tx, results) {
+      app.counters["counter-regi"] = results.rows.item(0).counter;
+    }
+
+    function mun(tx, results) {
+      app.counters["counter-mun"] = results.rows.item(0).counter;
+    }
   },
 
   registerInputs: function(list, type) {
@@ -384,25 +423,6 @@ var app = {
 
   ent: {
 
-    counter: function(tx, results) {
-      jQuery({
-        value: 0
-      }).animate({
-        value: results.rows.item(0).counter
-      }, {
-        duration: 1000,
-        easing: 'swing',
-        step: function() {
-          $('#counter').text(Math.ceil(this.value));
-        },
-        complete: function() {
-          $('#counter').css({
-            color: '#ddd'
-          });
-        }
-      });
-    },
-
     indicador: function(tx, results) {
       var list = "#indList";
       var len = results.rows.length;
@@ -443,6 +463,7 @@ var app = {
     departamento: function(tx, results) {
       var list = "#depList";
       var len = results.rows.length;
+
       $("#departamentoCount").html(len);
       for (var i = 0; i < len; i++) {
         var input = '<input type="checkbox" data-vista="departamento" data-col="iddepto" name="departamento-' + results.rows.item(i).iddepto + '" id="departamento-' + results.rows.item(i).iddepto + '" value="' + results.rows.item(i).iddepto + '"/>';
@@ -611,24 +632,35 @@ var app = {
           datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
         }
 
-        google.load("visualization", "1", {
-          packages: ["corechart"],
-          callback: googleChart
-        });
+        if (google && google.visualization) {
+          googleChart();
+        } else {
+          google.load("visualization", "1", {
+            callback: googleChart
+          });
+        }
 
         function googleChart() {
           var data = google.visualization.arrayToDataTable(datafromresults);
           var pie = new google.visualization.PieChart(document.getElementById('piechartdiv'));
           var options = {
-            legend : {
-              position : "bottom",
-              textStyle : {
-                color : '#fff'
-              }
+            chartArea: {
+              left: "0",
+              right: "0",
+              top: "40px",
+              bottom: "70px",
+              width: "100%",
+              height: "100%"
             },
-            backgroundColor: {
-              fill: "transparent"
-            }
+            // legend: {
+            //   position: "bottom",
+            //   textStyle: {
+            //     color: '#fff'
+            //   }
+            // }
+            // backgroundColor: {
+            //   fill: "transparent"
+            // }
           };
           pie.draw(data, options);
         }
@@ -642,6 +674,25 @@ var app = {
 
     bars: function(tx) {
 
+      var columnNames = [];
+
+      app.openDB(getColumns);
+
+      function getColumns(tx) {
+        console.log("LLamada a consulta getColumns");
+        tx.executeSql('SELECT name, sql FROM sqlite_master WHERE type="table" AND name = "datos"', [], analizeColumns, app.errorCB);
+      }
+
+      function analizeColumns(tx, results) {
+        console.log("Analizar columnas!");
+        var columnParts = results.rows.item(0).sql.replace(/^[^\(]+\(([^\)]+)\)/g, '$1').split(',');
+
+        for (var i in columnParts) {
+          if (typeof columnParts[i] === 'string') columnNames.push(columnParts[i].split(" ")[0]);
+        }
+        app.hideLoadingBox();
+      }
+
       tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
 
       function buildGraph(tx, results) {
@@ -653,13 +704,25 @@ var app = {
 
         var len = results.rows.length;
         for (var i = 0; i < len; i++) {
-          datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
+          var item = results.rows.item(i);
+          var colums = [];
+          for (var j = 0; j < columnNames.length; i++) {
+            if (typeof columnNames[j] === "string") {
+
+            }
+            colums.push(item[columnNames[j]]);
+          }
+
+          datafromresults.push([item["nomdepto"], parseFloat(item["yea2005"]), parseFloat(item["yea2006"])]);
         }
 
-        google.load("visualization", "1", {
-          packages: ["corechart"],
-          callback: googleChart
-        });
+        if (google && google.visualization) {
+          googleChart();
+        } else {
+          google.load("visualization", "1", {
+            callback: googleChart
+          });
+        }
 
         function googleChart() {
           var data = google.visualization.arrayToDataTable(datafromresults);
@@ -677,34 +740,76 @@ var app = {
       }
     },
 
-    maps: function(tx, results) {
-      var datafromresults = [];
-      var header = ['Departamento', '2005', '2006'];
+    maps: function(tx) {
 
-      datafromresults.push(header);
-      for (var i = 0; i < len; i++) {
-        var item = results.rows.item(i);
-        datafromresults.push([item.nomdepto, parseFloat(item.yea2005), parseFloat(item.yea2006)]);
-      }
-      var data = google.visualization.arrayToDataTable(datafromresults);
-      var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
-      var options = {
-        region: 'CO',
-        resolution: 'provinces',
-        displayMode: 'markers',
-        magnifyingGlass: {
-          enable: "true",
-          zoomFactor: "10.0"
-        },
-        colorAxis: {
-          colors: ['green', 'red']
+      tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
+
+      function buildGraph(tx, results) {
+
+        var datafromresults = [];
+        var header = ['Departamento', '2005', '2006'];
+
+        datafromresults.push(header);
+
+        var len = results.rows.length;
+        for (var i = 0; i < len; i++) {
+          datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
         }
-      };
 
-      map.draw(data, options);
+        if (google && google.visualization) {
+          googleChart();
+        } else {
+          google.load("visualization", "1", {
+            'packages': ['geochart'],
+            callback: googleChart
+          });
+        }
+
+        function googleChart() {
+          var data = google.visualization.arrayToDataTable(datafromresults);
+          var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
+          var options = {
+            region: 'CO',
+            resolution: 'provinces',
+            displayMode: 'markers',
+            height: $("#maps").height() - 200 + "px",
+            // magnifyingGlass: {
+            //   enable: "true",
+            //   zoomFactor: "10.0"
+            // },
+            backgroundColor: {
+              fill: "transparent"
+            },
+            colorAxis: {
+              colors: ['green', 'red']
+            }
+          };
+
+          map.draw(data, options);
+        }
+      }
     },
 
     table: function(tx, results) {}
+  },
+
+  counterAnim: function(selector, number) {
+    jQuery({
+      value: 0
+    }).animate({
+      value: number
+    }, {
+      duration: 1000,
+      easing: 'swing',
+      step: function() {
+        $(selector).text(Math.ceil(this.value));
+      },
+      complete: function() {
+        $(selector).css({
+          color: '#ddd'
+        });
+      }
+    });
   },
 
   buttonHeight: function() {
