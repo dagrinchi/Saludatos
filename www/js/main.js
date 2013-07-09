@@ -10,10 +10,10 @@ var app = {
 
   data: [],
 
-  counters : {
-    "counter-reg" : 0,
-    "counter-regi" : 0,
-    "counter-mun" : 0
+  counters: {
+    "counter-reg": 0,
+    "counter-regi": 0,
+    "counter-mun": 0
   },
 
   selection: {
@@ -144,14 +144,9 @@ var app = {
       console.log("Cargando google js!");
       app.initGoogleLoader();
     } else {
-      navigator.notification.alert(
-          'No hay una conexión a internet!',
-          function() {
-            navigator.app.exitApp();
-          },
-          'Atención',
-          'Aceptar'
-      );
+      navigator.notification.alert('No hay una conexión a internet!', function() {
+        navigator.app.exitApp();
+      }, 'Atención', 'Aceptar');
     }
   },
 
@@ -160,14 +155,14 @@ var app = {
       app.pageEvents();
       app.btnsEvents();
       app.openDB(app.queryDB);
-      setTimeout(function() {
-        $.mobile.changePage("#home");
-      }, 7000);
     } else {
       navigator.splashscreen.hide();
       app.showLoadingBox("Descargando información");
       app.load();
     }
+    setTimeout(function() {
+      $.mobile.changePage("#home");
+    }, 7000);
   },
 
   initGoogleLoader: function() {
@@ -211,7 +206,7 @@ var app = {
 
     $("#home").on("pagebeforeshow", function() {
       $.each(app.counters, function(k, v) {
-        app.counterAnim("#"+k, v);
+        app.counterAnim("#" + k, v);
       });
     });
   },
