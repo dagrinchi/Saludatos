@@ -1,7 +1,7 @@
 html, body {
     height : 100%;
 }
-/*****Start Media types******/
+/*****Start Media screen types******/
 /*iPhone < 5:*/
 @media screen and (device-aspect-ratio: 2/3) {
 	.animation-size-for-iframe {
@@ -91,7 +91,7 @@ html, body {
 	height: 342px;
 	margin: 0px 33.3% 0px 33.3% !important;
 }*/
-/*****End Media types******/
+/*****End Media screen types******/
 
 iframe {
 	border-width: 0;
