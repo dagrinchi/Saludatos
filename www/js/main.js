@@ -152,22 +152,16 @@ var app = {
 
   startApp: function() {
     if (app.checkUpdatedData()) {
-      app.pageEvents();
-      app.btnsEvents();
       app.openDB(app.queryDB);
     } else {
       navigator.splashscreen.hide();
-      app.showLoadingBox("Descargando información");
       app.load();
     }
-    setTimeout(function() {
-      $.mobile.changePage("#home");
-    }, 7000);
+    app.pageEvents();
+    app.btnsEvents();
   },
 
   initGoogleLoader: function() {
-
-    app.showLoadingBox("Cargando aplicación!");
 
     WebFontConfig = {
       google: {
@@ -249,7 +243,6 @@ var app = {
 
   createDB: function() {
     var msg = "Creando base de datos!";
-    app.showLoadingBox(msg);
     console.log(msg);
     var db = window.openDatabase("saludatos", "1.0", "Saludatos", 3145728);
     db.transaction(app.populateDB, app.errorCB, app.successCB);
@@ -257,7 +250,6 @@ var app = {
 
   openDB: function(queryDB) {
     var msg = "Abriendo base de datos!";
-    app.showLoadingBox(msg);
     console.log(msg);
     var db = window.openDatabase("saludatos", "1.0", "Saludatos", 3145728);
     db.transaction(queryDB, app.errorCB);
@@ -265,7 +257,6 @@ var app = {
 
   populateDB: function(tx) {
     var msg = "Creando tabla!";
-    app.showLoadingBox(msg);
     console.log(msg);
     var fields = [];
     $.each(app.data[0], function(k, v) {
@@ -276,7 +267,6 @@ var app = {
     tx.executeSql('CREATE TABLE IF NOT EXISTS datos (' + dbFields + ')');
 
     msg = "Creando vistas!";
-    app.showLoadingBox(msg);
     console.log(msg);
     tx.executeSql('CREATE VIEW IF NOT EXISTS region AS SELECT DISTINCT idregion, nomregion FROM datos WHERE nomregion <> "" GROUP BY idregion ORDER BY nomregion');
     tx.executeSql('CREATE VIEW IF NOT EXISTS subregion AS SELECT DISTINCT idregion, idsubregion, nomsubregion FROM datos WHERE nomsubregion <> "" GROUP BY idsubregion ORDER BY nomsubregion');
@@ -295,7 +285,6 @@ var app = {
     tx.executeSql('CREATE VIEW IF NOT EXISTS sexo AS SELECT DISTINCT idsexo, nomsexo FROM datos WHERE nomsexo <> "" GROUP BY idsexo ORDER BY nomsexo');
 
     msg = "Insertando registros en la base!";
-    app.showLoadingBox(msg);
     console.log(msg);
     $.each(app.data, function(k1, v1) {
       var values = [];
@@ -314,18 +303,15 @@ var app = {
 
   successCB: function() {
     var msg = "Base de datos creada con éxito!";
-    app.showLoadingBox(msg);
     console.log(msg);
     console.log("Guardando fecha de actualización!");
     var updated = new Date();
     window.localStorage.setItem("updated", updated);
-    app.hideLoadingBox();
     app.openDB(app.queryDB);
   },
 
   queryDB: function(tx) {
     var msg = "Consultas iniciales!";
-    app.showLoadingBox(msg);
     console.log(msg);
     tx.executeSql('SELECT * FROM indicador', [], app.ent.indicador, app.errorCB);
     tx.executeSql('SELECT * FROM educacion', [], app.ent.educacion, app.errorCB);
@@ -345,7 +331,6 @@ var app = {
     tx.executeSql('SELECT COUNT(*) AS counter FROM datos', [], reg, app.errorCB);
     tx.executeSql('SELECT COUNT(*) AS counter FROM region', [], regi, app.errorCB);
     tx.executeSql('SELECT COUNT(*) AS counter FROM municipio', [], mun, app.errorCB);
-    app.hideLoadingBox();
 
     function reg(tx, results) {
       app.counters["counter-reg"] = results.rows.item(0).counter;
@@ -358,6 +343,10 @@ var app = {
     function mun(tx, results) {
       app.counters["counter-mun"] = results.rows.item(0).counter;
     }
+
+    setTimeout(function() {
+      $.mobile.changePage("#home");
+    }, 2000);
   },
 
   registerInputs: function(list, type) {
@@ -396,12 +385,10 @@ var app = {
         app.load();
       } else {
         var msg = "Se descargaron los datos completos de open data!";
-        app.showLoadingBox(msg);
         console.log(msg);
         app.createDB();
       }
     });
-    app.showLoadingBox("Cargando registros!");
     console.log("Cargando: " + url);
   },
 
@@ -685,7 +672,6 @@ var app = {
         for (var i in columnParts) {
           if (typeof columnParts[i] === 'string') columnNames.push(columnParts[i].split(" ")[0]);
         }
-        app.hideLoadingBox();
       }
 
       tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
