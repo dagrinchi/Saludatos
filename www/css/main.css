@@ -4,11 +4,11 @@ html, body {
 /*****Start Media types******/
 /*iPhone < 5:*/
 @media screen and (device-aspect-ratio: 2/3) {
-	/*.animation-size-for-iframe {
+	.animation-size-for-iframe {
 	width: 330px;
 	height: 355px;
-	margin: 0px 25.3% 0px 23.3% !important;
-	}*/
+	margin: 0px 60% 0px 0px !important;
+	}
 }
 /*iPhone 5:*/
 @media screen and (device-aspect-ratio: 40/71) {
@@ -20,11 +20,11 @@ html, body {
 }
 /*iPad:*/
 @media screen and (device-aspect-ratio: 3/4) {
-	/*.animation-size-for-iframe {
+	.animation-size-for-iframe {
 	width: 330px;
 	height: 355px;
 	margin: 0px 33.3% 0px 28.3% !important;
-	}*/
+	}
 }
 /* Smartphones (portrait and landscape) ———– */
 @media only screen and (min-width : 320px) and (max-width : 480px) {
