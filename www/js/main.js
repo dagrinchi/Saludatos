@@ -265,6 +265,11 @@ var app = {
     var dbFields = fields.join();
     tx.executeSql('DROP TABLE IF EXISTS datos');
     tx.executeSql('CREATE TABLE IF NOT EXISTS datos (' + dbFields + ')');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS columnNames (columnName)');
+    
+    for(var j = 0; j<fields.length;j++){
+      tx.executeSql('INSERT INTO columnNames(columnName) VALUES ("'+fields[j]+'")');
+    }
 
     msg = "Creando vistas!";
     console.log(msg);
@@ -331,7 +336,7 @@ var app = {
     tx.executeSql('SELECT COUNT(*) AS counter FROM datos', [], reg, app.errorCB);
     tx.executeSql('SELECT COUNT(*) AS counter FROM region', [], regi, app.errorCB);
     tx.executeSql('SELECT COUNT(*) AS counter FROM municipio', [], mun, app.errorCB);
-
+    
     function reg(tx, results) {
       app.counters["counter-reg"] = results.rows.item(0).counter;
     }
@@ -656,23 +661,7 @@ var app = {
 
     bars: function(tx) {
 
-      var columnNames = [];
-
-      app.openDB(getColumns);
-
-      function getColumns(tx) {
-        console.log("LLamada a consulta getColumns");
-        tx.executeSql('SELECT name, sql FROM sqlite_master WHERE type="table" AND name = "datos"', [], analizeColumns, app.errorCB);
-      }
-
-      function analizeColumns(tx, results) {
-        console.log("Analizar columnas!");
-        var columnParts = results.rows.item(0).sql.replace(/^[^\(]+\(([^\)]+)\)/g, '$1').split(',');
-
-        for (var i in columnParts) {
-          if (typeof columnParts[i] === 'string') columnNames.push(columnParts[i].split(" ")[0]);
-        }
-      }
+      
 
       tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
 
