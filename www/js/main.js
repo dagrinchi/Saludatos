@@ -98,42 +98,18 @@ var app = {
     }
   },
 
-  checkConnection: function() {
-    console.log("Comprobando conectividad a internet!");
-    var networkState = navigator.connection.type;
-    if (networkState == Connection.NONE || networkState == Connection.UNKNOWN) {
-      console.log("No hay internet!");
-      return false;
-    } else {
-      console.log("Si hay internet!");
-      return true;
-    }
+  init: function() {
+    console.log("Iniciando app!");
+    app.buttonHeight();
+    document.addEventListener("deviceready", app.onDeviceReady, false);
   },
 
-  showLoadingBox: function(txt) {
-    $.mobile.loading('show', {
-      text: txt,
-      textVisible: true,
-      theme: 'a'
+  buttonHeight: function() {
+    console.log("Ajustando el alto de los botones!");
+    var wh = $("#home").height() - 180;
+    $.each($(".sidebar a"), function(i, item) {
+      $(item).height(wh / 3);
     });
-  },
-
-  hideLoadingBox: function() {
-    $.mobile.loading('hide');
-  },
-
-  checkUpdatedData: function() {
-    var s = new Date();
-    s.setMonth(s.getMonth() - 6);
-    var updated = window.localStorage.getItem("updated");
-    var u = new Date(updated);
-    if (updated && u > s) {
-      console.log("Los datos están actualizados! " + updated);
-      return true;
-    } else {
-      console.log("Los datos no están actualizados!");
-      return false;
-    }
   },
 
   onDeviceReady: function() {
@@ -148,6 +124,18 @@ var app = {
       navigator.notification.alert('No hay una conexión a internet!', function() {
         navigator.app.exitApp();
       }, 'Atención', 'Aceptar');
+    }
+  },
+
+  checkConnection: function() {
+    console.log("Comprobando conectividad a internet!");
+    var networkState = navigator.connection.type;
+    if (networkState == Connection.NONE || networkState == Connection.UNKNOWN) {
+      console.log("No hay internet!");
+      return false;
+    } else {
+      console.log("Si hay internet!");
+      return true;
     }
   },
 
@@ -176,6 +164,43 @@ var app = {
     // }, false);
   },
 
+  startApp: function() {
+    navigator.splashscreen.hide();
+    if (app.checkUpdatedData()) {
+      app.openDB(app.queryDB);
+    } else {
+      app.load();
+    }
+    app.pageEvents();
+    app.btnsEvents();
+  },
+
+  showLoadingBox: function(txt) {
+    $.mobile.loading('show', {
+      text: txt,
+      textVisible: true,
+      theme: 'a'
+    });
+  },
+
+  hideLoadingBox: function() {
+    $.mobile.loading('hide');
+  },
+
+  checkUpdatedData: function() {
+    var s = new Date();
+    s.setMonth(s.getMonth() - 6);
+    var updated = window.localStorage.getItem("updated");
+    var u = new Date(updated);
+    if (updated && u > s) {
+      console.log("Los datos están actualizados! " + updated);
+      return true;
+    } else {
+      console.log("Los datos no están actualizados!");
+      return false;
+    }
+  },
+
   googleVisualization: function() {
     if (google && google.visualization) {
       console.log("Librería graficos ya existe!");
@@ -187,17 +212,6 @@ var app = {
         callback: app.startApp
       });
     }
-  },
-
-  startApp: function() {
-    if (app.checkUpdatedData()) {
-      app.openDB(app.queryDB);
-    } else {
-      navigator.splashscreen.hide();
-      app.load();
-    }
-    app.pageEvents();
-    app.btnsEvents();
   },
 
   btnsEvents: function() {
@@ -281,8 +295,8 @@ var app = {
     tx.executeSql('CREATE TABLE IF NOT EXISTS datos (' + dbFields + ')');
     tx.executeSql('CREATE TABLE IF NOT EXISTS columnNames (columnName)');
 
-    for(var j = 0; j<fields.length;j++){
-      tx.executeSql('INSERT INTO columnNames(columnName) VALUES ("'+fields[j]+'")');
+    for (var j = 0; j < fields.length; j++) {
+      tx.executeSql('INSERT INTO columnNames(columnName) VALUES ("' + fields[j] + '")');
     }
 
     msg = "Creando vistas!";
@@ -367,7 +381,7 @@ var app = {
 
     setTimeout(function() {
       $.mobile.changePage("#home");
-    }, 2000);
+    }, 7000);
   },
 
   registerInputs: function(list, type) {
@@ -798,19 +812,5 @@ var app = {
         });
       }
     });
-  },
-
-  buttonHeight: function() {
-    console.log("Ajustando el alto de los botones!");
-    var wh = $("#home").height() - 180;
-    $.each($(".sidebar a"), function(i, item) {
-      $(item).height(wh / 3);
-    });
-  },
-
-  init: function() {
-    console.log("Iniciando app!");
-    app.buttonHeight();
-    document.addEventListener("deviceready", app.onDeviceReady, false);
   }
 };
