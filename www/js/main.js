@@ -143,22 +143,12 @@ var app = {
     if (app.checkConnection()) {
       console.log("Cargando google js!");
       app.initGoogleLoader();
+      app.startApp();
     } else {
       navigator.notification.alert('No hay una conexión a internet!', function() {
         navigator.app.exitApp();
       }, 'Atención', 'Aceptar');
     }
-  },
-
-  startApp: function() {
-    if (app.checkUpdatedData()) {
-      app.openDB(app.queryDB);
-    } else {
-      navigator.splashscreen.hide();
-      app.load();
-    }
-    app.pageEvents();
-    app.btnsEvents();
   },
 
   initGoogleLoader: function() {
@@ -176,14 +166,38 @@ var app = {
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(wf, s);
 
-    var script = document.createElement("script");
-    script.src = "https://www.google.com/jsapi?callback=app.startApp";
-    script.type = "text/javascript";
-    document.getElementsByTagName("head")[0].appendChild(script);
+    // var script = document.createElement("script");
+    // script.src = "https://www.google.com/jsapi?callback=app.startApp";
+    // script.type = "text/javascript";
+    // document.getElementsByTagName("head")[0].appendChild(script);
 
-    script.addEventListener("error", function(e) {
-      console.log("Error: " + e);
-    }, false);
+    // script.addEventListener("error", function(e) {
+    //   console.log("Error: " + e);
+    // }, false);
+  },
+
+  googleVisualization: function() {
+    if (google && google.visualization) {
+      console.log("Librería graficos ya existe!");
+      app.startApp();
+    } else {
+      console.log("Cargando librería graficos!");
+      google.load("visualization", "1", {
+        packages: ['corechart', 'geochart'],
+        callback: app.startApp
+      });
+    }
+  },
+
+  startApp: function() {
+    if (app.checkUpdatedData()) {
+      app.openDB(app.queryDB);
+    } else {
+      navigator.splashscreen.hide();
+      app.load();
+    }
+    app.pageEvents();
+    app.btnsEvents();
   },
 
   btnsEvents: function() {
@@ -602,54 +616,58 @@ var app = {
 
     pie: function(tx) {
 
-      tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
+      tx.executeSql(app.buildSQL("datos", "AND", "10", false), [], buildGraph, app.errorCB);
 
       function buildGraph(tx, results) {
 
-        var datafromresults = [];
-        var header = ['Departamento', '2005', '2006'];
+        chart = new Highcharts.Chart({
+          chart: {
+            renderTo: 'piechartdiv',
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+          },
+          title: {
+            text: 'Monthly Average Temperature',
+            x: -20 //center
+          },
 
-        datafromresults.push(header);
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                color: '#000000',
+                connectorColor: '#000000',
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+              }
+            }
+          },
 
-        var len = results.rows.length;
-        for (var i = 0; i < len; i++) {
-          datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
-        }
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
 
-        if (google && google.visualization) {
-          googleChart();
-        } else {
-          google.load("visualization", "1", {
-            callback: googleChart
-          });
-        }
-
-        function googleChart() {
-          var data = google.visualization.arrayToDataTable(datafromresults);
-          var pie = new google.visualization.PieChart(document.getElementById('piechartdiv'));
-          var options = {
-            chartArea: {
-              left: "0",
-              right: "0",
-              top: "40px",
-              bottom: "70px",
-              width: "100%",
-              height: "100%"
-            },
-            // legend: {
-            //   position: "bottom",
-            //   textStyle: {
-            //     color: '#fff'
-            //   }
-            // }
-            // backgroundColor: {
-            //   fill: "transparent"
-            // }
-          };
-          pie.draw(data, options);
-        }
+          series: [{
+              type: 'pie',
+              name: 'Browser share',
+              data: [
+                ['Firefox', 45.0],
+                ['IE', 26.8], {
+                  name: 'Chrome',
+                  y: 12.8,
+                  sliced: true,
+                  selected: true
+                },
+                ['Safari', 8.5],
+                ['Opera', 6.2],
+                ['Others', 0.7]
+              ]
+            }
+          ]
+        });
       }
-
     },
 
     lineal: function(tx, results) {
@@ -657,24 +675,6 @@ var app = {
     },
 
     bars: function(tx) {
-
-      var columnNames = [];
-
-      app.openDB(getColumns);
-
-      function getColumns(tx) {
-        console.log("LLamada a consulta getColumns");
-        tx.executeSql('SELECT name, sql FROM sqlite_master WHERE type="table" AND name = "datos"', [], analizeColumns, app.errorCB);
-      }
-
-      function analizeColumns(tx, results) {
-        console.log("Analizar columnas!");
-        var columnParts = results.rows.item(0).sql.replace(/^[^\(]+\(([^\)]+)\)/g, '$1').split(',');
-
-        for (var i in columnParts) {
-          if (typeof columnParts[i] === 'string') columnNames.push(columnParts[i].split(" ")[0]);
-        }
-      }
 
       tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
 
