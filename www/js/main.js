@@ -279,6 +279,11 @@ var app = {
     var dbFields = fields.join();
     tx.executeSql('DROP TABLE IF EXISTS datos');
     tx.executeSql('CREATE TABLE IF NOT EXISTS datos (' + dbFields + ')');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS columnNames (columnName)');
+
+    for(var j = 0; j<fields.length;j++){
+      tx.executeSql('INSERT INTO columnNames(columnName) VALUES ("'+fields[j]+'")');
+    }
 
     msg = "Creando vistas!";
     console.log(msg);
