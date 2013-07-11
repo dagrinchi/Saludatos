@@ -644,26 +644,39 @@ var app = {
             renderTo: 'piechartdiv',
             plotBackgroundColor: null,
             plotBorderWidth: null,
-            plotShadow: false
+            plotShadow: false,
+            // margin: [0, 0, 0, 0],
+            marginTop: 0,
+            spacingTop: 10,
+            spacingBottom: 50
           },
+          legend: {
+                align: 'center',
+                verticalAlign: 'top',
+                x: 0,
+                y: 20,
+                borderWidth: 0
+            },
           title: {
-            text: 'Monthly Average Temperature',
-            x: -20 //center
+            text: 'Titulo Dinamico',
+            align: 'center',
+            x: 0,
+            y: 10,
+            floating: true
           },
-
           plotOptions: {
             pie: {
               allowPointSelect: true,
               cursor: 'pointer',
               dataLabels: {
-                enabled: true,
+                enabled: false,
                 color: '#000000',
                 connectorColor: '#000000',
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-              }
+              },
+              showInLegend: true
             }
           },
-
           tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
           },
