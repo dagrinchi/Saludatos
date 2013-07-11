@@ -143,6 +143,7 @@ var app = {
     if (app.checkConnection()) {
       console.log("Cargando google js!");
       app.initGoogleLoader();
+      app.startApp();
     } else {
       navigator.notification.alert('No hay una conexión a internet!', function() {
         navigator.app.exitApp();
@@ -150,24 +151,7 @@ var app = {
     }
   },
 
-  startApp: function() {
-    if (app.checkUpdatedData()) {
-      app.pageEvents();
-      app.btnsEvents();
-      app.openDB(app.queryDB);
-    } else {
-      navigator.splashscreen.hide();
-      app.showLoadingBox("Descargando información");
-      app.load();
-    }
-    setTimeout(function() {
-      $.mobile.changePage("#home");
-    }, 7000);
-  },
-
   initGoogleLoader: function() {
-
-    app.showLoadingBox("Cargando aplicación!");
 
     WebFontConfig = {
       google: {
@@ -182,14 +166,38 @@ var app = {
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(wf, s);
 
-    var script = document.createElement("script");
-    script.src = "https://www.google.com/jsapi?callback=app.startApp";
-    script.type = "text/javascript";
-    document.getElementsByTagName("head")[0].appendChild(script);
+    // var script = document.createElement("script");
+    // script.src = "https://www.google.com/jsapi?callback=app.startApp";
+    // script.type = "text/javascript";
+    // document.getElementsByTagName("head")[0].appendChild(script);
 
-    script.addEventListener("error", function(e) {
-      console.log("Error: " + e);
-    }, false);
+    // script.addEventListener("error", function(e) {
+    //   console.log("Error: " + e);
+    // }, false);
+  },
+
+  googleVisualization: function() {
+    if (google && google.visualization) {
+      console.log("Librería graficos ya existe!");
+      app.startApp();
+    } else {
+      console.log("Cargando librería graficos!");
+      google.load("visualization", "1", {
+        packages: ['corechart', 'geochart'],
+        callback: app.startApp
+      });
+    }
+  },
+
+  startApp: function() {
+    if (app.checkUpdatedData()) {
+      app.openDB(app.queryDB);
+    } else {
+      navigator.splashscreen.hide();
+      app.load();
+    }
+    app.pageEvents();
+    app.btnsEvents();
   },
 
   btnsEvents: function() {
@@ -249,7 +257,6 @@ var app = {
 
   createDB: function() {
     var msg = "Creando base de datos!";
-    app.showLoadingBox(msg);
     console.log(msg);
     var db = window.openDatabase("saludatos", "1.0", "Saludatos", 3145728);
     db.transaction(app.populateDB, app.errorCB, app.successCB);
@@ -257,7 +264,6 @@ var app = {
 
   openDB: function(queryDB) {
     var msg = "Abriendo base de datos!";
-    app.showLoadingBox(msg);
     console.log(msg);
     var db = window.openDatabase("saludatos", "1.0", "Saludatos", 3145728);
     db.transaction(queryDB, app.errorCB);
@@ -265,7 +271,6 @@ var app = {
 
   populateDB: function(tx) {
     var msg = "Creando tabla!";
-    app.showLoadingBox(msg);
     console.log(msg);
     var fields = [];
     $.each(app.data[0], function(k, v) {
@@ -274,10 +279,15 @@ var app = {
     var dbFields = fields.join();
     tx.executeSql('DROP TABLE IF EXISTS datos');
     tx.executeSql('CREATE TABLE IF NOT EXISTS datos (' + dbFields + ')');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS columnNames (columnName)');
+
+    for(var j = 0; j<fields.length;j++){
+      tx.executeSql('INSERT INTO columnNames(columnName) VALUES ("'+fields[j]+'")');
+    }
 
     msg = "Creando vistas!";
-    app.showLoadingBox(msg);
     console.log(msg);
+
     tx.executeSql('CREATE VIEW IF NOT EXISTS region AS SELECT DISTINCT idregion, nomregion FROM datos WHERE nomregion <> "" GROUP BY idregion ORDER BY nomregion');
     tx.executeSql('CREATE VIEW IF NOT EXISTS subregion AS SELECT DISTINCT idregion, idsubregion, nomsubregion FROM datos WHERE nomsubregion <> "" GROUP BY idsubregion ORDER BY nomsubregion');
     tx.executeSql('CREATE VIEW IF NOT EXISTS departamento AS SELECT DISTINCT idregion, idsubregion, iddepto, nomdepto FROM datos WHERE nomdepto <> "" GROUP BY iddepto ORDER BY nomdepto');
@@ -295,7 +305,6 @@ var app = {
     tx.executeSql('CREATE VIEW IF NOT EXISTS sexo AS SELECT DISTINCT idsexo, nomsexo FROM datos WHERE nomsexo <> "" GROUP BY idsexo ORDER BY nomsexo');
 
     msg = "Insertando registros en la base!";
-    app.showLoadingBox(msg);
     console.log(msg);
     $.each(app.data, function(k1, v1) {
       var values = [];
@@ -314,19 +323,17 @@ var app = {
 
   successCB: function() {
     var msg = "Base de datos creada con éxito!";
-    app.showLoadingBox(msg);
     console.log(msg);
     console.log("Guardando fecha de actualización!");
     var updated = new Date();
     window.localStorage.setItem("updated", updated);
-    app.hideLoadingBox();
     app.openDB(app.queryDB);
   },
 
   queryDB: function(tx) {
     var msg = "Consultas iniciales!";
-    app.showLoadingBox(msg);
     console.log(msg);
+
     tx.executeSql('SELECT * FROM indicador', [], app.ent.indicador, app.errorCB);
     tx.executeSql('SELECT * FROM educacion', [], app.ent.educacion, app.errorCB);
     tx.executeSql('SELECT * FROM ocupacion', [], app.ent.ocupacion, app.errorCB);
@@ -340,12 +347,11 @@ var app = {
     tx.executeSql('SELECT * FROM region', [], app.ent.region, app.errorCB);
     tx.executeSql('SELECT * FROM subregion', [], app.ent.subregion, app.errorCB);
     tx.executeSql('SELECT * FROM departamento', [], app.ent.departamento, app.errorCB);
-    //tx.executeSql('SELECT * FROM municipio', [], app.ent.municipio, app.errorCB);
+    tx.executeSql('SELECT * FROM municipio', [], app.ent.municipio, app.errorCB);
     tx.executeSql('SELECT * FROM zona', [], app.ent.zona, app.errorCB);
     tx.executeSql('SELECT COUNT(*) AS counter FROM datos', [], reg, app.errorCB);
     tx.executeSql('SELECT COUNT(*) AS counter FROM region', [], regi, app.errorCB);
     tx.executeSql('SELECT COUNT(*) AS counter FROM municipio', [], mun, app.errorCB);
-    app.hideLoadingBox();
 
     function reg(tx, results) {
       app.counters["counter-reg"] = results.rows.item(0).counter;
@@ -358,6 +364,10 @@ var app = {
     function mun(tx, results) {
       app.counters["counter-mun"] = results.rows.item(0).counter;
     }
+
+    setTimeout(function() {
+      $.mobile.changePage("#home");
+    }, 2000);
   },
 
   registerInputs: function(list, type) {
@@ -396,12 +406,10 @@ var app = {
         app.load();
       } else {
         var msg = "Se descargaron los datos completos de open data!";
-        app.showLoadingBox(msg);
         console.log(msg);
         app.createDB();
       }
     });
-    app.showLoadingBox("Cargando registros!");
     console.log("Cargando: " + url);
   },
 
@@ -613,54 +621,58 @@ var app = {
 
     pie: function(tx) {
 
-      tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
+      tx.executeSql(app.buildSQL("datos", "AND", "10", false), [], buildGraph, app.errorCB);
 
       function buildGraph(tx, results) {
 
-        var datafromresults = [];
-        var header = ['Departamento', '2005', '2006'];
+        chart = new Highcharts.Chart({
+          chart: {
+            renderTo: 'piechartdiv',
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+          },
+          title: {
+            text: 'Monthly Average Temperature',
+            x: -20 //center
+          },
 
-        datafromresults.push(header);
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                color: '#000000',
+                connectorColor: '#000000',
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+              }
+            }
+          },
 
-        var len = results.rows.length;
-        for (var i = 0; i < len; i++) {
-          datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
-        }
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
 
-        if (google && google.visualization) {
-          googleChart();
-        } else {
-          google.load("visualization", "1", {
-            callback: googleChart
-          });
-        }
-
-        function googleChart() {
-          var data = google.visualization.arrayToDataTable(datafromresults);
-          var pie = new google.visualization.PieChart(document.getElementById('piechartdiv'));
-          var options = {
-            chartArea: {
-              left: "0",
-              right: "0",
-              top: "40px",
-              bottom: "70px",
-              width: "100%",
-              height: "100%"
-            },
-            // legend: {
-            //   position: "bottom",
-            //   textStyle: {
-            //     color: '#fff'
-            //   }
-            // }
-            // backgroundColor: {
-            //   fill: "transparent"
-            // }
-          };
-          pie.draw(data, options);
-        }
+          series: [{
+              type: 'pie',
+              name: 'Browser share',
+              data: [
+                ['Firefox', 45.0],
+                ['IE', 26.8], {
+                  name: 'Chrome',
+                  y: 12.8,
+                  sliced: true,
+                  selected: true
+                },
+                ['Safari', 8.5],
+                ['Opera', 6.2],
+                ['Others', 0.7]
+              ]
+            }
+          ]
+        });
       }
-
     },
 
     lineal: function(tx, results) {
@@ -668,25 +680,6 @@ var app = {
     },
 
     bars: function(tx) {
-
-      var columnNames = [];
-
-      app.openDB(getColumns);
-
-      function getColumns(tx) {
-        console.log("LLamada a consulta getColumns");
-        tx.executeSql('SELECT name, sql FROM sqlite_master WHERE type="table" AND name = "datos"', [], analizeColumns, app.errorCB);
-      }
-
-      function analizeColumns(tx, results) {
-        console.log("Analizar columnas!");
-        var columnParts = results.rows.item(0).sql.replace(/^[^\(]+\(([^\)]+)\)/g, '$1').split(',');
-
-        for (var i in columnParts) {
-          if (typeof columnParts[i] === 'string') columnNames.push(columnParts[i].split(" ")[0]);
-        }
-        app.hideLoadingBox();
-      }
 
       tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
 
