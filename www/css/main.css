@@ -1,11 +1,97 @@
 html, body {
     height : 100%;
 }
-
-.animation-size-for-iframe {
-	width: 80%;
-	height: 70%;
+/*****Start Media screen types******/
+/*iPhone < 5:*/
+@media screen and (device-aspect-ratio: 2/3) {
+	.animation-size-for-iframe {
+	width: 330px;
+	height: 355px;
+	margin: 0px 60% 0px 0px !important;
+	}
 }
+/*iPhone 5:*/
+@media screen and (device-aspect-ratio: 40/71) {
+	.animation-size-for-iframe {
+	width: 330px;
+	height: 355px;
+	margin: 0px 60% 0px 0px !important;
+	}
+}
+/*iPad:*/
+@media screen and (device-aspect-ratio: 3/4) {
+	.animation-size-for-iframe {
+	width: 330px;
+	height: 355px;
+	margin: 0px 33.3% 0px 28.3% !important;
+	}
+}
+/* Smartphones (portrait and landscape) ———– */
+@media only screen and (min-width : 320px) and (max-width : 480px) {
+/* Styles */
+
+}
+/* Smartphones (landscape) ———– */
+@media only screen and (min-width : 321px) {
+/* Styles */
+}
+/* Smartphones (portrait) ———– */
+@media only screen and (max-width : 320px) {
+/* Styles */
+}
+/* iPads (portrait and landscape) ———– */
+@media only screen and (min-width : 768px) and (max-width : 1024px) {
+/* Styles */
+	/*.animation-size-for-iframe {
+	width: 330px;
+	height: 355px;
+	margin: 0px 33.3% 0px 28.3% !important;
+	}*/
+}
+/* iPads (landscape) ———– */
+@media only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : landscape) {
+/* Styles */
+	/*.animation-size-for-iframe {
+	width: 330px;
+	height: 355px;
+	margin: 0px 33.3% 0px 23.3% !important;
+	}*/
+}
+/* iPads (portrait) ———– */
+@media only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : portrait) {
+/* Styles */
+   /*.animation-size-for-iframe {
+	width: 330px;
+	height: 355px;
+	margin: 0px 33.3% 0px 23.3% !important;
+	}*/
+}
+/* Desktops and laptops ———– */
+@media only screen and (min-width : 1224px) {
+/* Styles */
+
+}
+/* Large screens ———– */
+@media only screen and (min-width : 1824px) {
+/* Styles */
+
+}
+/* iPhone 4 ———– */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
+/* Styles */
+	/*.animation-size-for-iframe {
+	width: 330px;
+	height: 355px;
+	margin: 0px 33.3% 0px 23.3% !important;
+	} */ 
+}
+/*no erase pls*/
+/*.animation-size-for-iframe {
+	width: 330px;
+	height: 342px;
+	margin: 0px 33.3% 0px 33.3% !important;
+}*/
+/*****End Media screen types******/
 
 iframe {
 	border-width: 0;
