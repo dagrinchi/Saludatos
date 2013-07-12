@@ -696,14 +696,42 @@ var app = {
                 ['Opera', 6.2],
                 ['Others', 0.7]
               ]
-            }
-          ]
+            }]
         });
       }
     },
 
     lineal: function(tx, results) {
 
+      chart = new Highcharts.Chart({
+        chart: {
+            type: 'line',
+            renderTo: 'linealchartdiv',
+            spacingBottom: 150
+        },
+        xAxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+        legend: {
+            layout: 'vertical',
+            floating: true,
+            backgroundColor: '#FFFFFF',
+            align: 'right',
+            verticalAlign: 'top',
+            y: 60,
+            x: -60
+        },
+        tooltip: {
+            formatter: function() {
+                return '<b>'+ this.series.name +'</b><br/>'+
+                    this.x +': '+ this.y;
+            }
+        },
+        series: [{
+            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+        }]
+
+      });
     },
 
     bars: function(tx) {
