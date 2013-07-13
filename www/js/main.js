@@ -9,7 +9,9 @@ var app = {
   count: 0,
 
   data: [],
-
+    
+  years: [],
+    
   counters: {
     "counter-reg": 0,
     "counter-regi": 0,
@@ -366,7 +368,20 @@ var app = {
     tx.executeSql('SELECT COUNT(*) AS counter FROM datos', [], reg, app.errorCB);
     tx.executeSql('SELECT COUNT(*) AS counter FROM region', [], regi, app.errorCB);
     tx.executeSql('SELECT COUNT(*) AS counter FROM municipio', [], mun, app.errorCB);
+    tx.executeSql('SELECT columnName from columnNames where columnName like "%yea%"', [], yea, app.errorCB);
 
+    function yea(tx, results){
+        
+        for(var j = 0; j < results.rows.length; j++){
+            console.log("Año "+j+" "+results.rows.item(j).columnName.substring(3));
+            app.years.push(results.rows.item(j).columnName.substring(3));
+        }
+        /*for(var k = 0; k < app.years.length; k++){
+            console.log("Año guardado "+app.years[k]);
+        }*/
+        
+    }
+      
     function reg(tx, results) {
       app.counters["counter-reg"] = results.rows.item(0).counter;
     }
@@ -635,10 +650,18 @@ var app = {
 
     pie: function(tx) {
 
-      tx.executeSql(app.buildSQL("datos", "AND", "10", false), [], buildGraph, app.errorCB);
+      tx.executeSql(app.buildSQL("datos", "OR", "10", false), [], buildGraph, app.errorCB);
 
       function buildGraph(tx, results) {
-
+        
+          var datatoprint = [];
+          
+          for(var j=0; j < results.rows.length ; j ++){
+              console.log(results.rows.item(j).nomdepto+" "+results.rows.item(j).yea2005);
+              datatoprint.push([results.rows.item(j).nomdepto,parseFloat(results.rows.item(j).yea2005)]);
+          }
+          console.log("Numero de resultados de la consulta "+results.rows.length);
+          
         chart = new Highcharts.Chart({
           chart: {
             renderTo: 'piechartdiv',
@@ -668,23 +691,11 @@ var app = {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
           },
 
-          series: [{
-              type: 'pie',
-              name: 'Browser share',
-              data: [
-                ['Firefox', 45.0],
-                ['IE', 26.8], {
-                  name: 'Chrome',
-                  y: 12.8,
-                  sliced: true,
-                  selected: true
-                },
-                ['Safari', 8.5],
-                ['Opera', 6.2],
-                ['Others', 0.7]
-              ]
-            }
-          ]
+                                     series: [{
+                                              type: 'pie',
+                                              name: 'Browser share',
+                                              data: datatoprint
+                                              }]
         });
       }
     },
