@@ -651,16 +651,38 @@ var app = {
     pie: function(tx) {
 
       tx.executeSql(app.buildSQL("datos", "OR", "10", false), [], buildGraph, app.errorCB);
+      var datatoprint = [];
+      
+      function pushData(tx, results){
+        console.log("Inicia pushData");
+        var indicator = results.rows.item(0).idindicador;
+        console.log("mmmmmmmmmmm"+indicator);
+  
+        
+        
+        
+      }
 
+      
       function buildGraph(tx, results) {
         
-          var datatoprint = [];
-          
-          for(var j=0; j < results.rows.length ; j ++){
-              console.log(results.rows.item(j).nomdepto+" "+results.rows.item(j).yea2005);
-              datatoprint.push([results.rows.item(j).nomdepto,parseFloat(results.rows.item(j).yea2005)]);
-          }
-          console.log("Numero de resultados de la consulta "+results.rows.length);
+       
+        
+        var indicator = results.rows.item(0).idindicador;
+        var query = 'SELECT idindicador, nomdepto, yea'+app.years[15]+' from datos where idindicador = "'+indicator+'"';
+        console.log("La consulta fue:"+query);
+        console.log("El indicador"+indicator);
+        tx.executeSql(query, [], pushData, app.errorCB);
+        console.log("Consulta realizada");
+        
+       
+        
+        for(var j=0; j < results.rows.length ; j ++){
+          console.log(results.rows.item(j).nomdepto+" "+results.rows.item(j).yea2005);
+          datatoprint.push([results.rows.item(j).nomdepto,parseFloat(results.rows.item(j).yea2005)]);
+        }
+
+        console.log("Numero de resultados de la consulta "+results.rows.length);
           
         chart = new Highcharts.Chart({
           chart: {
