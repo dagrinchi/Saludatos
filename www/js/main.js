@@ -650,25 +650,53 @@ var app = {
 
     pie: function(tx) {
 
-      tx.executeSql(app.buildSQL("datos", "OR", "10", false), [], buildGraph, app.errorCB);
+      tx.executeSql(app.buildSQL("datos", "OR", "100", false), [], buildGraph, app.errorCB);
       var datatoprint = [];
+      var numberofyear = 16;
       
-      function pushData(tx, results){
+      function buildGraph(tx, results) {
+        
+        
+       
+        var indicator = results.rows.item(0).idindicador;
+        var query = 'SELECT idindicador, nomdepto, yea'+app.years[numberofyear]+' from datos where idindicador = "'+indicator+'" LIMIT 30';
+        console.log("La consulta fué: "+query);
+        console.log("El indicador fué: "+indicator);
+        console.log("El número de resultados fué: "+results.rows.length);
+        tx.executeSql(query, [], printData(tx,results,app.years[numberofyear]), app.errorCB);
+        console.log("Consulta realizada");
+        console.log("Numero de resultados de la consulta "+results.rows.length);
+        
+      }
+
+      
+      function printData(tx, results, theyear){
         console.log("Inicia pushData");
         var indicator = results.rows.item(0).idindicador;
-        console.log("mmmmmmmmmmm"+indicator);
+        console.log("Indicador para insertar datos en el gráfico:"+indicator);
         
-        
-        for(var j=0; j < results.rows.length ; j ++){
-          if( results.rows.item(j).yea2005 != null && results.rows.item(j).yea2005 != '' && parseFloat(results.rows.item(j).yea2005) != 0.0)
-             {
-            console.log(results.rows.item(j).nomdepto+" "+results.rows.item(j).yea2005);
-            datatoprint.push([results.rows.item(j).nomdepto,parseFloat(results.rows.item(j).yea2005)]);
+        if(theyear === '2005'){
+          for(var j=0; j < results.rows.length ; j ++){
+            if( results.rows.item(j).yea2005 != null && results.rows.item(j).yea2005 != '' && parseFloat(results.rows.item(j).yea2005) != 0.0){
+              console.log(results.rows.item(j).nomdepto+" "+results.rows.item(j).yea2005);
+              datatoprint.push([results.rows.item(j).nomdepto,parseFloat(results.rows.item(j).yea2005)]);
+            }
           }
         }
         
         
-        chart = new Highcharts.Chart({
+        if(theyear === '2006'){
+          for(var k=0; k < results.rows.length ; k ++){
+            if( results.rows.item(k).yea2006 != null && results.rows.item(k).yea2006 != '' && parseFloat(results.rows.item(k).yea2006) != 0.0)
+            {
+              console.log(results.rows.item(k).nomdepto+" "+results.rows.item(k).yea2006);
+              datatoprint.push([results.rows.item(k).nomdepto,parseFloat(results.rows.item(k).yea2006)]);
+            }
+          }
+        }
+        
+        chart = new Highcharts.Chart(
+                                     {
                                      chart: {
                                      renderTo: 'piechartdiv',
                                      plotBackgroundColor: null,
@@ -709,19 +737,6 @@ var app = {
       }
 
       
-      function buildGraph(tx, results) {
-        
-       
-        
-        var indicator = results.rows.item(0).idindicador;
-        var query = 'SELECT idindicador, nomdepto, yea'+app.years[15]+' from datos where idindicador = "'+indicator+'" LIMIT 30';
-        console.log("La consulta fue:"+query);
-        console.log("El indicador"+indicator);
-        tx.executeSql(query, [], pushData, app.errorCB);
-        console.log("Consulta realizada");
-        console.log("Numero de resultados de la consulta "+results.rows.length);
-          
-             }
     },
 
     lineal: function(tx, results) {
