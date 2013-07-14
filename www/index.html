@@ -112,7 +112,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="regList">
                     <legend>Seleccione uno varias regiones para evaluar:</legend>
+                    <input name="selectall-region" id="selectall-region" data-checkall="regList" type="checkbox" />
+                    <label for="selectall-region">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG REGIONES -->
@@ -124,7 +127,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="subregList">
                     <legend>Seleccione uno varias subregiones para evaluar:</legend>
+                    <input name="selectall-subregion" id="selectall-subregion" data-checkall="subregList" type="checkbox" />
+                    <label for="selectall-subregion">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG SUBREGIONES -->
@@ -136,7 +142,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="depList">
                     <legend>Seleccione uno varios departamentos para evaluar:</legend>
+                    <input name="selectall-departamento" id="selectall-departamento" data-checkall="depList" type="checkbox" />
+                    <label for="selectall-departamento">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG DEPARTAMENTO -->
@@ -146,7 +155,12 @@
                 <h1>Municipio</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="munList"></fieldset>
+                <fieldset data-role="controlgroup" id="munList">
+                    <legend>Seleccione uno varios municipios para evaluar:</legend>
+                    <input name="selectall-municipio" id="selectall-municipio" data-checkall="munList" type="checkbox" />
+                    <label for="selectall-municipio">Seleccionar todos</label>
+                </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG MUNICIPIO -->
@@ -158,7 +172,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="zonList">
                     <legend>Seleccione uno varias zonas para evaluar:</legend>
+                    <input name="selectall-zona" id="selectall-zona" data-checkall="zonList" type="checkbox" />
+                    <label for="selectall-zona">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG ZONA -->
@@ -210,7 +227,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="eduList">
                     <legend>Seleccione uno varias categorías de educación:</legend>
+                    <input name="selectall-educacion" id="selectall-educacion" data-checkall="eduList" type="checkbox" />
+                    <label for="selectall-educacion">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG EDUCACION -->
@@ -222,7 +242,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="ocuList">
                     <legend>Seleccione uno varias categorías de ocupación:</legend>
+                    <input name="selectall-ocupacion" id="selectall-ocupacion" data-checkall="ocuList" type="checkbox" />
+                    <label for="selectall-ocupacion">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG OCUPACION -->
@@ -234,7 +257,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="edaList">
                     <legend>Seleccione uno varias categorías de edad:</legend>
+                    <input name="selectall-edad" id="selectall-edad" data-checkall="edaList" type="checkbox" />
+                    <label for="selectall-edad">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG EDAD -->
@@ -246,7 +272,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="estList">
                     <legend>Seleccione uno varias categorías de estado civil:</legend>
+                    <input name="selectall-estadocivil" id="selectall-estadocivil" data-checkall="estList" type="checkbox" />
+                    <label for="selectall-estadocivil">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG ESTADOCIVIL -->
@@ -258,7 +287,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="genList">
                     <legend>Seleccione uno varias categorías de género:</legend>
+                    <input name="selectall-genero" id="selectall-genero" data-checkall="genList" type="checkbox" />
+                    <label for="selectall-genero">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG GENERO -->
@@ -270,7 +302,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="etnList">
                     <legend>Seleccione uno varias categorías de etnia:</legend>
+                    <input name="selectall-etnia" id="selectall-etnia" data-checkall="etnList" type="checkbox" />
+                    <label for="selectall-etnia">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG ETNIA -->
@@ -282,7 +317,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="epsList">
                     <legend>Seleccione uno varias EPS:</legend>
+                    <input name="selectall-eps" id="selectall-eps" data-checkall="epsList" type="checkbox" />
+                    <label for="selectall-eps">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG EPS -->
@@ -294,7 +332,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="ipsList">
                     <legend>Seleccione uno varias IPS:</legend>
+                    <input name="selectall-ips" id="selectall-ips" data-checkall="ipsList" type="checkbox" />
+                    <label for="selectall-ips">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG IPS -->
@@ -306,7 +347,10 @@
             <div data-role="content">
                 <fieldset data-role="controlgroup" id="regimenList">
                     <legend>Seleccione uno varias categorías de régimen:</legend>
+                    <input name="selectall-regimen" id="selectall-regimen" data-checkall="regimenList" type="checkbox" />
+                    <label for="selectall-regimen">Seleccionar todos</label>
                 </fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
         <!-- END DIALOG REGIMEN -->

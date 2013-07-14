@@ -424,14 +424,19 @@ var app = {
   },
 
   registerInputs: function(list, type) {
-    if (type === "checkbox") {
-      $(list + " :" + type).on("click", app.eventCheckboxes);
-    } else {
-      $(list + " :" + type).on("click", app.eventRadios);
+    console.log("registerInputs: Registrando " + type + "(s)!");
+    switch (type) {
+      case "checkbox":
+        $(list + " :" + type).on("click", app.eventCheckboxes);
+        break;
+      case "radio":
+        $(list + " :" + type).on("click", app.eventRadios);
+        break;
     }
   },
 
   eventRadios: function(e) {
+    console.log("eventRadios: Graba selección para radios!");
     var $this = $(this);
     app.selection[$this.attr("name")]["cols"][$this.data("col")].length = 0;
     app.selection[$this.attr("name")]["cols"][$this.data("col")].push($this.val());
@@ -439,11 +444,31 @@ var app = {
   },
 
   eventCheckboxes: function(e) {
-    var $this = $(this);
-    if ($this.is(':checked')) {
-      app.selection[$this.data("vista")]["cols"][$this.data("col")].push($this.val());
+    console.log("eventCheckboxes: Graba selección para checkboxes!");
+    var $checkbox = $(this);
+
+    if ($checkbox.is(':checked')) {
+      if ($checkbox.data("checkall")) {
+        $("#" + $checkbox.data("checkall") + " :checkbox").each(function(k, v) {
+          if (k !== 0) {
+            app.selection[$(v).data("vista")]["cols"][$(v).data("col")].push($(v).val());
+            $(v).prop("checked", true).checkboxradio('refresh');
+          }
+        });
+      } else {
+        app.selection[$checkbox.data("vista")]["cols"][$checkbox.data("col")].push($checkbox.val());
+      }
     } else {
-      app.selection[$this.data("vista")]["cols"][$this.data("col")].splice(app.selection[$this.data("vista")]["cols"][$this.data("col")].indexOf($this.val()), 1);
+      if ($checkbox.data("checkall")) {
+        $("#" + $checkbox.data("checkall") + " :checkbox").each(function(k, v) {
+          if (k !== 0) {
+            app.selection[$(v).data("vista")]["cols"][$(v).data("col")].splice(app.selection[$(v).data("vista")]["cols"][$(v).data("col")].indexOf($(v).val()), 1);
+            $(v).prop("checked", false).checkboxradio('refresh');
+          }
+        });
+      } else {
+        app.selection[$checkbox.data("vista")]["cols"][$checkbox.data("col")].splice(app.selection[$checkbox.data("vista")]["cols"][$checkbox.data("col")].indexOf($checkbox.val()), 1);
+      }
     }
   },
 
@@ -543,13 +568,15 @@ var app = {
       function municipio(tx, results) {
         var list = "#munList";
         var len = results.rows.length;
-        var html = "<legend>Seleccione uno varios municipios para evaluar:</legend> \n";
+
         $("#municipioCount").html(len);
         for (var i = 0; i < len; i++) {
-          html += '<input type="checkbox" data-vista="municipio" data-col="idmpio" name="municipio-' + results.rows.item(i).idmpio + '" id="municipio-' + results.rows.item(i).idmpio + '" value="' + results.rows.item(i).idmpio + '"/> \n';
-          html += '<label for="municipio-' + results.rows.item(i).idmpio + '">' + results.rows.item(i).nommpio + '</label> \n';
+          var input = '<input type="checkbox" data-vista="municipio" data-col="idmpio" name="municipio-' + results.rows.item(i).idmpio + '" id="municipio-' + results.rows.item(i).idmpio + '" value="' + results.rows.item(i).idmpio + '"/>';
+          var label = '<label for="municipio-' + results.rows.item(i).idmpio + '">' + results.rows.item(i).nommpio + '</label>';
+          $(list).append(input);
+          $(list).append(label);
         }
-        $(list).html(html).trigger('create');
+//        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
