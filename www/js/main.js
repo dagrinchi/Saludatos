@@ -660,8 +660,11 @@ var app = {
         
         
         for(var j=0; j < results.rows.length ; j ++){
-          console.log(results.rows.item(j).nomdepto+" "+results.rows.item(j).yea2005);
-          datatoprint.push([results.rows.item(j).nomdepto,parseFloat(results.rows.item(j).yea2005)]);
+          if( results.rows.item(j).yea2005 != null && results.rows.item(j).yea2005 != '' && parseFloat(results.rows.item(j).yea2005) != 0.0)
+             {
+            console.log(results.rows.item(j).nomdepto+" "+results.rows.item(j).yea2005);
+            datatoprint.push([results.rows.item(j).nomdepto,parseFloat(results.rows.item(j).yea2005)]);
+          }
         }
         
         
@@ -711,7 +714,7 @@ var app = {
        
         
         var indicator = results.rows.item(0).idindicador;
-        var query = 'SELECT idindicador, nomdepto, yea'+app.years[15]+' from datos where idindicador = "'+indicator+'" LIMIT 28';
+        var query = 'SELECT idindicador, nomdepto, yea'+app.years[15]+' from datos where idindicador = "'+indicator+'" LIMIT 30';
         console.log("La consulta fue:"+query);
         console.log("El indicador"+indicator);
         tx.executeSql(query, [], pushData, app.errorCB);
