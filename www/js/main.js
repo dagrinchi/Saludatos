@@ -657,10 +657,52 @@ var app = {
         console.log("Inicia pushData");
         var indicator = results.rows.item(0).idindicador;
         console.log("mmmmmmmmmmm"+indicator);
+        
+        
+        for(var j=0; j < results.rows.length ; j ++){
+          console.log(results.rows.item(j).nomdepto+" "+results.rows.item(j).yea2005);
+          datatoprint.push([results.rows.item(j).nomdepto,parseFloat(results.rows.item(j).yea2005)]);
+        }
+        
+        
+        chart = new Highcharts.Chart({
+                                     chart: {
+                                     renderTo: 'piechartdiv',
+                                     plotBackgroundColor: null,
+                                     plotBorderWidth: null,
+                                     plotShadow: false
+                                     },
+                                     title: {
+                                     text: 'Monthly Average Temperature',
+                                     x: -20 //center
+                                     },
+                                     
+                                     plotOptions: {
+                                     pie: {
+                                     allowPointSelect: true,
+                                     cursor: 'pointer',
+                                     dataLabels: {
+                                     enabled: true,
+                                     color: '#000000',
+                                     connectorColor: '#000000',
+                                     format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                                     }
+                                     }
+                                     },
+                                     
+                                     tooltip: {
+                                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                     },
+                                     
+                                     series: [{
+                                              type: 'pie',
+                                              name: 'Browser share',
+                                              data: datatoprint
+                                              }]
+                                     });
+
+
   
-        
-        
-        
       }
 
       
@@ -669,57 +711,14 @@ var app = {
        
         
         var indicator = results.rows.item(0).idindicador;
-        var query = 'SELECT idindicador, nomdepto, yea'+app.years[15]+' from datos where idindicador = "'+indicator+'"';
+        var query = 'SELECT idindicador, nomdepto, yea'+app.years[15]+' from datos where idindicador = "'+indicator+'" LIMIT 28';
         console.log("La consulta fue:"+query);
         console.log("El indicador"+indicator);
         tx.executeSql(query, [], pushData, app.errorCB);
         console.log("Consulta realizada");
-        
-       
-        
-        for(var j=0; j < results.rows.length ; j ++){
-          console.log(results.rows.item(j).nomdepto+" "+results.rows.item(j).yea2005);
-          datatoprint.push([results.rows.item(j).nomdepto,parseFloat(results.rows.item(j).yea2005)]);
-        }
-
         console.log("Numero de resultados de la consulta "+results.rows.length);
           
-        chart = new Highcharts.Chart({
-          chart: {
-            renderTo: 'piechartdiv',
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-          },
-          title: {
-            text: 'Monthly Average Temperature',
-            x: -20 //center
-          },
-
-          plotOptions: {
-            pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              dataLabels: {
-                enabled: true,
-                color: '#000000',
-                connectorColor: '#000000',
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-              }
-            }
-          },
-
-          tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-          },
-
-                                     series: [{
-                                              type: 'pie',
-                                              name: 'Browser share',
-                                              data: datatoprint
-                                              }]
-        });
-      }
+             }
     },
 
     lineal: function(tx, results) {
@@ -788,7 +787,7 @@ var app = {
 
         var len = results.rows.length;
         for (var i = 0; i < len; i++) {
-          datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
+          datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005),parseFloat(results.rows.item(i).yea2006)]);
         }
 
         if (google && google.visualization) {
