@@ -10,6 +10,8 @@ var app = {
 
   data: [],
 
+  results: {},
+
   counters: {
     "counter-reg": 0,
     "counter-regi": 0,
@@ -116,7 +118,7 @@ var app = {
       console.log("btnsEvents: Validando si hay un indicador!");
       if (app.selection.indicador.cols.idindicador[0]) {
         var $this = $(this);
-        app.openDB(app.ent[$this.data("graph")]);
+        app.openDB(app.chart[$this.data("graph")]);
       } else {
         navigator.notification.alert(
           'Debe seleccionar una categoría de salud!', function() {
@@ -130,10 +132,6 @@ var app = {
 
   pageEvents: function() {
     console.log("pageEvents: Asignando eventos a las páginas!");
-    $("#ubicaciones").on("pagebeforeshow", function() {
-
-    });
-
     $("#home").on("pagebeforeshow", function() {
       $.each(app.counters, function(k, v) {
         app.counterAnim("#" + k, v);
@@ -341,22 +339,24 @@ var app = {
       app.counters["counter-mun"] = results.rows.item(0).counter;
     }
 
-    app.ent.indicador(tx, app.buildSQL("indicador", "AND", "1000"), function(tx) {
-      app.ent.region(tx, app.buildSQL("region", "AND", "1000"), function(tx) {
-        app.ent.subregion(tx, app.buildSQL("subregion", "AND", "1000"), function(tx) {
-          app.ent.departamento(tx, app.buildSQL("departamento", "AND", "1000"), function(tx) {
-            app.ent.municipio(tx, app.buildSQL("municipio", "AND", "1000"), function(tx) {
-              app.ent.zona(tx, app.buildSQL("zona", "AND", "1000"), function(tx) {
-                app.ent.educacion(tx, app.buildSQL("educacion", "AND", "1000"), function(tx) {
-                  app.ent.ocupacion(tx, app.buildSQL("ocupacion", "AND", "1000"), function(tx) {
-                    app.ent.edad(tx, app.buildSQL("edad", "AND", "1000"), function(tx) {
-                      app.ent.estadocivil(tx, app.buildSQL("estadocivil", "AND", "1000"), function(tx) {
-                        app.ent.genero(tx, app.buildSQL("sexo", "AND", "1000"), function(tx) {
-                          app.ent.etnia(tx, app.buildSQL("etnia", "AND", "1000"), function(tx) {
-                            app.ent.eps(tx, app.buildSQL("eps", "AND", "1000"), function(tx) {
-                              app.ent.ips(tx, app.buildSQL("ips", "AND", "1000"), function(tx) {
-                                app.ent.regimen(tx, app.buildSQL("regimen", "AND", "1000"), function(tx) {
-                                  $.mobile.changePage("#home");
+    app.query(tx, function(tx) {
+      app.ent.indicador(tx, app.buildSQL("indicador", "AND"), function(tx) {
+        app.ent.region(tx, app.buildSQL("region", "AND"), function(tx) {
+          app.ent.subregion(tx, app.buildSQL("subregion", "AND"), function(tx) {
+            app.ent.departamento(tx, app.buildSQL("departamento", "AND"), function(tx) {
+              app.ent.municipio(tx, app.buildSQL("municipio", "AND"), function(tx) {
+                app.ent.zona(tx, app.buildSQL("zona", "AND"), function(tx) {
+                  app.ent.educacion(tx, app.buildSQL("educacion", "AND"), function(tx) {
+                    app.ent.ocupacion(tx, app.buildSQL("ocupacion", "AND"), function(tx) {
+                      app.ent.edad(tx, app.buildSQL("edad", "AND"), function(tx) {
+                        app.ent.estadocivil(tx, app.buildSQL("estadocivil", "AND"), function(tx) {
+                          app.ent.sexo(tx, app.buildSQL("sexo", "AND"), function(tx) {
+                            app.ent.etnia(tx, app.buildSQL("etnia", "AND"), function(tx) {
+                              app.ent.eps(tx, app.buildSQL("eps", "AND"), function(tx) {
+                                app.ent.ips(tx, app.buildSQL("ips", "AND"), function(tx) {
+                                  app.ent.regimen(tx, app.buildSQL("regimen", "AND"), function(tx) {
+                                    $.mobile.changePage("#home");
+                                  });
                                 });
                               });
                             });
@@ -372,8 +372,24 @@ var app = {
         });
       });
     });
+  },
 
+  query: function(tx, cb) {
+    console.log("query: Consulta la tabla datos con o sin selección!");
+    tx.executeSql(app.buildSQL("datos", "AND"), [], function(tx, results) {
+      var len = results.rows.length;
+      for (i = 0; i < len; i++) {
+        $.each(results.rows.item(i), insert);
+      }
+      cb(tx);
+    }, app.errorCB);
 
+    function insert(k1, v1) {
+      if (!$.isArray(app.results[k1])) {
+        app.results[k1] = [];
+      }
+      app.results[k1].push(v1);
+    }
   },
 
   googleVisualization: function() {
@@ -389,7 +405,7 @@ var app = {
     }
   },
 
-  buildSQL: function(entity, operator, limit, relations) {
+  buildSQL: function(entity, operator, limit) {
     var fields = [];
     var sql = "SELECT * FROM " + entity;
 
@@ -408,15 +424,13 @@ var app = {
         });
       });
     });
-    sql += " LIMIT " + limit;
-    //console.log("buildSQL: " + sql);
-    return sql;
-  },
 
-  queryUbicaciones: function(tx) {
-    var msg = "Consultando ubicaciones!";
-    console.log(msg);
-    tx.executeSql(app.buildSQL("municipio", "OR", "250", true), [], app.ent.municipio, app.errorCB);
+    if (typeof limit === "string") {
+      sql += " LIMIT " + limit;
+    }
+
+    console.log("buildSQL: " + sql);
+    return sql;
   },
 
   errorCB: function(tx, err) {
@@ -576,7 +590,7 @@ var app = {
           $(list).append(input);
           $(list).append(label);
         }
-//        $(list).html(html).trigger('create');
+        //        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -689,7 +703,7 @@ var app = {
       }
     },
 
-    genero: function(tx, sql, cb) {
+    sexo: function(tx, sql, cb) {
 
       console.log("ent.genero: Construye genero!");
 
@@ -793,11 +807,13 @@ var app = {
         cb(tx);
       }
 
-    },
+    }
+  },
 
+  chart: {
     pie: function(tx) {
 
-      tx.executeSql(app.buildSQL("datos", "AND", "10", false), [], buildGraph, app.errorCB);
+      tx.executeSql(app.buildSQL("datos", "AND"), [], buildGraph, app.errorCB);
 
       function buildGraph(tx, results) {
 
@@ -857,7 +873,7 @@ var app = {
 
     bars: function(tx) {
 
-      tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
+      tx.executeSql(app.buildSQL("datos", "AND"), [], buildGraph, app.errorCB);
 
       function buildGraph(tx, results) {
 
@@ -906,7 +922,7 @@ var app = {
 
     maps: function(tx) {
 
-      tx.executeSql(app.buildSQL("datos", "AND", "1000", false), [], buildGraph, app.errorCB);
+      tx.executeSql(app.buildSQL("datos", "AND"), [], buildGraph, app.errorCB);
 
       function buildGraph(tx, results) {
 
