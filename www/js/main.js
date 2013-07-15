@@ -834,8 +834,6 @@ var app = {
 
       function buildGraph(tx, results) {
 
-
-
         var indicator = results.rows.item(0).idindicador;
         var query = 'SELECT idindicador, nomdepto, yea' + app.years[numberofyear] + ' from datos where idindicador = "' + indicator + '" LIMIT 30';
         console.log("La consulta fué: " + query);
@@ -846,7 +844,6 @@ var app = {
         console.log("Numero de resultados de la consulta " + results.rows.length);
 
       }
-
 
       function printData(tx, results, theyear) {
         console.log("Inicia pushData");
@@ -861,7 +858,6 @@ var app = {
             }
           }
         }
-
 
         if (theyear === '2006') {
           for (var k = 0; k < results.rows.length; k++) {
@@ -878,23 +874,24 @@ var app = {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            spacingTop: 10,
-            spacingBottom: 50,
-            margin : [10, 10, 10, 10]
+            // spacingTop: 10,
+            height: 500
           },
           legend : {
             align : "center",
             verticalAlign : "top",
             x: 0,
             y: 20,
-            borderWidth: 0
+            borderWidth: 1,
+            margin : 20 //define el espacio entre el legend y la zona de grafico
           },
           title: {
-            text: 'Monthly Average Temperature',
+            text: '****TITULO DINAMICO****',
             align: "center",
             x: 0,
             y: 10,
             floating: true
+            // margin: 10 //define el espacio entre el titulo y la zona de grafico, si existe un subtitulo entonces sera desde el subTitulo
           },
           plotOptions: {
             pie: {
