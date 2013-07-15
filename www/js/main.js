@@ -856,7 +856,7 @@ var app = {
      
           for (var j = 0; j < results.rows.length; j++) {
               var dataresults = results.rows.item(j);
-            if (dataresults["yea"+theyear] != null && dataresults["yea"+theyear] != '' && parseFloat(results.rows.item(j).yea2005) != 0.0) {
+            if (dataresults["yea"+theyear] !== null && dataresults["yea"+theyear] !== '' && parseFloat(results.rows.item(j).yea2005) != 0.0) {
               console.log(results.rows.item(j).nomdepto + " " + dataresults["yea"+theyear]);
               datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea"+theyear])]);
             }
@@ -920,7 +920,94 @@ var app = {
 
     },
 
-    lineal: function(tx, results) {
+    lineal: function(tx) {
+        
+        tx.executeSql(app.buildSQL("datos", "OR", "100", false), [], buildGraph, app.errorCB);
+        var datatoprint = [];
+        var numberofyear = 17;
+        
+        function buildGraph(tx, results) {
+            
+            
+            
+            var indicator = results.rows.item(0).idindicador;
+            var query = 'SELECT idindicador, nomindicador, nomdepto, yea' + app.years[numberofyear] + ', fue' + app.years[numberofyear] + 'from datos where idindicador = "' + indicator + '" LIMIT 10';
+            console.log("La consulta fué: " + query);
+            console.log("El indicador fué: " + indicator);
+            console.log("El número de resultados fué: " + results.rows.length);
+            tx.executeSql(query, [], printData(tx, results, app.years[numberofyear]), app.errorCB);
+            console.log("Consulta realizada");
+            console.log("Numero de resultados de la consulta " + results.rows.length);
+            
+        }
+        
+        
+        function printData(tx, results, theyear) {
+            console.log("Inicia pushData");
+            var indicator = results.rows.item(0).idindicador;
+            console.log("Indicador para insertar datos en el gráfico:" + indicator);
+            
+            
+            for (var j = 0; j < results.rows.length; j++) {
+                var dataresults = results.rows.item(j);
+                if (dataresults["yea"+theyear] !== null && dataresults["yea"+theyear] !== '' && parseFloat(results.rows.item(j).yea2005) != 0.0) {
+                    console.log(results.rows.item(j).nomdepto + " " + dataresults["yea"+theyear]);
+                    datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea"+theyear])]);
+                }
+            }
+            
+            //Datos para etiquetas en el gráfico
+            var dataforlabels = results.rows.item(0);
+            
+            
+            chart = new Highcharts.Chart({
+                                         chart: {
+                                         renderTo: 'linealchartdiv',
+                                         plotBackgroundColor: null,
+                                         plotBorderWidth: null,
+                                         plotShadow: false,
+                                         spacingTop: 30,
+                                         spacingBottom: 50,
+                                         margin : [30, 10, 10, 10]
+                                         },                                     
+                                         
+                                         title: {
+                                         text: results.rows.item(0).nomindicador,
+                                         x: -20 //center
+                                         },
+                                         subtitle: {
+                                         text:dataforlabels['fue'+[theyear]],
+                                         x: -20
+                                         },
+                                         xAxis: {
+                                         categories: ['2005','2006']
+                                         },
+                                         yAxis: {
+                                         title: {
+                                         text: 'Temperature (°C)'
+                                         },
+                                         plotLines: [{
+                                                     value: 0,
+                                                     width: 1,
+                                                     color: '#808080'
+                                                     }]
+                                         },
+                                         tooltip: {
+                                         valueSuffix: '°C'
+                                         },
+                                         legend: {
+                                         layout: 'vertical',
+                                         align: 'right',
+                                         verticalAlign: 'middle',
+                                         borderWidth: 0
+                                         },
+                                         series:[{name:'Amazonas',data:[10,20]},{name:'Cundinamarca',data:[40,10]}]
+                                         
+                                         
+                                         //[{name:'Amazonas',data:[15.0,30]},{name:'Cundinamarca',data:[19.0,10]}]
+                                         });
+        }
+        
 
     },
 
