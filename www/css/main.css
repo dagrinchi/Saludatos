@@ -10,27 +10,6 @@ html, body {
 		height: 355px;
 		margin: 0px 60% 0px 0px !important;
 	}
-	/*.pieChart_render{
-		background-color: red;	
-
-	}
-	.pieChartDiv{
-		min-width: 100px; 
-		height: 100px; 
-		margin: 0 auto
-	}*/
-	.chart-wrapper {
-		position: relative;
-	    padding-bottom: 20%;
-	    background-color: none;
-	    padding-top: 40px;
-	}
-
-	.chart-inner {
-		position: absolute;
-	    width: 100%; height: 100%;
-	}
-
 }
 /*iPhone 5:*/
 @media screen and (device-aspect-ratio: 40/71) {
@@ -38,10 +17,6 @@ html, body {
 	width: 330px;
 	height: 355px;
 	margin: 0px 60% 0px 0px !important;
-	}
-
-	.pieChart_render{
-	background-color: cyan;	
 	}
 }
 /*iPad:*/
@@ -111,13 +86,27 @@ html, body {
 	margin: 0px 33.3% 0px 23.3% !important;
 	} */ 
 }
-/*no erase pls*/
+/*---> no erase pls <--- */
 /*.animation-size-for-iframe {
 	width: 330px;
 	height: 342px;
 	margin: 0px 33.3% 0px 33.3% !important;
 }*/
 /*****End Media screen types******/
+
+/* Reponsive chart */
+.chart-wrapper {
+	position: relative;
+    padding-bottom: 20%;
+    background-color: none;
+    padding-top: 40px;
+}
+
+.chart-inner {
+	/*position: absolute;*/
+    width: 100%; 
+    height: 100%;
+}
 
 iframe {
 	border-width: 0;
