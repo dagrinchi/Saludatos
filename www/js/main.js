@@ -16,7 +16,7 @@ var app = {
 
   counters: {
     "counter-reg": 0,
-    "counter-regi": 0,
+    "counter-dep": 0,
     "counter-mun": 0
   },
 
@@ -135,9 +135,7 @@ var app = {
   pageEvents: function() {
     console.log("pageEvents: Asignando eventos a las páginas!");
     $("#home").on("pagebeforeshow", function() {
-      $.each(app.counters, function(k, v) {
-        app.counterAnim("#" + k, v);
-      });
+      app.openDB(app.queryDB);
     });
   },
 
@@ -198,7 +196,8 @@ var app = {
     console.log("startApp: Iniciando estructura de la applicación!");
     navigator.splashscreen.hide();
     if (app.checkUpdatedData()) {
-      app.openDB(app.queryDB);
+      $.mobile.changePage("#home");
+      //app.openDB(app.queryDB);
     } else {
       app.load();
     }
@@ -269,25 +268,6 @@ var app = {
     tx.executeSql('CREATE TABLE IF NOT EXISTS datos (' + dbFields + ')');
     tx.executeSql('CREATE TABLE IF NOT EXISTS columnNames (columnName)');
 
-    msg = "populateDB: Creando vistas!";
-    console.log(msg);
-
-    tx.executeSql('CREATE VIEW IF NOT EXISTS region AS SELECT DISTINCT idregion, nomregion FROM datos WHERE nomregion <> "" GROUP BY idregion ORDER BY nomregion');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS subregion AS SELECT DISTINCT idsubregion, nomsubregion FROM datos WHERE nomsubregion <> "" GROUP BY idsubregion ORDER BY nomsubregion');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS departamento AS SELECT DISTINCT iddepto, nomdepto FROM datos WHERE nomdepto <> "" GROUP BY iddepto ORDER BY nomdepto');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS municipio AS SELECT DISTINCT idmpio, nommpio FROM datos WHERE nommpio <> "" GROUP BY idmpio ORDER BY nommpio');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS zona AS SELECT DISTINCT idzona, nomzona FROM datos WHERE nomzona <> "" GROUP BY idzona ORDER BY nomzona');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS edad AS SELECT DISTINCT idedad, nomedad FROM datos WHERE nomedad <> "" GROUP BY idedad ORDER BY nomedad');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS educacion AS SELECT DISTINCT ideducacion, nomeducacion FROM datos WHERE nomeducacion <> "" GROUP BY ideducacion ORDER BY nomeducacion');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS eps AS SELECT DISTINCT ideps, nomeps FROM datos WHERE nomeps <> "" GROUP BY ideps ORDER BY nomeps');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS estadocivil AS SELECT DISTINCT idestadocivil, nomestadocivil FROM datos WHERE nomestadocivil <> "" GROUP BY idestadocivil ORDER BY nomestadocivil');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS etnia AS SELECT DISTINCT idetnia, nometnia FROM datos WHERE nometnia <> "" GROUP BY idetnia ORDER BY nometnia');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS indicador AS SELECT DISTINCT idindicador, nomindicador FROM datos WHERE nomindicador <> "" GROUP BY idindicador ORDER BY nomindicador');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS ips AS SELECT DISTINCT idips, nomips FROM datos WHERE nomips <> "" GROUP BY idips ORDER BY nomips');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS ocupacion AS SELECT DISTINCT idocupacion, nomocupacion FROM datos WHERE nomocupacion <> "" GROUP BY idocupacion ORDER BY nomocupacion');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS regimen AS SELECT DISTINCT idregimen, nomregimen FROM datos WHERE nomregimen <> "" GROUP BY idregimen ORDER BY nomregimen');
-    tx.executeSql('CREATE VIEW IF NOT EXISTS sexo AS SELECT DISTINCT idsexo, nomsexo FROM datos WHERE nomsexo <> "" GROUP BY idsexo ORDER BY nomsexo');
-
     console.log("populateDB: Insertando registros en la tabla datos!");
     for (var j = 0; j < fields.length; j++) {
       tx.executeSql('INSERT INTO columnNames(columnName) VALUES ("' + fields[j] + '")');
@@ -312,7 +292,8 @@ var app = {
     console.log("successCB: Guardando fecha de actualización!");
     var updated = new Date();
     window.localStorage.setItem("updated", updated);
-    app.openDB(app.queryDB);
+    $.mobile.changePage("#home");
+    //app.openDB(app.queryDB);
   },
 
   openDB: function(queryDB) {
@@ -325,10 +306,12 @@ var app = {
   queryDB: function(tx) {
     console.log("queryDB: Consultas!");
 
-    tx.executeSql('SELECT COUNT(*) AS counter FROM datos', [], reg, app.errorCB);
-    tx.executeSql('SELECT COUNT(*) AS counter FROM region', [], regi, app.errorCB);
-    tx.executeSql('SELECT COUNT(*) AS counter FROM municipio', [], mun, app.errorCB);
+    tx.executeSql('SELECT COUNT(*) AS counter FROM (' + app.buildSQL() + ')', [], reg, app.errorCB);
     tx.executeSql('SELECT columnName from columnNames where columnName like "%yea%"', [], yea, app.errorCB);
+
+    function reg(tx, results) {
+      app.counters["counter-reg"] = results.rows.item(0).counter;
+    }
 
     function yea(tx, results) {
 
@@ -342,35 +325,23 @@ var app = {
 
     }
 
-    function reg(tx, results) {
-      app.counters["counter-reg"] = results.rows.item(0).counter;
-    }
-
-    function regi(tx, results) {
-      app.counters["counter-regi"] = results.rows.item(0).counter;
-    }
-
-    function mun(tx, results) {
-      app.counters["counter-mun"] = results.rows.item(0).counter;
-    }
-
-    app.query(tx, function(tx) {
-      app.ent.indicador(tx, app.buildSQL("indicador", "AND"), function(tx) {
-        app.ent.region(tx, app.buildSQL("region", "AND"), function(tx) {
-          app.ent.subregion(tx, app.buildSQL("subregion", "AND"), function(tx) {
-            app.ent.departamento(tx, app.buildSQL("departamento", "AND"), function(tx) {
-              app.ent.municipio(tx, app.buildSQL("municipio", "AND"), function(tx) {
-                app.ent.zona(tx, app.buildSQL("zona", "AND"), function(tx) {
-                  app.ent.educacion(tx, app.buildSQL("educacion", "AND"), function(tx) {
-                    app.ent.ocupacion(tx, app.buildSQL("ocupacion", "AND"), function(tx) {
-                      app.ent.edad(tx, app.buildSQL("edad", "AND"), function(tx) {
-                        app.ent.estadocivil(tx, app.buildSQL("estadocivil", "AND"), function(tx) {
-                          app.ent.sexo(tx, app.buildSQL("sexo", "AND"), function(tx) {
-                            app.ent.etnia(tx, app.buildSQL("etnia", "AND"), function(tx) {
-                              app.ent.eps(tx, app.buildSQL("eps", "AND"), function(tx) {
-                                app.ent.ips(tx, app.buildSQL("ips", "AND"), function(tx) {
-                                  app.ent.regimen(tx, app.buildSQL("regimen", "AND"), function(tx) {
-                                    $.mobile.changePage("#home");
+    app.ent.indicador(tx, "SELECT DISTINCT idindicador, nomindicador FROM (" + app.buildSQL() + ") WHERE nomindicador <> '' GROUP BY idindicador ORDER BY nomindicador", function(tx) {
+      app.ent.region(tx, "SELECT DISTINCT idregion, nomregion FROM (" + app.buildSQL() + ") WHERE nomregion <> '' GROUP BY idregion ORDER BY nomregion", function(tx) {
+        app.ent.subregion(tx, "SELECT DISTINCT idsubregion, nomsubregion FROM (" + app.buildSQL() + ") WHERE nomsubregion <> '' GROUP BY idsubregion ORDER BY nomsubregion", function(tx) {
+          app.ent.departamento(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' GROUP BY iddepto ORDER BY nomdepto", function(tx) {
+            app.ent.municipio(tx, "SELECT DISTINCT idmpio, nommpio FROM (" + app.buildSQL() + ") WHERE nommpio <> '' GROUP BY idmpio ORDER BY nommpio", function(tx) {
+              app.ent.zona(tx, "SELECT DISTINCT idzona, nomzona FROM (" + app.buildSQL() + ") WHERE nomzona <> '' GROUP BY idzona ORDER BY nomzona", function(tx) {
+                app.ent.educacion(tx, "SELECT DISTINCT ideducacion, nomeducacion FROM (" + app.buildSQL() + ") WHERE nomeducacion <> '' GROUP BY ideducacion ORDER BY nomeducacion", function(tx) {
+                  app.ent.ocupacion(tx, "SELECT DISTINCT idocupacion, nomocupacion FROM (" + app.buildSQL() + ") WHERE nomocupacion <> '' GROUP BY idocupacion ORDER BY nomocupacion", function(tx) {
+                    app.ent.edad(tx, "SELECT DISTINCT idedad, nomedad FROM (" + app.buildSQL() + ") WHERE nomedad <> '' GROUP BY idedad ORDER BY nomedad", function(tx) {
+                      app.ent.estadocivil(tx, "SELECT DISTINCT idestadocivil, nomestadocivil FROM (" + app.buildSQL() + ") WHERE nomestadocivil <> '' GROUP BY idestadocivil ORDER BY nomestadocivil", function(tx) {
+                        app.ent.sexo(tx, "SELECT DISTINCT idsexo, nomsexo FROM (" + app.buildSQL() + ") WHERE nomsexo <> '' GROUP BY idsexo ORDER BY nomsexo", function(tx) {
+                          app.ent.etnia(tx, "SELECT DISTINCT idetnia, nometnia FROM (" + app.buildSQL() + ") WHERE nometnia <> '' GROUP BY idetnia ORDER BY nometnia", function(tx) {
+                            app.ent.eps(tx, "SELECT DISTINCT ideps, nomeps FROM (" + app.buildSQL() + ") WHERE nomeps <> '' GROUP BY ideps ORDER BY nomeps", function(tx) {
+                              app.ent.ips(tx, "SELECT DISTINCT idips, nomips FROM (" + app.buildSQL() + ") WHERE nomips <> '' GROUP BY idips ORDER BY nomips", function(tx) {
+                                app.ent.regimen(tx, "SELECT DISTINCT idregimen, nomregimen FROM (" + app.buildSQL() + ") WHERE nomregimen <> '' GROUP BY idregimen ORDER BY nomregimen", function(tx) {
+                                  $.each(app.counters, function(k, v) {
+                                    app.counterAnim("#" + k, v);
                                   });
                                 });
                               });
@@ -389,24 +360,6 @@ var app = {
     });
   },
 
-  query: function(tx, cb) {
-    console.log("query: Consulta la tabla datos con o sin selección!");
-    tx.executeSql(app.buildSQL("datos", "AND"), [], function(tx, results) {
-      var len = results.rows.length;
-      for (i = 0; i < len; i++) {
-        $.each(results.rows.item(i), insert);
-      }
-      cb(tx);
-    }, app.errorCB);
-
-    function insert(k1, v1) {
-      if (!$.isArray(app.results[k1])) {
-        app.results[k1] = [];
-      }
-      app.results[k1].push(v1);
-    }
-  },
-
   googleVisualization: function() {
     if (google && google.visualization) {
       console.log("Librería graficos ya existe!");
@@ -420,24 +373,41 @@ var app = {
     }
   },
 
-  buildSQL: function(entity, operator, limit) {
-    var fields = [];
-    var sql = "SELECT * FROM " + entity;
+  buildSQL: function(limit) {
+    var selection = [];
+    var sql = "SELECT * FROM datos ";
 
-    $.each(app.selection, function(kr, vr) {
-      fields.push(app.selection[kr]["cols"]);
-    });
-
-    $.each(fields, function(k1, v1) {
-      $.each(v1, function(k2, v2) {
+    $.each(app.selection, function(k1, v1) {
+      var item = [];
+      $.each(v1["cols"], function(k2, v2) {
         $.each(v2, function(k3, v3) {
-          if (k1 === 0 && k3 === 0) {
-            sql += " WHERE " + k2 + " = '" + v3 + "'";
-          } else {
-            sql += " " + operator + " " + k2 + " = '" + v3 + "'";
-          }
+          var val = {};
+          val[k2] = v3;
+          item.push(val);
         });
       });
+      if (item[0]) {
+        selection.push(item);
+      }
+    });
+
+    $.each(selection, function(k1, v1) {
+      if (k1 === 0) {
+        sql += "WHERE ";
+      } else {
+        sql += " AND (";
+      }
+      $.each(v1, function(k2, v2) {
+        if (k2 > 0) {
+          sql += " OR ";
+        }
+        $.each(v2, function(k3, v3) {
+          sql += k3 + " = " + "'" + v3 + "'";
+        });
+      });
+      if (k1 !== 0) {
+        sql += ")";
+      }
     });
 
     if (typeof limit === "string") {
@@ -532,6 +502,7 @@ var app = {
       function region(tx, results) {
         var list = "#regList";
         var len = results.rows.length;
+
         $("#regionCount").html(len);
         for (var i = 0; i < len; i++) {
           var input = '<input type="checkbox" data-vista="region" data-col="idregion" name="region-' + results.rows.item(i).idregion + '" id="region-' + results.rows.item(i).idregion + '" value="' + results.rows.item(i).idregion + '"/>';
@@ -574,6 +545,7 @@ var app = {
       function departamento(tx, results) {
         var list = "#depList";
         var len = results.rows.length;
+        app.counters["counter-dep"] = len;
 
         $("#departamentoCount").html(len);
         for (var i = 0; i < len; i++) {
@@ -597,6 +569,7 @@ var app = {
       function municipio(tx, results) {
         var list = "#munList";
         var len = results.rows.length;
+        app.counters["counter-mun"] = len;
 
         $("#municipioCount").html(len);
         for (var i = 0; i < len; i++) {
@@ -880,11 +853,11 @@ var app = {
             plotShadow: false,
             spacingTop: 10,
             spacingBottom: 50,
-            margin : [10, 10, 10, 10]
+            margin: [10, 10, 10, 10]
           },
-          legend : {
-            align : "center",
-            verticalAlign : "top",
+          legend: {
+            align: "center",
+            verticalAlign: "top",
             x: 0,
             y: 20,
             borderWidth: 0
@@ -906,7 +879,7 @@ var app = {
                 connectorColor: '#000000',
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'
               },
-              showInLegend : true
+              showInLegend: true
             }
           },
 

@@ -206,7 +206,7 @@ fieldset label {
 	padding: 0;
 }
 
-#counter-reg, #counter-regi, #counter-mun {
+#counter-reg, #counter-dep, #counter-mun {
 	font-size: 350%;
 	color: #ccc;
 }
