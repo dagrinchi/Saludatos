@@ -828,27 +828,17 @@ var app = {
   chart: {
     pie: function(tx) {
 
-      tx.executeSql(app.buildSQL("datos", "OR", "100", false), [], buildGraph, app.errorCB);
+      tx.executeSql(app.buildSQL("datos", "OR", "100", false), [], printData, app.errorCB);
       var datatoprint = [];
-      var numberofyear = 17;
-
-      function buildGraph(tx, results) {
+      var theyear = app.years[17];
 
 
-
+      function printData(tx, results) {
         var indicator = results.rows.item(0).idindicador;
-        var query = 'SELECT idindicador, nomdepto, yea' + app.years[numberofyear] + ' from datos where idindicador = "' + indicator + '" LIMIT 30';
-        console.log("La consulta fué: " + query);
         console.log("El indicador fué: " + indicator);
         console.log("El número de resultados fué: " + results.rows.length);
-        tx.executeSql(query, [], printData(tx, results, app.years[numberofyear]), app.errorCB);
         console.log("Consulta realizada");
         console.log("Numero de resultados de la consulta " + results.rows.length);
-
-      }
-
-
-      function printData(tx, results, theyear) {
         console.log("Inicia pushData");
         var indicator = results.rows.item(0).idindicador;
         console.log("Indicador para insertar datos en el gráfico:" + indicator);
@@ -861,10 +851,6 @@ var app = {
               datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea"+theyear])]);
             }
           }
-     
-
-
-        
 
         chart = new Highcharts.Chart({
           chart: {
@@ -922,31 +908,21 @@ var app = {
 
     lineal: function(tx) {
         
-        tx.executeSql(app.buildSQL("datos", "OR", "100", false), [], buildGraph, app.errorCB);
-        var datatoprint = [];
-        var numberofyear = 17;
-        
-        function buildGraph(tx, results) {
-            
-            
-            
-            var indicator = results.rows.item(0).idindicador;
-            var query = 'SELECT idindicador, nomindicador, nomdepto, yea' + app.years[numberofyear] + ', fue' + app.years[numberofyear] + 'from datos where idindicador = "' + indicator + '" LIMIT 10';
-            console.log("La consulta fué: " + query);
-            console.log("El indicador fué: " + indicator);
-            console.log("El número de resultados fué: " + results.rows.length);
-            tx.executeSql(query, [], printData(tx, results, app.years[numberofyear]), app.errorCB);
-            console.log("Consulta realizada");
-            console.log("Numero de resultados de la consulta " + results.rows.length);
-            
-        }
+      tx.executeSql(app.buildSQL("datos", "OR", "100", false), [], printData, app.errorCB);
+      var datatoprint = [];
+      var theyear = app.years[17];
         
         
         function printData(tx, results, theyear) {
-            console.log("Inicia pushData");
-            var indicator = results.rows.item(0).idindicador;
-            console.log("Indicador para insertar datos en el gráfico:" + indicator);
-            
+          
+          var indicator = results.rows.item(0).idindicador;
+          console.log("El indicador fué: " + indicator);
+          console.log("El número de resultados fué: " + results.rows.length);
+          console.log("Consulta realizada");
+          console.log("Numero de resultados de la consulta " + results.rows.length);
+          console.log("Inicia pushData");
+          var indicator = results.rows.item(0).idindicador;
+          console.log("Indicador para insertar datos en el gráfico:" + indicator);
             
             for (var j = 0; j < results.rows.length; j++) {
                 var dataresults = results.rows.item(j);
