@@ -831,6 +831,7 @@ var app = {
       tx.executeSql(app.buildSQL("datos", "OR", "100", false), [], printData, app.errorCB);
       var datatoprint = [];
       var theyear = app.years[17];
+      var departamentos = [];
 
 
       function printData(tx, results) {
@@ -849,6 +850,7 @@ var app = {
             if (dataresults["yea"+theyear] !== null && dataresults["yea"+theyear] !== '' && parseFloat(results.rows.item(j).yea2005) != 0.0) {
               console.log(results.rows.item(j).nomdepto + " " + dataresults["yea"+theyear]);
               datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea"+theyear])]);
+              departamentos.push(results.rows.item(j).nomdepto);
             }
           }
 
@@ -870,7 +872,7 @@ var app = {
             borderWidth: 0
           },
           title: {
-            text: 'Monthly Average Temperature',
+            text: results.rows.item(0).nomindicador+" - Año "+theyear,
             align: "center",
             x: 0,
             y: 10,
@@ -896,7 +898,7 @@ var app = {
 
           series: [{
               type: 'pie',
-              name: 'Browser share',
+              name: results.rows.item(0).nomunidad,
               data: datatoprint
             }
           ]
@@ -989,51 +991,98 @@ var app = {
 
     bars: function(tx) {
 
-      tx.executeSql(app.buildSQL("datos", "AND"), [], buildGraph, app.errorCB);
-
-      function buildGraph(tx, results) {
-
-        var datafromresults = [];
-        var header = ['Departamento', '2005', '2006'];
-
-        datafromresults.push(header);
-
-        var len = results.rows.length;
-        for (var i = 0; i < len; i++) {
-          var item = results.rows.item(i);
-          var colums = [];
-          for (var j = 0; j < columnNames.length; i++) {
-            if (typeof columnNames[j] === "string") {
-
+        tx.executeSql(app.buildSQL("datos", "OR", "100", false), [], printData, app.errorCB);
+        var datatoprint = [];
+        var theyear = app.years[17];
+        var departamentos = [];
+        
+        
+        function printData(tx, results) {
+            var indicator = results.rows.item(0).idindicador;
+            console.log("El indicador fué: " + indicator);
+            console.log("El número de resultados fué: " + results.rows.length);
+            console.log("Consulta realizada");
+            console.log("Numero de resultados de la consulta " + results.rows.length);
+            console.log("Inicia pushData");
+            var indicator = results.rows.item(0).idindicador;
+            console.log("Indicador para insertar datos en el gráfico:" + indicator);
+            
+            
+            for (var j = 0; j < results.rows.length; j++) {
+                var dataresults = results.rows.item(j);
+                if (dataresults["yea"+theyear] !== null && dataresults["yea"+theyear] !== '' && parseFloat(results.rows.item(j).yea2005) != 0.0) {
+                    console.log(results.rows.item(j).nomdepto + " " + dataresults["yea"+theyear]);
+                    datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea"+theyear])]);
+                    departamentos.push(results.rows.item(j).nomdepto);
+                }
             }
-            colums.push(item[columnNames[j]]);
-          }
-
-          datafromresults.push([item["nomdepto"], parseFloat(item["yea2005"]), parseFloat(item["yea2006"])]);
+            
+            chart = new Highcharts.Chart({
+                                         chart: {
+                                            type: 'column',
+                                            renderTo: 'columnchartdiv',
+                                            plotBackgroundColor: null,
+                                            plotBorderWidth: null,
+                                            plotShadow: false,
+                                            spacingTop: 50,
+                                            spacingBottom: 50,
+                                            margin : [200, 50, 200, 50]
+                                         },
+                                         
+                                         
+                                         xAxis: {
+                                         categories: departamentos,
+                                         labels: {
+                                         rotation: -45,
+                                         align: 'right',
+                                         style: {
+                                         fontSize: '13px',
+                                         fontFamily: 'Verdana, sans-serif'
+                                         }
+                                         }
+                                         },
+                                         
+                                         
+                                         legend : {
+                                            align : "center",
+                                            verticalAlign : "top",
+                                            x: 0,
+                                            y: 20,
+                                            borderWidth: 0
+                                         },
+                                         title: {
+                                         text: results.rows.item(0).nomindicador+" - Año "+theyear,
+                                         align: "center",
+                                         x: 0,
+                                         y: 10,
+                                         floating: true
+                                         },
+                                         /*plotOptions: {
+                                            pie: {
+                                                allowPointSelect: true,
+                                                cursor: 'pointer',
+                                                dataLabels: {
+                                                    enabled: false,
+                                                    color: '#000000',
+                                                    connectorColor: '#000000',
+                                                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                                                },
+                                            showInLegend : true
+                                            }
+                                         },*/
+                                         
+                                         tooltip: {
+                                         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                         },
+                                         
+                                         series: [{
+                                                  //type: 'pie',
+                                                  name: results.rows.item(0).nomunidad,
+                                                  data: datatoprint
+                                                  }
+                                                  ]
+                                         });
         }
-
-        if (google && google.visualization) {
-          googleChart();
-        } else {
-          google.load("visualization", "1", {
-            callback: googleChart
-          });
-        }
-
-        function googleChart() {
-          var data = google.visualization.arrayToDataTable(datafromresults);
-          var bars = new google.visualization.ColumnChart(document.getElementById('columnchartdiv'));
-          var options = {
-            hAxis: {
-              title: "y2005 y2006"
-            },
-            vAxis: {
-              title: "miles"
-            }
-          };
-          bars.draw(data, options);
-        }
-      }
     },
 
     maps: function(tx) {

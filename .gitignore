@@ -6,3 +6,7 @@ Saludatos.xcodeproj/project.xcworkspace/xcuserdata/david.xcuserdatad/UserInterfa
 www/.DS_Store
 
 *.xcuserstate
+
+*.xcscheme
+
+*.plist
