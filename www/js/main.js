@@ -830,7 +830,7 @@ var app = {
 
       tx.executeSql(app.buildSQL("datos", "OR", "100", false), [], buildGraph, app.errorCB);
       var datatoprint = [];
-      var numberofyear = 16;
+      var numberofyear = 17;
 
       function buildGraph(tx, results) {
 
@@ -853,24 +853,18 @@ var app = {
         var indicator = results.rows.item(0).idindicador;
         console.log("Indicador para insertar datos en el gráfico:" + indicator);
 
-        if (theyear === '2005') {
+     
           for (var j = 0; j < results.rows.length; j++) {
-            if (results.rows.item(j).yea2005 != null && results.rows.item(j).yea2005 != '' && parseFloat(results.rows.item(j).yea2005) != 0.0) {
-              console.log(results.rows.item(j).nomdepto + " " + results.rows.item(j).yea2005);
-              datatoprint.push([results.rows.item(j).nomdepto, parseFloat(results.rows.item(j).yea2005)]);
+              var dataresults = results.rows.item(j);
+            if (dataresults["yea"+theyear] != null && dataresults["yea"+theyear] != '' && parseFloat(results.rows.item(j).yea2005) != 0.0) {
+              console.log(results.rows.item(j).nomdepto + " " + dataresults["yea"+theyear]);
+              datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea"+theyear])]);
             }
           }
-        }
+     
 
 
-        if (theyear === '2006') {
-          for (var k = 0; k < results.rows.length; k++) {
-            if (results.rows.item(k).yea2006 != null && results.rows.item(k).yea2006 != '' && parseFloat(results.rows.item(k).yea2006) != 0.0) {
-              console.log(results.rows.item(k).nomdepto + " " + results.rows.item(k).yea2006);
-              datatoprint.push([results.rows.item(k).nomdepto, parseFloat(results.rows.item(k).yea2006)]);
-            }
-          }
-        }
+        
 
         chart = new Highcharts.Chart({
           chart: {

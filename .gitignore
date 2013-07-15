@@ -4,3 +4,5 @@ Saludatos.xcodeproj/project.xcworkspace/xcuserdata/david.xcuserdatad/UserInterfa
 .DS_Store
 
 www/.DS_Store
+
+*.xcuserstate
