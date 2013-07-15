@@ -9,9 +9,9 @@ var app = {
   count: 0,
 
   data: [],
-    
+
   years: [],
-    
+
   counters: {
     "counter-reg": 0,
     "counter-regi": 0,
@@ -370,18 +370,18 @@ var app = {
     tx.executeSql('SELECT COUNT(*) AS counter FROM municipio', [], mun, app.errorCB);
     tx.executeSql('SELECT columnName from columnNames where columnName like "%yea%"', [], yea, app.errorCB);
 
-    function yea(tx, results){
-        
-        for(var j = 0; j < results.rows.length; j++){
-            console.log("Año "+j+" "+results.rows.item(j).columnName.substring(3));
-            app.years.push(results.rows.item(j).columnName.substring(3));
-        }
-        /*for(var k = 0; k < app.years.length; k++){
+    function yea(tx, results) {
+
+      for (var j = 0; j < results.rows.length; j++) {
+        console.log("Año " + j + " " + results.rows.item(j).columnName.substring(3));
+        app.years.push(results.rows.item(j).columnName.substring(3));
+      }
+      /*for(var k = 0; k < app.years.length; k++){
             console.log("Año guardado "+app.years[k]);
         }*/
-        
+
     }
-      
+
     function reg(tx, results) {
       app.counters["counter-reg"] = results.rows.item(0).counter;
     }
@@ -653,90 +653,99 @@ var app = {
       tx.executeSql(app.buildSQL("datos", "OR", "100", false), [], buildGraph, app.errorCB);
       var datatoprint = [];
       var numberofyear = 16;
-      
+
       function buildGraph(tx, results) {
-        
-        
-       
+
+
+
         var indicator = results.rows.item(0).idindicador;
-        var query = 'SELECT idindicador, nomdepto, yea'+app.years[numberofyear]+' from datos where idindicador = "'+indicator+'" LIMIT 30';
-        console.log("La consulta fué: "+query);
-        console.log("El indicador fué: "+indicator);
-        console.log("El número de resultados fué: "+results.rows.length);
-        tx.executeSql(query, [], printData(tx,results,app.years[numberofyear]), app.errorCB);
+        var query = 'SELECT idindicador, nomdepto, yea' + app.years[numberofyear] + ' from datos where idindicador = "' + indicator + '" LIMIT 30';
+        console.log("La consulta fué: " + query);
+        console.log("El indicador fué: " + indicator);
+        console.log("El número de resultados fué: " + results.rows.length);
+        tx.executeSql(query, [], printData(tx, results, app.years[numberofyear]), app.errorCB);
         console.log("Consulta realizada");
-        console.log("Numero de resultados de la consulta "+results.rows.length);
-        
+        console.log("Numero de resultados de la consulta " + results.rows.length);
+
       }
 
-      
-      function printData(tx, results, theyear){
+
+      function printData(tx, results, theyear) {
         console.log("Inicia pushData");
         var indicator = results.rows.item(0).idindicador;
-        console.log("Indicador para insertar datos en el gráfico:"+indicator);
-        
-        if(theyear === '2005'){
-          for(var j=0; j < results.rows.length ; j ++){
-            if( results.rows.item(j).yea2005 != null && results.rows.item(j).yea2005 != '' && parseFloat(results.rows.item(j).yea2005) != 0.0){
-              console.log(results.rows.item(j).nomdepto+" "+results.rows.item(j).yea2005);
-              datatoprint.push([results.rows.item(j).nomdepto,parseFloat(results.rows.item(j).yea2005)]);
+        console.log("Indicador para insertar datos en el gráfico:" + indicator);
+
+        if (theyear === '2005') {
+          for (var j = 0; j < results.rows.length; j++) {
+            if (results.rows.item(j).yea2005 != null && results.rows.item(j).yea2005 != '' && parseFloat(results.rows.item(j).yea2005) != 0.0) {
+              console.log(results.rows.item(j).nomdepto + " " + results.rows.item(j).yea2005);
+              datatoprint.push([results.rows.item(j).nomdepto, parseFloat(results.rows.item(j).yea2005)]);
             }
           }
         }
-        
-        
-        if(theyear === '2006'){
-          for(var k=0; k < results.rows.length ; k ++){
-            if( results.rows.item(k).yea2006 != null && results.rows.item(k).yea2006 != '' && parseFloat(results.rows.item(k).yea2006) != 0.0)
-            {
-              console.log(results.rows.item(k).nomdepto+" "+results.rows.item(k).yea2006);
-              datatoprint.push([results.rows.item(k).nomdepto,parseFloat(results.rows.item(k).yea2006)]);
+
+
+        if (theyear === '2006') {
+          for (var k = 0; k < results.rows.length; k++) {
+            if (results.rows.item(k).yea2006 != null && results.rows.item(k).yea2006 != '' && parseFloat(results.rows.item(k).yea2006) != 0.0) {
+              console.log(results.rows.item(k).nomdepto + " " + results.rows.item(k).yea2006);
+              datatoprint.push([results.rows.item(k).nomdepto, parseFloat(results.rows.item(k).yea2006)]);
             }
           }
         }
-        
-        chart = new Highcharts.Chart(
-                                     {
-                                     chart: {
-                                     renderTo: 'piechartdiv',
-                                     plotBackgroundColor: null,
-                                     plotBorderWidth: null,
-                                     plotShadow: false
-                                     },
-                                     title: {
-                                     text: 'Monthly Average Temperature',
-                                     x: -20 //center
-                                     },
-                                     
-                                     plotOptions: {
-                                     pie: {
-                                     allowPointSelect: true,
-                                     cursor: 'pointer',
-                                     dataLabels: {
-                                     enabled: true,
-                                     color: '#000000',
-                                     connectorColor: '#000000',
-                                     format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                                     }
-                                     }
-                                     },
-                                     
-                                     tooltip: {
-                                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                                     },
-                                     
-                                     series: [{
-                                              type: 'pie',
-                                              name: 'Browser share',
-                                              data: datatoprint
-                                              }]
-                                     });
 
+        chart = new Highcharts.Chart({
+          chart: {
+            renderTo: 'piechartdiv',
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            spacingTop: 10,
+            spacingBottom: 50,
+            margin : [10, 10, 10, 10]
+          },
+          legend : {
+            align : "center",
+            verticalAlign : "top",
+            x: 0,
+            y: 20,
+            borderWidth: 0
+          },
+          title: {
+            text: 'Monthly Average Temperature',
+            align: "center",
+            x: 0,
+            y: 10,
+            floating: true
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: false,
+                color: '#000000',
+                connectorColor: '#000000',
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+              },
+              showInLegend : true
+            }
+          },
 
-  
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+
+          series: [{
+              type: 'pie',
+              name: 'Browser share',
+              data: datatoprint
+            }
+          ]
+        });
       }
 
-      
+
     },
 
     lineal: function(tx, results) {
@@ -805,7 +814,7 @@ var app = {
 
         var len = results.rows.length;
         for (var i = 0; i < len; i++) {
-          datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005),parseFloat(results.rows.item(i).yea2006)]);
+          datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
         }
 
         if (google && google.visualization) {
