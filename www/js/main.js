@@ -885,8 +885,11 @@ var app = {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            // spacingTop: 10,
+            borderRadius: 0,
             height: 500
+          },
+          credits: {
+            enabled: false
           },
           legend: {
             align: "center",
@@ -897,7 +900,7 @@ var app = {
             margin: 20 //define el espacio entre el legend y la zona de grafico
           },
           title: {
-            text: results.rows.item(0).nomindicador + " - Año " + theyear,
+            text: ' ',
             align: "center",
             x: 0,
             y: 10,
@@ -954,8 +957,7 @@ var app = {
           var dataresults = results.rows.item(p);
           var serie = {};
           var rowdata = [];
-            
-            
+          
            //Verificacion de Regiones
             
             if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && parseFloat(dataresults["nomregion"]) != 0.0) {
@@ -967,8 +969,7 @@ var app = {
                     if(dataresults["yea"+app.years[l]] !== '' && dataresults["yea"+app.years[l]] !== null && dataresults["yea"+app.years[l]] !== '-' && parseFloat(dataresults["yea"+app.years[l]]) !== 0.0){
                         rowdata.push(parseFloat(dataresults["yea"+app.years[l]]));
                         console.log(l+" Año "+app.years[l]+" :"+dataresults["yea"+app.years[l]]);
-                    }
-                    
+                    }               
                 }
                 
                 for(var q=0; q<rowdata.length;q++){
@@ -1075,7 +1076,6 @@ var app = {
                 serie["data"]=rowdata;
                 theseries.push(serie);
             }
-
           //FIN DE printData
         }
         
@@ -1088,13 +1088,17 @@ var app = {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            spacingTop: 30
-            // spacingBottom: 50,
+            spacingTop: 30,
+            borderRadius: 0,
+            spacingBottom: 50
             // margin: [30, 10, 10, 10]
           },
+          credits: {
+            enabled: false
+          },
           title: {
-            // text: results.rows.item(0).nomindicador,
-            // x: -20 //center
+             text: '',
+             x: 20 //center
           },
           subtitle: {
             text: dataforlabels['fue' + [theyear]],
@@ -1105,7 +1109,7 @@ var app = {
           },*/
           yAxis: {
             title: {
-              text: 'Cantidad'
+               text: 'Cantidad'
             },
             plotLines: [{
                 value: 0,
@@ -1119,7 +1123,6 @@ var app = {
           legend: {
             align: "center",
             verticalAlign: "top",
-            // layout: 'vertical',
             borderWidth: 1,
             margin: 20 //define el espacio entre el legend y la zona de grafico
           },
@@ -1135,7 +1138,6 @@ var app = {
       var datatoprint = [];
       var theyear = app.years[17];
       var departamentos = [];
-
 
       function printData(tx, results) {
         var indicator = results.rows.item(0).idindicador;
@@ -1162,11 +1164,16 @@ var app = {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            spacingTop: 50,
-            spacingBottom: 50,
-            margin: [200, 50, 200, 50]
+            spacingTop: 10,
+            borderRadius: 0,
+            spacingBottom: 50
+            // margin: [200, 50, 200, 50]
           },
 
+          credits: {
+            enabled: false
+          },
+          
           xAxis: {
             categories: departamentos,
             labels: {
@@ -1188,7 +1195,7 @@ var app = {
           },
 
           title: {
-            text: results.rows.item(0).nomindicador + " - Año " + theyear,
+            text: '',
             align: "center",
             x: 0,
             y: 10,

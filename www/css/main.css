@@ -108,6 +108,19 @@ html, body {
     height: 100%;
 }
 
+.Title-Size{
+	width: 100%;
+	text-align: center;
+	padding: 0px;
+    margin: 0px;
+    overflow: auto;
+    background-color: #fff;
+    color: #000; /*#29abe2;*/
+    text-align: center;
+	font-weight: none;
+	font-size: 11px;
+}
+
 iframe {
 	border-width: 0;
 }
