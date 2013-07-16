@@ -165,7 +165,7 @@ var app = {
 
   pageEvents: function() {
     console.log("pageEvents: Asignando eventos a las páginas!");
-    var pages = ["#home", "#ubicaciones", "#demografia"];
+    var pages = ["#home"];
     $.each(pages, function(k, v) {
       $(v).on("pagebeforeshow", function() {
         app.openDB(app.queryDB);
