@@ -861,7 +861,6 @@ var app = {
       var theyear = app.years[17];
       var departamentos = [];
 
-
       function printData(tx, results) {
         var indicator = results.rows.item(0).idindicador;
         console.log("El indicador fué: " + indicator);
@@ -870,7 +869,6 @@ var app = {
         console.log("Numero de resultados de la consulta " + results.rows.length);
         console.log("Inicia pushData");
         console.log("Indicador para insertar datos en el gráfico:" + indicator);
-
 
         for (var j = 0; j < results.rows.length; j++) {
           var dataresults = results.rows.item(j);
@@ -928,12 +926,9 @@ var app = {
               type: 'pie',
               name: results.rows.item(0).nomunidad,
               data: datatoprint
-            }
-          ]
+            }]
         });
       }
-
-
     },
 
     lineal: function(tx) {
@@ -948,8 +943,6 @@ var app = {
       var zonas = [];
       var geograficas = [];
       var theseries = [];
-       
-  
 
       function printData(tx, results, theyear) {
 
@@ -1012,8 +1005,6 @@ var app = {
                 theseries.push(serie);
             }
 
-            
-          
           //Verificación de departamentos
           
           if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && parseFloat(dataresults["nomdepto"]) != 0.0) {
@@ -1085,9 +1076,6 @@ var app = {
                 theseries.push(serie);
             }
 
-           
-            
-            
           //FIN DE printData
         }
         
@@ -1100,14 +1088,13 @@ var app = {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            spacingTop: 30,
-            spacingBottom: 50,
-            margin: [30, 10, 10, 10]
+            spacingTop: 30
+            // spacingBottom: 50,
+            // margin: [30, 10, 10, 10]
           },
-
           title: {
-            text: results.rows.item(0).nomindicador,
-            x: -20 //center
+            // text: results.rows.item(0).nomindicador,
+            // x: -20 //center
           },
           subtitle: {
             text: dataforlabels['fue' + [theyear]],
@@ -1118,31 +1105,28 @@ var app = {
           },*/
           yAxis: {
             title: {
-              text: 'Temperature (°C)'
+              text: 'Cantidad'
             },
             plotLines: [{
                 value: 0,
                 width: 1,
                 color: '#808080'
-              }
-            ]
+              }]
           },
           tooltip: {
-            valueSuffix: '°C'
+             // valueSuffix: '%'
           },
           legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
-            borderWidth: 0
+            align: "center",
+            verticalAlign: "top",
+            // layout: 'vertical',
+            borderWidth: 1,
+            margin: 20 //define el espacio entre el legend y la zona de grafico
           },
           series: theseries
-
           //[{name:'Amazonas',data:[15.0,30]},{name:'Cundinamarca',data:[19.0,10]}]
         });
       }
-
-
     },
 
     bars: function(tx) {
@@ -1183,7 +1167,6 @@ var app = {
             margin: [200, 50, 200, 50]
           },
 
-
           xAxis: {
             categories: departamentos,
             labels: {
@@ -1196,7 +1179,6 @@ var app = {
             }
           },
 
-
           legend: {
             align: "center",
             verticalAlign: "top",
@@ -1204,6 +1186,7 @@ var app = {
             y: 20,
             borderWidth: 0
           },
+
           title: {
             text: results.rows.item(0).nomindicador + " - Año " + theyear,
             align: "center",
