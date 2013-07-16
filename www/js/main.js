@@ -914,22 +914,54 @@ var app = {
           var serie = {};
           var rowdata = [];
           
+          //Verificación de departamentos
+          
           if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && parseFloat(dataresults["nomdepto"]) != 0.0) {
             console.log(" Departamento "+p+": "+dataresults["nomdepto"]);
             departamentos.push(dataresults["nomdepto"]);
             geograficas.push(dataresults["nomdepto"]);
             console.log("Numero de años:"+app.years.length);
             for (var l=0;l<app.years.length;l++){
-              if(dataresults["yea"+app.years[l]] !== ''){
-                  rowdata.push(dataresults["yea"+app.years[l]]);
+              if(dataresults["yea"+app.years[l]] !== '' && dataresults["yea"+app.years[l]] !== null && dataresults["yea"+app.years[l]] !== '-' && parseFloat(dataresults["yea"+app.years[l]]) !== 0.0){
+                  rowdata.push(parseFloat(dataresults["yea"+app.years[l]]));
                   console.log(l+" Año "+app.years[l]+" :"+dataresults["yea"+app.years[l]]);
               }
             
             }
+          
+            for(var q=0; q<rowdata.length;q++){
+              console.log("Datos guardado "+rowdata[q]);
+            }
+            
             serie["name"]=dataresults["nomdepto"];
             serie["data"]=rowdata;
             theseries.push(serie);
           }
+          //
+          
+          if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && parseFloat(dataresults["nommpio"]) != 0.0) {
+            console.log(" Departamento "+p+": "+dataresults["nommpio"]);
+            municipios.push(dataresults["nommpio"]);
+            geograficas.push(dataresults["nommpio"]);
+            console.log("Numero de años:"+app.years.length);
+            for (var l=0;l<app.years.length;l++){
+              if(dataresults["yea"+app.years[l]] !== '' && dataresults["yea"+app.years[l]] !== null && parseFloat(dataresults["yea"+app.years[l]]) !== 0.0){
+                rowdata.push(parseFloat(dataresults["yea"+app.years[l]]));
+                console.log(l+" Año "+app.years[l]+" :"+dataresults["yea"+app.years[l]]);
+              }
+              
+            }
+            
+            for(var q=0; q<rowdata.length;q++){
+              console.log("Datos guardado "+rowdata[q]);
+            }
+            
+            serie["name"]=dataresults["nommpio"];
+            serie["data"]=rowdata;
+            theseries.push(serie);
+          }
+          
+          //FIN DE printData
         }
         
         //Datos para etiquetas en el gráfico
