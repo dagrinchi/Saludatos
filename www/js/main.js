@@ -130,6 +130,14 @@ var app = {
           'Aceptar');
       }
     });
+
+    $("#reset").on("click", function(e) {
+      $.each(app.selection, function(k1, v1) {
+        $.each(v1['cols'], function(k2, v2) {
+          app.selection[k1]['cols'][k2] = [];
+        });
+      });
+    });
   },
 
   pageEvents: function() {
@@ -311,8 +319,8 @@ var app = {
   },
 
   openDB: function(queryDB) {
-    var msg = "openDB: Abriendo base de datos!";
-    console.log(msg);
+    console.log("openDB: Abriendo base de datos!");
+    app.showLoadingBox("Abriendo base de datos!");
     var db = window.openDatabase("saludatos", "1.0", "Saludatos", 3145728);
     db.transaction(queryDB, app.errorCB);
   },
@@ -320,6 +328,7 @@ var app = {
   queryDB: function(tx) {
    
     console.log("queryDB: Consultas!");
+    app.showLoadingBox("Consultando!");
 
     tx.executeSql('SELECT COUNT(*) AS counter FROM (' + app.buildSQL() + ')', [], reg, app.errorCB);
     app.years = [];
@@ -330,7 +339,11 @@ var app = {
       app.counters["counter-reg"] = results.rows.item(0).counter;
     }
 
-    
+    function yea(tx, results) {
+      for (var j = 0; j < results.rows.length; j++) {
+        app.years.push(results.rows.item(j).columnName.substring(3));
+      }
+    }
 
     app.ent.indicador(tx, "SELECT DISTINCT idindicador, nomindicador FROM (" + app.buildSQL() + ") WHERE nomindicador <> '' GROUP BY idindicador ORDER BY nomindicador", function(tx) {
       app.ent.region(tx, "SELECT DISTINCT idregion, nomregion FROM (" + app.buildSQL() + ") WHERE nomregion <> '' GROUP BY idregion ORDER BY nomregion", function(tx) {
@@ -350,6 +363,7 @@ var app = {
                                   $.each(app.counters, function(k, v) {
                                     app.counterAnim("#" + k, v);
                                   });
+                                  app.hideLoadingBox();
                                 });
                               });
                             });
@@ -426,7 +440,7 @@ var app = {
   },
 
   errorCB: function(tx, err) {
-    console.log("Opps!: " + err.code);
+    console.log("errorCB: Opps!: " + err.code);
   },
 
   registerInputs: function(list, type) {
@@ -455,6 +469,7 @@ var app = {
 
     if ($checkbox.is(':checked')) {
       if ($checkbox.data("checkall")) {
+        app.selection[$checkbox.data("vista")]["cols"][$checkbox.data("col")] = [];
         $("#" + $checkbox.data("checkall") + " :checkbox").each(function(k, v) {
           if (k !== 0) {
             app.selection[$(v).data("vista")]["cols"][$(v).data("col")].push($(v).val());
@@ -466,6 +481,7 @@ var app = {
       }
     } else {
       if ($checkbox.data("checkall")) {
+        app.selection[$checkbox.data("vista")]["cols"][$checkbox.data("col")] = [];
         $("#" + $checkbox.data("checkall") + " :checkbox").each(function(k, v) {
           if (k !== 0) {
             app.selection[$(v).data("vista")]["cols"][$(v).data("col")].splice(app.selection[$(v).data("vista")]["cols"][$(v).data("col")].indexOf($(v).val()), 1);
@@ -489,12 +505,13 @@ var app = {
       function indicador(tx, results) {
         var list = "#indList";
         var len = results.rows.length;
+
+        var html = "<legend>Seleccione un indicador para evaluar:</legend> \n";
         for (var i = 0; i < len; i++) {
-          var input = '<input type="radio" name="indicador" data-col="idindicador" id="indicador-' + results.rows.item(i).idindicador + '" value="' + results.rows.item(i).idindicador + '" />';
-          var label = '<label for="indicador-' + results.rows.item(i).idindicador + '">' + results.rows.item(i).nomindicador + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="radio" name="indicador" data-col="idindicador" id="indicador-' + results.rows.item(i).idindicador + '" value="' + results.rows.item(i).idindicador + '" />';
+          html += '<label for="indicador-' + results.rows.item(i).idindicador + '">' + results.rows.item(i).nomindicador + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "radio");
         cb(tx);
       }
@@ -510,13 +527,15 @@ var app = {
         var list = "#regList";
         var len = results.rows.length;
 
+        var html = '<legend>Seleccione uno varias regiones para evaluar:</legend> \n';
+        html += '<input name="selectall-region" id="selectall-region" data-vista="region" data-col="idregion" data-checkall="regList" type="checkbox" /> \n';
+        html += '<label for="selectall-region">Seleccionar todos</label> \n';
         $("#regionCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="region" data-col="idregion" name="region-' + results.rows.item(i).idregion + '" id="region-' + results.rows.item(i).idregion + '" value="' + results.rows.item(i).idregion + '"/>';
-          var label = '<label for="region-' + results.rows.item(i).idregion + '">' + results.rows.item(i).nomregion + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="region" data-col="idregion" name="region-' + results.rows.item(i).idregion + '" id="region-' + results.rows.item(i).idregion + '" value="' + results.rows.item(i).idregion + '"/>';
+          html += '<label for="region-' + results.rows.item(i).idregion + '">' + results.rows.item(i).nomregion + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -531,13 +550,16 @@ var app = {
       function subregion(tx, results) {
         var list = "#subregList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varias subregiones para evaluar:</legend> \n';
+        html += '<input name="selectall-subregion" id="selectall-subregion" data-vista="subregion" data-col="idsubregion" data-checkall="subregList" type="checkbox" /> \n';
+        html += '<label for="selectall-subregion">Seleccionar todos</label> \n';
+
         $("#subregionCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="subregion" data-col="idsubregion" name="subregion-' + results.rows.item(i).idsubregion + '" id="subregion-' + results.rows.item(i).idsubregion + '" value="' + results.rows.item(i).idsubregion + '"/>';
-          var label = '<label for="subregion-' + results.rows.item(i).idsubregion + '">' + results.rows.item(i).nomsubregion + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="subregion" data-col="idsubregion" name="subregion-' + results.rows.item(i).idsubregion + '" id="subregion-' + results.rows.item(i).idsubregion + '" value="' + results.rows.item(i).idsubregion + '"/>';
+          html += '<label for="subregion-' + results.rows.item(i).idsubregion + '">' + results.rows.item(i).nomsubregion + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -552,15 +574,18 @@ var app = {
       function departamento(tx, results) {
         var list = "#depList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varios departamentos para evaluar:</legend> \n';
+        html += '<input name="selectall-departamento" id="selectall-departamento" data-vista="departamento" data-col="iddepto" data-checkall="depList" type="checkbox" /> \n';
+        html += '<label for="selectall-departamento">Seleccionar todos</label> \n';
+
         app.counters["counter-dep"] = len;
 
         $("#departamentoCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="departamento" data-col="iddepto" name="departamento-' + results.rows.item(i).iddepto + '" id="departamento-' + results.rows.item(i).iddepto + '" value="' + results.rows.item(i).iddepto + '"/>';
-          var label = '<label for="departamento-' + results.rows.item(i).iddepto + '">' + results.rows.item(i).nomdepto + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="departamento" data-col="iddepto" name="departamento-' + results.rows.item(i).iddepto + '" id="departamento-' + results.rows.item(i).iddepto + '" value="' + results.rows.item(i).iddepto + '"/>';
+          html += '<label for="departamento-' + results.rows.item(i).iddepto + '">' + results.rows.item(i).nomdepto + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -577,15 +602,16 @@ var app = {
         var list = "#munList";
         var len = results.rows.length;
         app.counters["counter-mun"] = len;
+        var html = "<legend>Seleccione uno varios municipios para evaluar:</legend> \n";
+        html += '<input name="selectall-municipio" id="selectall-municipio" data-vista="municipio" data-col="idmpio" data-checkall="munList" type="checkbox" /> \n';
+        html += '<label for="selectall-municipio">Seleccionar todos</label>';
 
         $("#municipioCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="municipio" data-col="idmpio" name="municipio-' + results.rows.item(i).idmpio + '" id="municipio-' + results.rows.item(i).idmpio + '" value="' + results.rows.item(i).idmpio + '"/>';
-          var label = '<label for="municipio-' + results.rows.item(i).idmpio + '">' + results.rows.item(i).nommpio + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="municipio" data-col="idmpio" name="municipio-' + results.rows.item(i).idmpio + '" id="municipio-' + results.rows.item(i).idmpio + '" value="' + results.rows.item(i).idmpio + '"/> \n';
+          html += '<label for="municipio-' + results.rows.item(i).idmpio + '">' + results.rows.item(i).nommpio + '</label> \n';
         }
-        //        $(list).html(html).trigger('create');
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -601,13 +627,16 @@ var app = {
       function zona(tx, results) {
         var list = "#zonList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varias zonas para evaluar:</legend> \n';
+        html += '<input name="selectall-zona" id="selectall-zona" data-vista="zona" data-col="idzona" data-checkall="zonList" type="checkbox" /> \n';
+        html += '<label for="selectall-zona">Seleccionar todos</label>';
+
         $("#zonaCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="zona" data-col="idzona" name="zona-' + results.rows.item(i).idzona + '" id="zona-' + results.rows.item(i).idzona + '" value="' + results.rows.item(i).idzona + '"/>';
-          var label = '<label for="zona-' + results.rows.item(i).idzona + '">' + results.rows.item(i).nomzona + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="zona" data-col="idzona" name="zona-' + results.rows.item(i).idzona + '" id="zona-' + results.rows.item(i).idzona + '" value="' + results.rows.item(i).idzona + '"/>';
+          html += '<label for="zona-' + results.rows.item(i).idzona + '">' + results.rows.item(i).nomzona + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -623,13 +652,16 @@ var app = {
       function educacion(tx, results) {
         var list = "#eduList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varias categorías de educación:</legend> \n';
+        html += '<input name="selectall-educacion" id="selectall-educacion" data-vista="educacion" data-col="ideducacion" data-checkall="eduList" type="checkbox" /> \n';
+        html += '<label for="selectall-educacion">Seleccionar todos</label> \n';
+
         $("#eduCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="educacion" data-col="ideducacion" name="educacion-' + results.rows.item(i).ideducacion + '" id="educacion-' + results.rows.item(i).ideducacion + '" value="' + results.rows.item(i).ideducacion + '"/>';
-          var label = '<label for="educacion-' + results.rows.item(i).ideducacion + '">' + results.rows.item(i).nomeducacion + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="educacion" data-col="ideducacion" name="educacion-' + results.rows.item(i).ideducacion + '" id="educacion-' + results.rows.item(i).ideducacion + '" value="' + results.rows.item(i).ideducacion + '"/>';
+          html += '<label for="educacion-' + results.rows.item(i).ideducacion + '">' + results.rows.item(i).nomeducacion + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -644,13 +676,15 @@ var app = {
       function ocupacion(tx, results) {
         var list = "#ocuList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varias categorías de ocupación:</legend>\n';
+        html += '<input name="selectall-ocupacion" id="selectall-ocupacion" data-vista="ocupacion" data-col="idocupacion" data-checkall="ocuList" type="checkbox" />\n';
+        html += '<label for="selectall-ocupacion">Seleccionar todos</label>\n';
         $("#ocuCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="ocupacion" data-col="idocupacion" name="ocupacion-' + results.rows.item(i).idocupacion + '" id="ocupacion-' + results.rows.item(i).idocupacion + '" value="' + results.rows.item(i).idocupacion + '"/>';
-          var label = '<label for="ocupacion-' + results.rows.item(i).idocupacion + '">' + results.rows.item(i).nomocupacion + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="ocupacion" data-col="idocupacion" name="ocupacion-' + results.rows.item(i).idocupacion + '" id="ocupacion-' + results.rows.item(i).idocupacion + '" value="' + results.rows.item(i).idocupacion + '"/>';
+          html += '<label for="ocupacion-' + results.rows.item(i).idocupacion + '">' + results.rows.item(i).nomocupacion + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -665,13 +699,15 @@ var app = {
       function edad(tx, results) {
         var list = "#edaList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varias categorías de edad:</legend>\n';
+        html += '<input name="selectall-edad" id="selectall-edad" data-vista="edad" data-col="idedad" data-checkall="edaList" type="checkbox" /> \n';
+        html += '<label for="selectall-edad">Seleccionar todos</label> \n';
         $("#edaCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="edad" data-col="idedad" name="edad-' + results.rows.item(i).idedad + '" id="edad-' + results.rows.item(i).idedad + '" value="' + results.rows.item(i).idedad + '"/>';
-          var label = '<label for="edad-' + results.rows.item(i).idedad + '">' + results.rows.item(i).nomedad + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="edad" data-col="idedad" name="edad-' + results.rows.item(i).idedad + '" id="edad-' + results.rows.item(i).idedad + '" value="' + results.rows.item(i).idedad + '"/>';
+          html += '<label for="edad-' + results.rows.item(i).idedad + '">' + results.rows.item(i).nomedad + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -686,13 +722,15 @@ var app = {
       function estadocivil(tx, results) {
         var list = "#estList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varias categorías de estado civil:</legend> \n';
+        html += '<input name="selectall-estadocivil" id="selectall-estadocivil" data-vista="estadocivil" data-col="idestadocivil" data-checkall="estList" type="checkbox" /> \n';
+        html += '<label for="selectall-estadocivil">Seleccionar todos</label> \n';
         $("#estCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="estadocivil" data-col="idestadocivil" name="estadocivil-' + results.rows.item(i).idestadocivil + '" id="estadocivil-' + results.rows.item(i).idestadocivil + '" value="' + results.rows.item(i).idestadocivil + '"/>';
-          var label = '<label for="estadocivil-' + results.rows.item(i).idestadocivil + '">' + results.rows.item(i).nomestadocivil + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="estadocivil" data-col="idestadocivil" name="estadocivil-' + results.rows.item(i).idestadocivil + '" id="estadocivil-' + results.rows.item(i).idestadocivil + '" value="' + results.rows.item(i).idestadocivil + '"/>';
+          html += '<label for="estadocivil-' + results.rows.item(i).idestadocivil + '">' + results.rows.item(i).nomestadocivil + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -707,13 +745,15 @@ var app = {
       function genero(tx, results) {
         var list = "#genList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varias categorías de género:</legend> \n';
+        html += '<input name="selectall-genero" id="selectall-genero" data-vista="sexo" data-col="idsexo" data-checkall="genList" type="checkbox" /> \n';
+        html += '<label for="selectall-genero">Seleccionar todos</label> \n';
         $("#genCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="sexo" data-col="idsexo" name="genero-' + results.rows.item(i).idsexo + '" id="genero-' + results.rows.item(i).idsexo + '" value="' + results.rows.item(i).idsexo + '"/>';
-          var label = '<label for="genero-' + results.rows.item(i).idsexo + '">' + results.rows.item(i).nomsexo + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="sexo" data-col="idsexo" name="genero-' + results.rows.item(i).idsexo + '" id="genero-' + results.rows.item(i).idsexo + '" value="' + results.rows.item(i).idsexo + '"/>';
+          html += '<label for="genero-' + results.rows.item(i).idsexo + '">' + results.rows.item(i).nomsexo + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -728,13 +768,15 @@ var app = {
       function etnia(tx, results) {
         var list = "#etnList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varias categorías de etnia:</legend> \n';
+        html += '<input name="selectall-etnia" id="selectall-etnia" data-vista="etnia" data-col="idetnia" data-checkall="etnList" type="checkbox" /> \n';
+        html += '<label for="selectall-etnia">Seleccionar todos</label> \n';
         $("#etnCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="etnia" data-col="idetnia" name="etnia-' + results.rows.item(i).idetnia + '" id="etnia-' + results.rows.item(i).idetnia + '" value="' + results.rows.item(i).idetnia + '"/>';
-          var label = '<label for="etnia-' + results.rows.item(i).idetnia + '">' + results.rows.item(i).nometnia + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="etnia" data-col="idetnia" name="etnia-' + results.rows.item(i).idetnia + '" id="etnia-' + results.rows.item(i).idetnia + '" value="' + results.rows.item(i).idetnia + '"/>';
+          html += '<label for="etnia-' + results.rows.item(i).idetnia + '">' + results.rows.item(i).nometnia + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -749,13 +791,15 @@ var app = {
       function eps(tx, results) {
         var list = "#epsList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varias EPS:</legend> \n';
+        html += '<input name="selectall-eps" id="selectall-eps" data-vista="eps" data-col="ideps" data-checkall="epsList" type="checkbox" /> \n';
+        html += '<label for="selectall-eps">Seleccionar todos</label> \n';
         $("#epsCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="eps" data-col="ideps" name="eps-' + results.rows.item(i).ideps + '" id="eps-' + results.rows.item(i).ideps + '" value="' + results.rows.item(i).ideps + '"/>';
-          var label = '<label for="eps-' + results.rows.item(i).ideps + '">' + results.rows.item(i).nomeps + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="eps" data-col="ideps" name="eps-' + results.rows.item(i).ideps + '" id="eps-' + results.rows.item(i).ideps + '" value="' + results.rows.item(i).ideps + '"/>';
+          html += '<label for="eps-' + results.rows.item(i).ideps + '">' + results.rows.item(i).nomeps + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -770,13 +814,15 @@ var app = {
       function ips(tx, results) {
         var list = "#ipsList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varias IPS:</legend> \n';
+        html += '<input name="selectall-ips" id="selectall-ips" data-vista="ips" data-col="idips" data-checkall="ipsList" type="checkbox" /> \n';
+        html += '<label for="selectall-ips">Seleccionar todos</label> \n';
         $("#ipsCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="ips" data-col="idips" name="ips-' + results.rows.item(i).idips + '" id="ips-' + results.rows.item(i).idips + '" value="' + results.rows.item(i).idips + '"/>';
-          var label = '<label for="ips-' + results.rows.item(i).idips + '">' + results.rows.item(i).nomips + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="ips" data-col="idips" name="ips-' + results.rows.item(i).idips + '" id="ips-' + results.rows.item(i).idips + '" value="' + results.rows.item(i).idips + '"/>';
+          html += '<label for="ips-' + results.rows.item(i).idips + '">' + results.rows.item(i).nomips + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -791,13 +837,15 @@ var app = {
       function regimen(tx, results) {
         var list = "#regimenList";
         var len = results.rows.length;
+        var html = '<legend>Seleccione uno varias categorías de régimen:</legend> \n';
+        html += '<input name="selectall-regimen" id="selectall-regimen" data-vista="regimen" data-col="idregimen" data-checkall="regimenList" type="checkbox" /> \n';
+        html += '<label for="selectall-regimen">Seleccionar todos</label> \n';
         $("#regiCount").html(len);
         for (var i = 0; i < len; i++) {
-          var input = '<input type="checkbox" data-vista="regimen" data-col="idregimen" name="regimen-' + results.rows.item(i).idregimen + '" id="regimen-' + results.rows.item(i).idregimen + '" value="' + results.rows.item(i).idregimen + '"/>';
-          var label = '<label for="regimen-' + results.rows.item(i).idregimen + '">' + results.rows.item(i).nomregimen + '</label>';
-          $(list).append(input);
-          $(list).append(label);
+          html += '<input type="checkbox" data-vista="regimen" data-col="idregimen" name="regimen-' + results.rows.item(i).idregimen + '" id="regimen-' + results.rows.item(i).idregimen + '" value="' + results.rows.item(i).idregimen + '"/>';
+          html += '<label for="regimen-' + results.rows.item(i).idregimen + '">' + results.rows.item(i).nomregimen + '</label>';
         }
+        $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         cb(tx);
       }
@@ -821,13 +869,12 @@ var app = {
         console.log("Consulta realizada");
         console.log("Numero de resultados de la consulta " + results.rows.length);
         console.log("Inicia pushData");
-        var indicator = results.rows.item(0).idindicador;
         console.log("Indicador para insertar datos en el gráfico:" + indicator);
 
 
         for (var j = 0; j < results.rows.length; j++) {
           var dataresults = results.rows.item(j);
-          if (dataresults["yea" + theyear] !== null && dataresults["yea" + theyear] !== '' && parseFloat(dataresults["yea" + theyear]) != 0.0) {
+          if (dataresults["yea" + theyear] !== null && dataresults["yea" + theyear] !== '' && parseFloat(results.rows.item(j).yea2005) !== 0.0) {
             console.log(results.rows.item(j).nomdepto + " " + dataresults["yea" + theyear]);
             datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
             departamentos.push(results.rows.item(j).nomdepto);
@@ -1111,13 +1158,13 @@ var app = {
         console.log("El indicador fué: " + indicator);
         console.log("Consulta realizada");
         console.log("Numero de resultados de la consulta " + results.rows.length);
-        var indicator = results.rows.item(0).idindicador;
+        console.log("Inicia pushData");
         console.log("Indicador para insertar datos en el gráfico:" + indicator);
 
 
         for (var j = 0; j < results.rows.length; j++) {
           var dataresults = results.rows.item(j);
-          if (dataresults["yea" + theyear] !== null && dataresults["yea" + theyear] !== '' && parseFloat(results.rows.item(j).yea2005) != 0.0) {
+          if (dataresults["yea" + theyear] !== null && dataresults["yea" + theyear] !== '' && parseFloat(results.rows.item(j).yea2005) !== 0.0) {
             console.log(results.rows.item(j).nomdepto + " " + dataresults["yea" + theyear]);
             datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
             departamentos.push(results.rows.item(j).nomdepto);

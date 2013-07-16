@@ -22,7 +22,7 @@
                 <iframe id="manual-animation-2" class="animation-size-for-iframe" src="motion_intro/motion.html" frameborder="0"></iframe>
             </div>
         </div>
-        <!-- START DIALOG HOME -->
+        <!-- START PAGE HOME -->
         <div data-role="page" id="home"> 
             <div data-role="header" data-position="fixed">
                 <a href="#acerca" class="ui-btn-left" data-icon="info" data-rel="dialog">Acerca</a>
@@ -36,6 +36,7 @@
                     <span id="counter-dep">0</span>
                     <p>Número de Municipios:</p>
                     <span id="counter-mun">0</span>
+                    <a href="#popupDialog" data-rel="dialog" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-icon="delete" data-theme="b">Restablecer</a>
                 </div>
                 <div class="ui-block-b sidebar">
                     <a href="#cat" class="icon_health" data-rel="dialog">CATEGORÍAS<br/>DE SALUD<br/></a>
@@ -63,16 +64,14 @@
                 </div>
             </div>
         </div>
-        <!-- END DIALOG HOME -->
+        <!-- END PAGE HOME -->
         <!-- START DIALOG INDICADORES -->
         <div data-role="dialog" id="cat" data-theme="b">
             <div data-role="header" data-position="fixed" data-theme="b">
                 <h1>Categorías de Salud</h1>
             </div>
             <div data-role="content" data-theme="b">
-                <fieldset data-role="controlgroup" id="indList" data-theme="b">
-                    <legend>Seleccione un indicador para evaluar:</legend>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="indList" data-theme="b"></fieldset>
             </div>
         </div>
         <!-- END DIALOG INDICADORES -->
@@ -110,11 +109,7 @@
                 <h1>Región</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="regList">
-                    <legend>Seleccione uno varias regiones para evaluar:</legend>
-                    <input name="selectall-region" id="selectall-region" data-checkall="regList" type="checkbox" />
-                    <label for="selectall-region">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="regList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -125,11 +120,7 @@
                 <h1>Subregión</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="subregList">
-                    <legend>Seleccione uno varias subregiones para evaluar:</legend>
-                    <input name="selectall-subregion" id="selectall-subregion" data-checkall="subregList" type="checkbox" />
-                    <label for="selectall-subregion">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="subregList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -140,11 +131,7 @@
                 <h1>Departamento</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="depList">
-                    <legend>Seleccione uno varios departamentos para evaluar:</legend>
-                    <input name="selectall-departamento" id="selectall-departamento" data-checkall="depList" type="checkbox" />
-                    <label for="selectall-departamento">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="depList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -155,11 +142,7 @@
                 <h1>Municipio</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="munList">
-                    <legend>Seleccione uno varios municipios para evaluar:</legend>
-                    <input name="selectall-municipio" id="selectall-municipio" data-checkall="munList" type="checkbox" />
-                    <label for="selectall-municipio">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="munList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -170,11 +153,7 @@
                 <h1>Zona</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="zonList">
-                    <legend>Seleccione uno varias zonas para evaluar:</legend>
-                    <input name="selectall-zona" id="selectall-zona" data-checkall="zonList" type="checkbox" />
-                    <label for="selectall-zona">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="zonList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -225,11 +204,7 @@
                 <h1>Educación</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="eduList">
-                    <legend>Seleccione uno varias categorías de educación:</legend>
-                    <input name="selectall-educacion" id="selectall-educacion" data-checkall="eduList" type="checkbox" />
-                    <label for="selectall-educacion">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="eduList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -240,11 +215,7 @@
                 <h1>Ocupación</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="ocuList">
-                    <legend>Seleccione uno varias categorías de ocupación:</legend>
-                    <input name="selectall-ocupacion" id="selectall-ocupacion" data-checkall="ocuList" type="checkbox" />
-                    <label for="selectall-ocupacion">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="ocuList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -255,11 +226,7 @@
                 <h1>Edad</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="edaList">
-                    <legend>Seleccione uno varias categorías de edad:</legend>
-                    <input name="selectall-edad" id="selectall-edad" data-checkall="edaList" type="checkbox" />
-                    <label for="selectall-edad">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="edaList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -270,11 +237,7 @@
                 <h1>Estado civil</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="estList">
-                    <legend>Seleccione uno varias categorías de estado civil:</legend>
-                    <input name="selectall-estadocivil" id="selectall-estadocivil" data-checkall="estList" type="checkbox" />
-                    <label for="selectall-estadocivil">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="estList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -285,11 +248,7 @@
                 <h1>Género</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="genList">
-                    <legend>Seleccione uno varias categorías de género:</legend>
-                    <input name="selectall-genero" id="selectall-genero" data-checkall="genList" type="checkbox" />
-                    <label for="selectall-genero">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="genList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -300,11 +259,7 @@
                 <h1>Etnia</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="etnList">
-                    <legend>Seleccione uno varias categorías de etnia:</legend>
-                    <input name="selectall-etnia" id="selectall-etnia" data-checkall="etnList" type="checkbox" />
-                    <label for="selectall-etnia">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="etnList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -315,11 +270,7 @@
                 <h1>EPS</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="epsList">
-                    <legend>Seleccione uno varias EPS:</legend>
-                    <input name="selectall-eps" id="selectall-eps" data-checkall="epsList" type="checkbox" />
-                    <label for="selectall-eps">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="epsList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -330,11 +281,7 @@
                 <h1>IPS</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="ipsList">
-                    <legend>Seleccione uno varias IPS:</legend>
-                    <input name="selectall-ips" id="selectall-ips" data-checkall="ipsList" type="checkbox" />
-                    <label for="selectall-ips">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="ipsList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -345,11 +292,7 @@
                 <h1>Régimen</h1>
             </div>
             <div data-role="content">
-                <fieldset data-role="controlgroup" id="regimenList">
-                    <legend>Seleccione uno varias categorías de régimen:</legend>
-                    <input name="selectall-regimen" id="selectall-regimen" data-checkall="regimenList" type="checkbox" />
-                    <label for="selectall-regimen">Seleccionar todos</label>
-                </fieldset>
+                <fieldset data-role="controlgroup" id="regimenList"></fieldset>
                 <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
             </div>
         </div>
@@ -555,6 +498,17 @@
             </div>
         </div>
         <!-- END DIALOG ACERCA DE -->
+        <div data-role="dialog" id="popupDialog" data-overlay-theme="a" data-theme="c" data-dismissible="false">
+            <div data-role="header" data-theme="a" class="ui-corner-top">
+                <h1>¿Restablecer?</h1>
+            </div>
+            <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+                <h3 class="ui-title">¿Desea continuar?</h3>
+                <p>Esta acción restablece las gráficas y contadores a las consultas iniciales.</p>
+                <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancelar</a>
+                <a href="#home" id="reset" data-role="button" data-inline="true" data-transition="flow" data-theme="b">Aceptar</a>
+            </div>
+        </div>
 
         <script type="text/javascript" src="cordova-2.7.0.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
