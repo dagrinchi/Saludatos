@@ -100,9 +100,6 @@ var app = {
 
   init: function() {
     console.log("init: Iniciando app!");
-    app.buttonHeight();
-    app.btnsEvents();
-    app.pageEvents();
     document.addEventListener("deviceready", app.onDeviceReady, false);
   },
 
@@ -114,18 +111,36 @@ var app = {
     });
   },
 
-  btnsEvents: function() {
+  onDeviceReady: function() {
+    //window.localStorage.removeItem("updated");
+
+    console.log("onDeviceReady: Dispositivo listo!");
+    app.buttonHeight();
+    app.btnsEvents(app.sliderEvents);
+    app.pageEvents();
+
+    if (app.checkConnection()) {
+      app.initGoogleLoader(app.startApp);
+    } else {
+      navigator.notification.alert('No hay una conexión a internet!', function() {
+        navigator.app.exitApp();
+      }, 'Atención', 'Aceptar');
+    }
+  },
+
+  btnsEvents: function(cb) {
     console.log("btnsEvents: Asignando eventos a los botones de las gráficas!");
     $(".btn_secundario").on("click", function(e) {
       console.log("btnsEvents: Validando si hay un indicador!");
       if (app.selection.indicador.cols.idindicador[0]) {
         var $this = $(this);
-        app.openDB(app.chart[$this.data("graph")]);
+        cb(app.chart[$this.data("graph")]);
+        //app.openDB(app.chart[$this.data("graph")]);
       } else {
         navigator.notification.alert(
           'Debe seleccionar una categoría de salud!', function() {
-          $.mobile.changePage("#home");
-        },
+            $.mobile.changePage("#home");
+          },
           'Atención',
           'Aceptar');
       }
@@ -140,6 +155,14 @@ var app = {
     });
   },
 
+  sliderEvents: function(chart) {
+    chart();
+    console.log("sliderEvents: Asignando eventos a sliders!");
+    $(document).on("slidestop", "#pie-slider", function() {
+      chart();
+    });
+  },
+
   pageEvents: function() {
     console.log("pageEvents: Asignando eventos a las páginas!");
       var pages = ["#home","#ubicaciones","#demografia"];
@@ -150,20 +173,6 @@ var app = {
 
              });
      },
-
-
-  onDeviceReady: function() {
-    //window.localStorage.removeItem("updated");
-
-    console.log("onDeviceReady: Dispositivo listo!");
-    if (app.checkConnection()) {
-      app.initGoogleLoader(app.startApp);
-    } else {
-      navigator.notification.alert('No hay una conexión a internet!', function() {
-        navigator.app.exitApp();
-      }, 'Atención', 'Aceptar');
-    }
-  },
 
   checkConnection: function() {
     console.log("checkConnection: Comprobando conectividad a internet!");
@@ -305,48 +314,38 @@ var app = {
     var updated = new Date();
     window.localStorage.setItem("updated", updated);
     $.mobile.changePage("#home");
-   
-    
-
   },
-  
+
   yea: function(tx, results) {
-    
     for (var j = 0; j < results.rows.length; j++) {
-      console.log("Número de años: "+results.rows.length);
-      console.log("Año " + j + " " + results.rows.item(j).columnName.substring(3));
       app.years.push(results.rows.item(j).columnName.substring(3));
     }
-    console.log("Numero resultante de elentos en years"+app.years.length);
-   
-    
+
+    $("#pie-slider").prop({
+      value: app.years[0],
+      min: app.years[0],
+      max: app.years.slice(-1)[0]
+    });
   },
 
-  openDB: function(queryDB) {
+  openDB: function(q) {
     console.log("openDB: Abriendo base de datos!");
     app.showLoadingBox("Abriendo base de datos!");
     var db = window.openDatabase("saludatos", "1.0", "Saludatos", 3145728);
-    db.transaction(queryDB, app.errorCB);
+    db.transaction(q, app.errorCB);
   },
 
   queryDB: function(tx) {
-   
+
     console.log("queryDB: Consultas!");
     app.showLoadingBox("Consultando!");
 
     tx.executeSql('SELECT COUNT(*) AS counter FROM (' + app.buildSQL() + ')', [], reg, app.errorCB);
     app.years = [];
     tx.executeSql('SELECT columnName from columnNames where columnName like "%yea%"', [], app.yea, app.errorCB);
-   
 
     function reg(tx, results) {
       app.counters["counter-reg"] = results.rows.item(0).counter;
-    }
-
-    function yea(tx, results) {
-      for (var j = 0; j < results.rows.length; j++) {
-        app.years.push(results.rows.item(j).columnName.substring(3));
-      }
     }
 
     app.ent.indicador(tx, "SELECT DISTINCT idindicador, nomindicador FROM (" + app.buildSQL() + ") WHERE nomindicador <> '' GROUP BY idindicador ORDER BY nomindicador", function(tx) {
@@ -858,83 +857,83 @@ var app = {
   },
 
   chart: {
-    pie: function(tx) {
 
-      tx.executeSql(app.buildSQL(), [], printData, app.errorCB);
-      var datatoprint = [];
-      var theyear = app.years[17];
-      var departamentos = [];
+    pie: function() {
 
-      function printData(tx, results) {
-        var indicator = results.rows.item(0).idindicador;
-        console.log("El indicador fué: " + indicator);
-        console.log("El número de resultados fué: " + results.rows.length);
-        console.log("Consulta realizada");
-        console.log("Numero de resultados de la consulta " + results.rows.length);
-        console.log("Inicia pushData");
-        console.log("Indicador para insertar datos en el gráfico:" + indicator);
+      var chart;
 
-        for (var j = 0; j < results.rows.length; j++) {
-          var dataresults = results.rows.item(j);
-          if (dataresults["yea" + theyear] !== null && dataresults["yea" + theyear] !== '' && parseFloat(results.rows.item(j).yea2005) !== 0.0) {
-            console.log(results.rows.item(j).nomdepto + " " + dataresults["yea" + theyear]);
-            datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
-            departamentos.push(results.rows.item(j).nomdepto);
-          }
-        }
+      app.openDB(query);
 
-        chart = new Highcharts.Chart({
-          chart: {
-            renderTo: 'piechartdiv',
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            borderRadius: 0,
-            height: 500
-          },
-          credits: {
-            enabled: false
-          },
-          legend: {
-            align: "center",
-            verticalAlign: "top",
-            x: 0,
-            y: 20,
-            borderWidth: 1,
-            margin: 20 //define el espacio entre el legend y la zona de grafico
-          },
-          title: {
-            text: ' ',
-            align: "center",
-            x: 0,
-            y: 10,
-            floating: true
-            // margin: 10 //define el espacio entre el titulo y la zona de grafico, si existe un subtitulo entonces sera desde el subTitulo
-          },
-          plotOptions: {
-            pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              dataLabels: {
-                enabled: false,
-                color: '#000000',
-                connectorColor: '#000000',
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-              },
-              showInLegend: true
+      function query(tx) {
+
+        tx.executeSql(app.buildSQL(), [], printData, app.errorCB);
+        var datatoprint = [];
+        var theyear = $("#pie-slider").val();
+        var departamentos = [];
+
+
+        function printData(tx, results) {
+          var indicator = results.rows.item(0).idindicador;
+
+          for (var j = 0; j < results.rows.length; j++) {
+            var dataresults = results.rows.item(j);
+            if (dataresults["yea" + theyear] !== null && dataresults["yea" + theyear] !== '' && parseFloat(results.rows.item(j).yea2005) !== 0.0) {
+              datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
+              departamentos.push(results.rows.item(j).nomdepto);
             }
-          },
+          }
 
-          tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-          },
+          chart = new Highcharts.Chart({
+            chart: {
+              renderTo: 'piechartdiv',
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              // spacingTop: 10,
+              height: 500
+            },
+            legend: {
+              align: "center",
+              verticalAlign: "top",
+              x: 0,
+              y: 20,
+              borderWidth: 1,
+              margin: 20 //define el espacio entre el legend y la zona de grafico
+            },
+            title: {
+              text: results.rows.item(0).nomindicador + " - Año " + theyear,
+              align: "center",
+              x: 0,
+              y: 10,
+              floating: true
+              // margin: 10 //define el espacio entre el titulo y la zona de grafico, si existe un subtitulo entonces sera desde el subTitulo
+            },
+            plotOptions: {
+              pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                  enabled: false,
+                  color: '#000000',
+                  connectorColor: '#000000',
+                  format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                },
+                showInLegend: true
+              }
+            },
 
-          series: [{
+            tooltip: {
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+
+            series: [{
               type: 'pie',
               name: results.rows.item(0).nomunidad,
               data: datatoprint
             }]
-        });
+          });
+          app.hideLoadingBox();
+        }
       }
     },
 
@@ -1479,8 +1478,12 @@ var app = {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
           },
 
-          series:theseries
-                                     });
+          series: [{
+            //type: 'pie',
+            name: results.rows.item(0).nomunidad,
+            data: datatoprint
+          }]
+        });
       }
     },
 
