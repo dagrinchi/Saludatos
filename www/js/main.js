@@ -293,7 +293,21 @@ var app = {
     var updated = new Date();
     window.localStorage.setItem("updated", updated);
     $.mobile.changePage("#home");
-    //app.openDB(app.queryDB);
+   
+    
+
+  },
+  
+  yea: function(tx, results) {
+    
+    for (var j = 0; j < results.rows.length; j++) {
+      console.log("Número de años: "+results.rows.length);
+      console.log("Año " + j + " " + results.rows.item(j).columnName.substring(3));
+      app.years.push(results.rows.item(j).columnName.substring(3));
+    }
+    console.log("Numero resultante de elentos en years"+app.years.length);
+   
+    
   },
 
   openDB: function(queryDB) {
@@ -304,26 +318,19 @@ var app = {
   },
 
   queryDB: function(tx) {
+   
     console.log("queryDB: Consultas!");
 
     tx.executeSql('SELECT COUNT(*) AS counter FROM (' + app.buildSQL() + ')', [], reg, app.errorCB);
-    tx.executeSql('SELECT columnName from columnNames where columnName like "%yea%"', [], yea, app.errorCB);
+    app.years = [];
+    tx.executeSql('SELECT columnName from columnNames where columnName like "%yea%"', [], app.yea, app.errorCB);
+   
 
     function reg(tx, results) {
       app.counters["counter-reg"] = results.rows.item(0).counter;
     }
 
-    function yea(tx, results) {
-
-      for (var j = 0; j < results.rows.length; j++) {
-        console.log("Año " + j + " " + results.rows.item(j).columnName.substring(3));
-        app.years.push(results.rows.item(j).columnName.substring(3));
-      }
-      /*for(var k = 0; k < app.years.length; k++){
-            console.log("Año guardado "+app.years[k]);
-        }*/
-
-    }
+    
 
     app.ent.indicador(tx, "SELECT DISTINCT idindicador, nomindicador FROM (" + app.buildSQL() + ") WHERE nomindicador <> '' GROUP BY idindicador ORDER BY nomindicador", function(tx) {
       app.ent.region(tx, "SELECT DISTINCT idregion, nomregion FROM (" + app.buildSQL() + ") WHERE nomregion <> '' GROUP BY idregion ORDER BY nomregion", function(tx) {
@@ -820,7 +827,7 @@ var app = {
 
         for (var j = 0; j < results.rows.length; j++) {
           var dataresults = results.rows.item(j);
-          if (dataresults["yea" + theyear] !== null && dataresults["yea" + theyear] !== '' && parseFloat(results.rows.item(j).yea2005) != 0.0) {
+          if (dataresults["yea" + theyear] !== null && dataresults["yea" + theyear] !== '' && parseFloat(dataresults["yea" + theyear]) != 0.0) {
             console.log(results.rows.item(j).nomdepto + " " + dataresults["yea" + theyear]);
             datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
             departamentos.push(results.rows.item(j).nomdepto);
@@ -887,30 +894,46 @@ var app = {
       tx.executeSql(app.buildSQL(), [], printData, app.errorCB);
       var datatoprint = [];
       var theyear = app.years[17];
-
+      var regiones = [];
+      var subregiones = [];
+      var departamentos = [];
+      var municipios = [];
+      var zonas = [];
+      var geograficas = [];
+      var theseries = [];
+  
 
       function printData(tx, results, theyear) {
 
-        var indicator = results.rows.item(0).idindicador;
-        console.log("El indicador fué: " + indicator);
-        console.log("El número de resultados fué: " + results.rows.length);
-        console.log("Consulta realizada");
+        var indicator = results.rows.item(0).idindicador;console.log("El indicador fué: " + indicator);console.log("El número de resultados fué: " + results.rows.length);console.log("Consulta realizada");
         console.log("Numero de resultados de la consulta " + results.rows.length);
-        console.log("Inicia pushData");
-        var indicator = results.rows.item(0).idindicador;
         console.log("Indicador para insertar datos en el gráfico:" + indicator);
 
-        for (var j = 0; j < results.rows.length; j++) {
-          var dataresults = results.rows.item(j);
-          if (dataresults["yea" + theyear] !== null && dataresults["yea" + theyear] !== '' && parseFloat(results.rows.item(j).yea2005) != 0.0) {
-            console.log(results.rows.item(j).nomdepto + " " + dataresults["yea" + theyear]);
-            datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
+        for (var p = 0; p < results.rows.length; p++) {
+          var dataresults = results.rows.item(p);
+          var serie = {};
+          var rowdata = [];
+          
+          if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && parseFloat(dataresults["nomdepto"]) != 0.0) {
+            console.log(" Departamento "+p+": "+dataresults["nomdepto"]);
+            departamentos.push(dataresults["nomdepto"]);
+            geograficas.push(dataresults["nomdepto"]);
+            console.log("Numero de años:"+app.years.length);
+            for (var l=0;l<app.years.length;l++){
+              if(dataresults["yea"+app.years[l]] !== ''){
+                  rowdata.push(dataresults["yea"+app.years[l]]);
+                  console.log(l+" Año "+app.years[l]+" :"+dataresults["yea"+app.years[l]]);
+              }
+            
+            }
+            serie["name"]=dataresults["nomdepto"];
+            serie["data"]=rowdata;
+            theseries.push(serie);
           }
         }
-
+        
         //Datos para etiquetas en el gráfico
         var dataforlabels = results.rows.item(0);
-
 
         chart = new Highcharts.Chart({
           chart: {
@@ -954,15 +977,7 @@ var app = {
             verticalAlign: 'middle',
             borderWidth: 0
           },
-          series: [{
-              name: 'Amazonas',
-              data: [10, 20]
-            }, {
-              name: 'Cundinamarca',
-              data: [40, 10]
-            }
-          ]
-
+          series: theseries
 
           //[{name:'Amazonas',data:[15.0,30]},{name:'Cundinamarca',data:[19.0,10]}]
         });
@@ -982,10 +997,8 @@ var app = {
       function printData(tx, results) {
         var indicator = results.rows.item(0).idindicador;
         console.log("El indicador fué: " + indicator);
-        console.log("El número de resultados fué: " + results.rows.length);
         console.log("Consulta realizada");
         console.log("Numero de resultados de la consulta " + results.rows.length);
-        console.log("Inicia pushData");
         var indicator = results.rows.item(0).idindicador;
         console.log("Indicador para insertar datos en el gráfico:" + indicator);
 
