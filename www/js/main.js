@@ -1210,7 +1210,6 @@ var app = {
 
         tx.executeSql(app.buildSQL(), [], printData, app.errorCB);
         var datatoprint = [];
-        var theyear = app.years[17];
         var regiones = [];
         var subregiones = [];
         var departamentos = [];
@@ -1233,7 +1232,7 @@ var app = {
             yearstoprint.push(false);
         }
         
-        function printData(tx, results, theyear) {
+        function printData(tx, results) {
             
             var indicator = results.rows.item(0).idindicador;console.log("El indicador fué: " + indicator);console.log("El número de resultados fué: " + results.rows.length);console.log("Consulta realizada");
             console.log("Numero de resultados de la consulta " + results.rows.length);
@@ -1453,7 +1452,7 @@ var app = {
             borderWidth: 0
           },
           title: {
-            text: results.rows.item(0).nomindicador + " - Año " + theyear,
+            text: results.rows.item(0).nomindicador + " - Año ",
             align: "center",
             x: 0,
             y: 10,
