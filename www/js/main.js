@@ -950,6 +950,7 @@ var app = {
       var theseries = [];
       var thecategories = [];
       var yearstoprint = [];
+      var printstate = true;
       
       for(c=0;c<app.years.length;c++){
           yearstoprint.push(false);
@@ -962,7 +963,7 @@ var app = {
           console.log("Indicador para insertar datos en el gráfico:" + indicator);
           
           
-          //Inserción de Años como categorías verificando para cuáles hay datos
+          //Verificar años para cuáles hay datos
           
           
           for(a=0;a<app.years.length;a++){
@@ -971,10 +972,28 @@ var app = {
               for(b=0;b<results.rows.length;b++){
                   var row = results.rows.item(b);
                   if(row["yea"+app.years[a]] !== '' && row["yea"+app.years[a]] !== '-' && row["yea"+app.years[a]] !== null && parseFloat(row["yea"+app.years[a]]) !== 0.0){
-                      yearstoprint[b] = true;
+                      yearstoprint[a] = true;
                   }
+                 
+              }
+               
+          }
+          
+          // Insertar las categorias segun los años que tienen datos
+          
+          console.log("AÑOS A IMPRIMIR: ");
+          for(d=0;d<app.years.length;d++){
+              if(yearstoprint[d]){
+                  thecategories.push(app.years[d]);
+                  console.log(app.years[d]+",")
               }
           }
+          console.log("LAS CATEGORIAS");
+          for(e=0;e<thecategories.length;e++){
+              console.log(thecategories[e]+",");
+          }
+          
+          // Inserción de datos en la serie
           
           for (var p = 0; p < results.rows.length; p++) {
               var dataresults = results.rows.item(p);
@@ -1037,35 +1056,10 @@ var app = {
                   theseries.push(serie);
               }
               
-              
-              
-              //Verificación de departamentos
-              
-              if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && parseFloat(dataresults["nomdepto"]) != 0.0) {
-                  console.log(" Departamento "+p+": "+dataresults["nomdepto"]);
-                  departamentos.push(dataresults["nomdepto"]);
-                  geograficas.push(dataresults["nomdepto"]);
-                  console.log("Numero de años:"+app.years.length);
-                  for (var l=0;l<app.years.length;l++){
-                      if(yearstoprint[l]){
-                          if(dataresults["yea"+app.years[l]] !== '' && dataresults["yea"+app.years[l]] !== null && dataresults["yea"+app.years[l]] !== '-' && parseFloat(dataresults["yea"+app.years[l]]) !== 0.0){
-                              rowdata.push(parseFloat(dataresults["yea"+app.years[l]]));
-                              console.log(l+" Año "+app.years[l]+" :"+dataresults["yea"+app.years[l]]);
-                          }
-                      }
-                  }
-                  
-                  for(var q=0; q<rowdata.length;q++){
-                      console.log("Datos guardado "+rowdata[q]);
-                  }
-                  
-                  serie["name"]=dataresults["nomdepto"];
-                  serie["data"]=rowdata;
-                  theseries.push(serie);
-              }
               //Verificación de municipios
               
               if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && parseFloat(dataresults["nommpio"]) != 0.0) {
+                  printstate = false;
                   console.log(" Municipio "+p+": "+dataresults["nommpio"]);
                   municipios.push(dataresults["nommpio"]);
                   geograficas.push(dataresults["nommpio"]);
@@ -1087,7 +1081,34 @@ var app = {
                   serie["data"]=rowdata;
                   theseries.push(serie);
               }
+
               
+              
+              //Verificación de departamentos
+              
+              if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && parseFloat(dataresults["nomdepto"]) != 0.0 && printstate) {
+                  console.log(" Departamento "+p+": "+dataresults["nomdepto"]);
+                  departamentos.push(dataresults["nomdepto"]);
+                  geograficas.push(dataresults["nomdepto"]);
+                  console.log("Numero de años:"+app.years.length);
+                  for (var l=0;l<app.years.length;l++){
+                      if(yearstoprint[l]){
+                          if(dataresults["yea"+app.years[l]] !== '' && dataresults["yea"+app.years[l]] !== null && dataresults["yea"+app.years[l]] !== '-' && parseFloat(dataresults["yea"+app.years[l]]) !== 0.0){
+                              rowdata.push(parseFloat(dataresults["yea"+app.years[l]]));
+                              console.log(l+" Año "+app.years[l]+" :"+dataresults["yea"+app.years[l]]);
+                          }
+                      }
+                  }
+                  
+                  for(var q=0; q<rowdata.length;q++){
+                      console.log("Datos guardado "+rowdata[q]);
+                  }
+                  
+                  serie["name"]=dataresults["nomdepto"];
+                  serie["data"]=rowdata;
+                  theseries.push(serie);
+              }
+                            
               //Verificación de zonas
               
               if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && parseFloat(dataresults["nomzona"]) != 0.0) {
@@ -1131,8 +1152,8 @@ var app = {
                                        plotBorderWidth: null,
                                        plotShadow: false,
                                        spacingTop: 30,
-                                       spacingBottom: 50,
-                                       margin: [30, 10, 10, 10]
+                                       spacingBottom: 100,
+                                       margin: [100, 100, 200, 100]
                                        },
                                        
                                        title: {
@@ -1143,9 +1164,8 @@ var app = {
                                        text: dataforlabels['fue' + [theyear]],
                                        x: -20
                                        },
-                                       /*xAxis: {
-                                        categories: ['1990','1991','1992','1993','1940','1995']
-                                        },*/
+                                       xAxis: {
+                                        categories: thecategories                                       },
                                        yAxis: {
                                        title: {
                                        text: 'Temperature (°C)'
@@ -1161,7 +1181,7 @@ var app = {
                                        valueSuffix: '°C'
                                        },
                                        legend: {
-                                       layout: 'vertical',
+                                      
                                        align: 'right',
                                        verticalAlign: 'middle',
                                        borderWidth: 0
