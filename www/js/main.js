@@ -901,6 +901,7 @@ var app = {
       var zonas = [];
       var geograficas = [];
       var theseries = [];
+       
   
 
       function printData(tx, results, theyear) {
@@ -913,6 +914,58 @@ var app = {
           var dataresults = results.rows.item(p);
           var serie = {};
           var rowdata = [];
+            
+            
+           //Verificacion de Regiones
+            
+            if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && parseFloat(dataresults["nomregion"]) != 0.0) {
+                console.log(" Region"+p+": "+dataresults["nomregion"]);
+                departamentos.push(dataresults["nomregion"]);
+                geograficas.push(dataresults["nomregion"]);
+                console.log("Numero de años:"+app.years.length);
+                for (var l=0;l<app.years.length;l++){
+                    if(dataresults["yea"+app.years[l]] !== '' && dataresults["yea"+app.years[l]] !== null && dataresults["yea"+app.years[l]] !== '-' && parseFloat(dataresults["yea"+app.years[l]]) !== 0.0){
+                        rowdata.push(parseFloat(dataresults["yea"+app.years[l]]));
+                        console.log(l+" Año "+app.years[l]+" :"+dataresults["yea"+app.years[l]]);
+                    }
+                    
+                }
+                
+                for(var q=0; q<rowdata.length;q++){
+                    console.log("Datos guardado "+rowdata[q]);
+                }
+                
+                serie["name"]=dataresults["nomregion"];
+                serie["data"]=rowdata;
+                theseries.push(serie);
+            }
+            
+            
+            //Verificacion de Subregiones
+            
+            if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && parseFloat(dataresults["nomsubregion"]) != 0.0) {
+                console.log(" Subregion"+p+": "+dataresults["nomsubregion"]);
+                departamentos.push(dataresults["nomsubregion"]);
+                geograficas.push(dataresults["nomsubregion"]);
+                console.log("Numero de años:"+app.years.length);
+                for (var l=0;l<app.years.length;l++){
+                    if(dataresults["yea"+app.years[l]] !== '' && dataresults["yea"+app.years[l]] !== null && dataresults["yea"+app.years[l]] !== '-' && parseFloat(dataresults["yea"+app.years[l]]) !== 0.0){
+                        rowdata.push(parseFloat(dataresults["yea"+app.years[l]]));
+                        console.log(l+" Año "+app.years[l]+" :"+dataresults["yea"+app.years[l]]);
+                    }
+                    
+                }
+                
+                for(var q=0; q<rowdata.length;q++){
+                    console.log("Datos guardado "+rowdata[q]);
+                }
+                
+                serie["name"]=dataresults["nomsubregion"];
+                serie["data"]=rowdata;
+                theseries.push(serie);
+            }
+
+            
           
           //Verificación de departamentos
           
@@ -937,15 +990,15 @@ var app = {
             serie["data"]=rowdata;
             theseries.push(serie);
           }
-          //
+          //Verificación de municipios
           
           if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && parseFloat(dataresults["nommpio"]) != 0.0) {
-            console.log(" Departamento "+p+": "+dataresults["nommpio"]);
+            console.log(" Municipio "+p+": "+dataresults["nommpio"]);
             municipios.push(dataresults["nommpio"]);
             geograficas.push(dataresults["nommpio"]);
             console.log("Numero de años:"+app.years.length);
             for (var l=0;l<app.years.length;l++){
-              if(dataresults["yea"+app.years[l]] !== '' && dataresults["yea"+app.years[l]] !== null && parseFloat(dataresults["yea"+app.years[l]]) !== 0.0){
+              if(dataresults["yea"+app.years[l]] !== '' && dataresults["yea"+app.years[l]] !== null && parseFloat(dataresults["yea"+app.years[l]]) !== 0.0 && dataresults["yea"+app.years[l]] !== '-'){
                 rowdata.push(parseFloat(dataresults["yea"+app.years[l]]));
                 console.log(l+" Año "+app.years[l]+" :"+dataresults["yea"+app.years[l]]);
               }
@@ -960,7 +1013,34 @@ var app = {
             serie["data"]=rowdata;
             theseries.push(serie);
           }
-          
+
+            //Verificación de zonas
+            
+            if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && parseFloat(dataresults["nomzona"]) != 0.0) {
+                console.log(" Zona "+p+": "+dataresults["nomzona"]);
+                municipios.push(dataresults["nomzona"]);
+                geograficas.push(dataresults["nomzona"]);
+                console.log("Numero de años:"+app.years.length);
+                for (var l=0;l<app.years.length;l++){
+                    if(dataresults["yea"+app.years[l]] !== '' && dataresults["yea"+app.years[l]] !== null && parseFloat(dataresults["yea"+app.years[l]]) !== 0.0 && dataresults["yea"+app.years[l]] !== '-'){
+                        rowdata.push(parseFloat(dataresults["yea"+app.years[l]]));
+                        console.log(l+" Año "+app.years[l]+" :"+dataresults["yea"+app.years[l]]);
+                    }
+                    
+                }
+                
+                for(var q=0; q<rowdata.length;q++){
+                    console.log("Datos guardado "+rowdata[q]);
+                }
+                
+                serie["name"]=dataresults["nomzona"];
+                serie["data"]=rowdata;
+                theseries.push(serie);
+            }
+
+           
+            
+            
           //FIN DE printData
         }
         
@@ -986,9 +1066,9 @@ var app = {
             text: dataforlabels['fue' + [theyear]],
             x: -20
           },
-          xAxis: {
-            categories: ['2005', '2006']
-          },
+          /*xAxis: {
+            categories: ['1990','1991','1992','1993','1940','1995']
+          },*/
           yAxis: {
             title: {
               text: 'Temperature (°C)'
