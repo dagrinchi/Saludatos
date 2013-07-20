@@ -4,6 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         
+        <link rel="stylesheet" href="css/normalize.css" />
         <link rel="stylesheet" href="css/main.css" />
         <link rel="stylesheet" href="css/saludatos.css" />
         <link rel="stylesheet" href="css/jquery.mobile.structure-1.3.1.min.css" />
@@ -11,8 +12,12 @@
         <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="js/jquery.mobile-1.3.1.min.js"></script>
         <script type="text/javascript" src="js/highcharts.js"></script>
-        <script type="text/javascript" src="js/modules/exporting.js"></script>
-
+        <script type="text/javascript" src="js/themes/gray.js"></script>
+        <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="js/canvg/rgbcolor.js"></script>
+        <script type="text/javascript" src="js/canvg/StackBlur.js"></script>
+        <script type="text/javascript" src="js/canvg/canvg.js"></script>
+        <script type="text/javascript" src="js/canvas-to-blob.min.js"></script>
         <title>Saludatos</title>
     </head>
     <body>
@@ -301,15 +306,11 @@
         <div data-role="page" id="pie"> 
             <div data-role="header" data-position="fixed">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
-                <select class="ui-btn-right share">
-                    <option value="email">Email</option>
-                    <option value="facebook">Facebook</option>
-                    <option value="twitter">Twitter</option>
-                </select>
+                <a href="#" class="ui-btn-right share" data-icon="star" data-chart="pie">Compartir</a>
             </div>
             <div data-role="content" class="chart-wrapper">
                 <div class="chart-inner">
-                    <div  class="Title-Size"></div>
+                    <p class="Title-Size"></p>
                     <div id="piechartdiv" style="width: 100%; height: 100%;"></div>
                 </div>
             </div>
@@ -341,11 +342,7 @@
         <div data-role="page" id="lineal"> 
             <div data-role="header" data-position="fixed">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
-                <select class="ui-btn-right share">
-                    <option value="email">Email</option>
-                    <option value="facebook">Facebook</option>
-                    <option value="twitter">Twitter</option>
-                </select>
+                <a href="#" class="ui-btn-right share" data-icon="star" data-chart="lineal">Compartir</a>
             </div>
             <div data-role="content" class="chart-wrapper">
                 <div class="chart-inner">
@@ -378,15 +375,11 @@
         <div data-role="page" id="bars"> 
             <div data-role="header" data-position="fixed">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
-                <select class="ui-btn-right share">
-                    <option value="email">Email</option>
-                    <option value="facebook">Facebook</option>
-                    <option value="twitter">Twitter</option>
-                </select>
+                <a href="#" class="ui-btn-right share" data-icon="star" data-chart="bars">Compartir</a>
             </div>
             <div class="chart-wrapper">
                 <div class="chart-inner">
-                    <div  class="Title-Size"></div>
+                    <p class="Title-Size"></p>
                     <div id="columnchartdiv" style="width: 100%; height: 100%;"></div>
                 </div>
             </div> 
@@ -415,15 +408,11 @@
         <div data-role="page" id="maps"> 
             <div data-role="header" data-position="fixed">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
-                <select class="ui-btn-right share">
-                    <option value="email">Email</option>
-                    <option value="facebook">Facebook</option>
-                    <option value="twitter">Twitter</option>
-                </select>
+                <a href="#" class="ui-btn-right share" data-icon="star" data-chart="map">Compartir</a>
             </div>
             <div data-role="content" class="chart-wrapper">
                 <div class="chart-inner">
-                    <div  class="Title-Size"></div>
+                    <p class="Title-Size"></p>
                     <div id="geochartdiv" style="width: 100%; height: 100%;"></div>
                 </div>
             </div> 
@@ -452,17 +441,10 @@
         <div data-role="page" id="table"> 
             <div data-role="header" data-position="fixed">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
-                <select class="ui-btn-right share">
-                    <option value="email">Email</option>
-                    <option value="facebook">Facebook</option>
-                    <option value="twitter">Twitter</option>
-                </select>
+                <a href="#" class="ui-btn-right share" data-icon="star" data-chart="table">Compartir</a>
             </div>
-            <div data-role="content" class="chart-wrapper">
-                <div class="chart-inner">
-                    <div  class="Title-Size"></div>
-                    <div id="tablediv" style="width: 100%; height: 100%;"></div>
-                </div>
+            <div data-role="content">
+                <table cellpadding="0" cellspacing="0" border="0" id="dtable" class="ui-responsive table-stroke"></table>
             </div> 
             <div data-role="footer" data-position="fixed">
                 <div class="ui-grid-d">
@@ -519,7 +501,7 @@
                 <a href="#home" id="reset" data-role="button" data-inline="true" data-transition="flow" data-theme="b">Aceptar</a>
             </div>
         </div>
-
+        <canvas id="canvas" style="display: none;"></canvas> 
         <script type="text/javascript" src="cordova-2.7.0.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript">

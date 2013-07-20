@@ -7,13 +7,14 @@ Highcharts.theme = {
 	colors: ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee",
 		"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
 	chart: {
-		backgroundColor: {
-			linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-			stops: [
-				[0, 'rgb(96, 96, 96)'],
-				[1, 'rgb(16, 16, 16)']
-			]
-		},
+		backgroundColor: "#000",
+		// backgroundColor: {
+		// 	linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+		// 	stops: [
+		// 		[0, 'rgb(0, 0, 0)'],
+		// 		[1, 'rgb(96, 96, 96)']
+		// 	]
+		// },
 		borderWidth: 0,
 		borderRadius: 15,
 		plotBackgroundColor: null,
@@ -23,13 +24,13 @@ Highcharts.theme = {
 	title: {
 		style: {
 			color: '#FFF',
-			font: '16px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
+			font: '16px Open Sans'
 		}
 	},
 	subtitle: {
 		style: {
 			color: '#DDD',
-			font: '12px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
+			font: '12px Open Sans'
 		}
 	},
 	xAxis: {
@@ -39,13 +40,13 @@ Highcharts.theme = {
 		labels: {
 			style: {
 				color: '#999',
-				fontWeight: 'bold'
+				fontWeight: '300'
 			}
 		},
 		title: {
 			style: {
 				color: '#AAA',
-				font: 'bold 12px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
+				font: '300 12px Open Sans'
 			}
 		}
 	},
@@ -59,25 +60,28 @@ Highcharts.theme = {
 		labels: {
 			style: {
 				color: '#999',
-				fontWeight: 'bold'
+				fontWeight: '300'
 			}
 		},
 		title: {
 			style: {
 				color: '#AAA',
-				font: 'bold 12px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
+				font: '300 12px Open Sans'
 			}
 		}
 	},
 	legend: {
 		itemStyle: {
-			color: '#CCC'
+			color: '#CCC',
+			font: '300 12px Open Sans'
 		},
 		itemHoverStyle: {
-			color: '#FFF'
+			color: '#FFF',
+			font: '300 12px Open Sans'
 		},
 		itemHiddenStyle: {
-			color: '#333'
+			color: '#333',
+			font: '300 12px Open Sans'
 		}
 	},
 	labels: {
@@ -163,7 +167,7 @@ Highcharts.theme = {
 			stroke: '#000000',
 			style: {
 				color: '#CCC',
-				fontWeight: 'bold'
+				fontWeight: '300'
 			},
 			states: {
 				hover: {

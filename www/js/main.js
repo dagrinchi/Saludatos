@@ -115,6 +115,7 @@ var app = {
     //window.localStorage.removeItem("updated");
 
     console.log("onDeviceReady: Dispositivo listo!");
+
     app.buttonHeight();
     app.btnsEvents(app.sliderEvents);
     app.pageEvents();
@@ -129,7 +130,33 @@ var app = {
   },
 
   btnsEvents: function(cb) {
+
     console.log("btnsEvents: Asignando eventos a los botones de las gráficas!");
+
+    $(".share").on("click", function(e) {
+      console.log("btnsEvents: Convirtiendo svg a canvas!");
+
+      $(this).buttonMarkup("disable");
+
+      var canvasObj = document.getElementById('canvas');
+      var now = new Date();
+      var filedate = now.getDate().toString() + now.getMonth().toString() + now.getFullYear().toString() + "-" + now.getHours().toString() + now.getMinutes().toString();
+      var chartType = $(this).data("chart");
+
+      canvg(canvasObj, $("#" + chartType + " svg").clone().wrap('<div/>').parent().html());
+
+      setTimeout(function() {
+        if (canvasObj.toBlob) {
+          canvasObj.toBlob(
+            function(blob) {
+              app.createFile(chartType + "-" + filedate + ".jpg", blob);
+            },
+            'image/jpeg'
+          );
+        }
+      }, 3000);
+    });
+
     $(".btn_secundario").on("click", function(e) {
       console.log("btnsEvents: Validando si hay un indicador!");
       if (app.selection.indicador.cols.idindicador[0]) {
@@ -173,6 +200,41 @@ var app = {
     });
   },
 
+  createFile: function(fileName, blob) {
+    console.log("createFile: Escribiendo " + fileName + "!");
+
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, FSfail);
+
+    function gotFS(fileSystem) {
+      fileSystem.root.getFile(fileName, {
+        create: true,
+        exclusive: false
+      }, gotFileEntry, FSfail);
+    }
+
+    function gotFileEntry(fileEntry) {
+      fileEntry.createWriter(gotFileWriter, FSfail);
+    }
+
+    function gotFileWriter(writer) {
+      writer.onwriteend = function(evt) {
+        console.log("createFile: Imagen guardada con exito!");
+      };
+      var reader = new FileReader();
+      reader.onloadend = function(evt) {
+        if (evt.target.readyState == FileReader.DONE) {
+          writer.write(evt.target.result);
+        }
+      };
+      reader.readAsBinaryString(blob);
+    }
+
+    function FSfail(error) {
+      console.log("FSfail: Opps! " + error.code);
+    }
+  },
+
+
   checkConnection: function() {
     console.log("checkConnection: Comprobando conectividad a internet!");
     var networkState = navigator.connection.type;
@@ -202,14 +264,14 @@ var app = {
 
     cb();
 
-    // var script = document.createElement("script");
-    // script.src = "https://www.google.com/jsapi?callback=app.startApp";
-    // script.type = "text/javascript";
-    // document.getElementsByTagName("head")[0].appendChild(script);
+    var script = document.createElement("script");
+    script.src = "https://www.google.com/jsapi";
+    script.type = "text/javascript";
+    document.getElementsByTagName("head")[0].appendChild(script);
 
-    // script.addEventListener("error", function(e) {
-    //   console.log("Error: " + e);
-    // }, false);
+    script.addEventListener("error", function(e) {
+      console.log("Error: " + e);
+    }, false);
   },
 
   startApp: function() {
@@ -295,8 +357,6 @@ var app = {
       tx.executeSql('INSERT INTO columnNames(columnName) VALUES ("' + fields[j] + '")');
     }
 
-    msg = "populateDB: Insertando registros en la tabla datos!";
-    console.log(msg);
     $.each(app.data, function(k1, v1) {
       var values = [];
       $.each(v1, function(k2, v2) {
@@ -625,7 +685,7 @@ var app = {
         html += '<input name="selectall-municipio" id="selectall-municipio" data-vista="municipio" data-col="idmpio" data-checkall="munList" type="checkbox" /> \n';
         html += '<label for="selectall-municipio">Seleccionar todos</label>';
 
-        $("#municipioCount").html("+"+len);
+        $("#municipioCount").html("+" + len);
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="municipio" data-col="idmpio" name="municipio-' + results.rows.item(i).idmpio + '" id="municipio-' + results.rows.item(i).idmpio + '" value="' + results.rows.item(i).idmpio + '"/> \n';
           html += '<label for="municipio-' + results.rows.item(i).idmpio + '">' + results.rows.item(i).nommpio + '</label> \n';
@@ -1527,57 +1587,158 @@ var app = {
       }
     },
 
-    maps: function(tx) {
+    maps: function() {
 
-      tx.executeSql(app.buildSQL(), [], buildGraph, app.errorCB);
+      app.openDB(query);
 
-      function buildGraph(tx, results) {
+      function query(tx) {
 
-        var datafromresults = [];
-        var header = ['Departamento', '2005', '2006'];
+        tx.executeSql(app.buildSQL(), [], buildGraph, app.errorCB);
 
-        datafromresults.push(header);
+        function buildGraph(tx, results) {
 
-        var len = results.rows.length;
-        for (var i = 0; i < len; i++) {
-          datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
-        }
+          var datafromresults = [];
+          var header = ['Departamento', '2005', '2006'];
 
-        if (google && google.visualization) {
-          googleChart();
-        } else {
-          google.load("visualization", "1", {
-            'packages': ['geochart'],
-            callback: googleChart
-          });
-        }
+          datafromresults.push(header);
 
-        function googleChart() {
-          var data = google.visualization.arrayToDataTable(datafromresults);
-          var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
-          var options = {
-            region: 'CO',
-            resolution: 'provinces',
-            displayMode: 'markers',
-            height: $("#maps").height() - 200 + "px",
-            // magnifyingGlass: {
-            //   enable: "true",
-            //   zoomFactor: "10.0"
-            // },
-            backgroundColor: {
-              fill: "transparent"
-            },
-            colorAxis: {
-              colors: ['green', 'red']
-            }
-          };
+          var len = results.rows.length;
+          for (var i = 0; i < len; i++) {
+            datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
+          }
 
-          map.draw(data, options);
+          if (google && google.visualization) {
+            googleChart();
+          } else {
+            google.load("visualization", "1", {
+              'packages': ['geochart'],
+              callback: googleChart
+            });
+          }
+
+          function googleChart() {
+            var data = google.visualization.arrayToDataTable(datafromresults);
+            var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
+            var options = {
+              region: 'CO',
+              resolution: 'provinces',
+              displayMode: 'markers',
+              height: $("#maps").height() - 200 + "px",
+              // magnifyingGlass: {
+              //   enable: "true",
+              //   zoomFactor: "10.0"
+              // },
+              backgroundColor: {
+                fill: "transparent"
+              },
+              colorAxis: {
+                colors: ['green', 'red']
+              }
+            };
+
+            map.draw(data, options);
+          }
         }
       }
+
     },
 
-    table: function(tx, results) {}
+    table: function() {
+
+      app.openDB(query);
+
+      function query(tx) {
+
+        tx.executeSql(app.buildSQL(), [], buildTable, app.errorCB);
+
+        function buildTable() {
+
+          var aDataSet = [
+            ['Trident', 'Internet Explorer 4.0', 'Win 95+', '4', 'X'],
+            ['Trident', 'Internet Explorer 5.0', 'Win 95+', '5', 'C'],
+            ['Trident', 'Internet Explorer 5.5', 'Win 95+', '5.5', 'A'],
+            ['Trident', 'Internet Explorer 6', 'Win 98+', '6', 'A'],
+            ['Trident', 'Internet Explorer 7', 'Win XP SP2+', '7', 'A'],
+            ['Trident', 'AOL browser (AOL desktop)', 'Win XP', '6', 'A'],
+            ['Gecko', 'Firefox 1.0', 'Win 98+ / OSX.2+', '1.7', 'A'],
+            ['Gecko', 'Firefox 1.5', 'Win 98+ / OSX.2+', '1.8', 'A'],
+            ['Gecko', 'Firefox 2.0', 'Win 98+ / OSX.2+', '1.8', 'A'],
+            ['Gecko', 'Firefox 3.0', 'Win 2k+ / OSX.3+', '1.9', 'A'],
+            ['Gecko', 'Camino 1.0', 'OSX.2+', '1.8', 'A'],
+            ['Gecko', 'Camino 1.5', 'OSX.3+', '1.8', 'A'],
+            ['Gecko', 'Netscape 7.2', 'Win 95+ / Mac OS 8.6-9.2', '1.7', 'A'],
+            ['Gecko', 'Netscape Browser 8', 'Win 98SE+', '1.7', 'A'],
+            ['Gecko', 'Netscape Navigator 9', 'Win 98+ / OSX.2+', '1.8', 'A'],
+            ['Gecko', 'Mozilla 1.0', 'Win 95+ / OSX.1+', 1, 'A'],
+            ['Gecko', 'Mozilla 1.1', 'Win 95+ / OSX.1+', 1.1, 'A'],
+            ['Gecko', 'Mozilla 1.2', 'Win 95+ / OSX.1+', 1.2, 'A'],
+            ['Gecko', 'Mozilla 1.3', 'Win 95+ / OSX.1+', 1.3, 'A'],
+            ['Gecko', 'Mozilla 1.4', 'Win 95+ / OSX.1+', 1.4, 'A'],
+            ['Gecko', 'Mozilla 1.5', 'Win 95+ / OSX.1+', 1.5, 'A'],
+            ['Gecko', 'Mozilla 1.6', 'Win 95+ / OSX.1+', 1.6, 'A'],
+            ['Gecko', 'Mozilla 1.7', 'Win 98+ / OSX.1+', 1.7, 'A'],
+            ['Gecko', 'Mozilla 1.8', 'Win 98+ / OSX.1+', 1.8, 'A'],
+            ['Gecko', 'Seamonkey 1.1', 'Win 98+ / OSX.2+', '1.8', 'A'],
+            ['Gecko', 'Epiphany 2.20', 'Gnome', '1.8', 'A'],
+            ['Webkit', 'Safari 1.2', 'OSX.3', '125.5', 'A'],
+            ['Webkit', 'Safari 1.3', 'OSX.3', '312.8', 'A'],
+            ['Webkit', 'Safari 2.0', 'OSX.4+', '419.3', 'A'],
+            ['Webkit', 'Safari 3.0', 'OSX.4+', '522.1', 'A'],
+            ['Webkit', 'OmniWeb 5.5', 'OSX.4+', '420', 'A'],
+            ['Webkit', 'iPod Touch / iPhone', 'iPod', '420.1', 'A'],
+            ['Webkit', 'S60', 'S60', '413', 'A'],
+            ['Presto', 'Opera 7.0', 'Win 95+ / OSX.1+', '-', 'A'],
+            ['Presto', 'Opera 7.5', 'Win 95+ / OSX.2+', '-', 'A'],
+            ['Presto', 'Opera 8.0', 'Win 95+ / OSX.2+', '-', 'A'],
+            ['Presto', 'Opera 8.5', 'Win 95+ / OSX.2+', '-', 'A'],
+            ['Presto', 'Opera 9.0', 'Win 95+ / OSX.3+', '-', 'A'],
+            ['Presto', 'Opera 9.2', 'Win 88+ / OSX.3+', '-', 'A'],
+            ['Presto', 'Opera 9.5', 'Win 88+ / OSX.3+', '-', 'A'],
+            ['Presto', 'Opera for Wii', 'Wii', '-', 'A'],
+            ['Presto', 'Nokia N800', 'N800', '-', 'A'],
+            ['Presto', 'Nintendo DS browser', 'Nintendo DS', '8.5', 'C/A<sup>1</sup>'],
+            ['KHTML', 'Konqureror 3.1', 'KDE 3.1', '3.1', 'C'],
+            ['KHTML', 'Konqureror 3.3', 'KDE 3.3', '3.3', 'A'],
+            ['KHTML', 'Konqureror 3.5', 'KDE 3.5', '3.5', 'A'],
+            ['Tasman', 'Internet Explorer 4.5', 'Mac OS 8-9', '-', 'X'],
+            ['Tasman', 'Internet Explorer 5.1', 'Mac OS 7.6-9', '1', 'C'],
+            ['Tasman', 'Internet Explorer 5.2', 'Mac OS 8-X', '1', 'C'],
+            ['Misc', 'NetFront 3.1', 'Embedded devices', '-', 'C'],
+            ['Misc', 'NetFront 3.4', 'Embedded devices', '-', 'A'],
+            ['Misc', 'Dillo 0.8', 'Embedded devices', '-', 'X'],
+            ['Misc', 'Links', 'Text only', '-', 'X'],
+            ['Misc', 'Lynx', 'Text only', '-', 'X'],
+            ['Misc', 'IE Mobile', 'Windows Mobile 6', '-', 'C'],
+            ['Misc', 'PSP browser', 'PSP', '-', 'C'],
+            ['Other browsers', 'All others', '-', '-', 'U']
+          ];
+
+          $('#dtable').dataTable({
+            "fnInitComplete": function(oSettings, json) {
+              $('#dtable').table();
+            },
+            "bDestroy": true,
+            "bFilter": false,
+            "bInfo": false,
+            "bPaginate": false,
+            aaData: aDataSet,
+            aoColumns: [{
+              "sTitle": "Engine"
+            }, {
+              "sTitle": "Browser"
+            }, {
+              "sTitle": "Platform"
+            }, {
+              "sTitle": "Version",
+              "sClass": "center"
+            }, {
+              "sTitle": "Grade",
+              "sClass": "center"
+            }]
+          });
+        }
+      }
+    }
   },
 
   counterAnim: function(selector, number) {
