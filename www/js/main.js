@@ -876,11 +876,33 @@ var app = {
 
     pie: function() {
 
-      $("#pie-slider").prop({
-        min: app.years[0],
-        max: app.years.slice(-1)[0]
-      });
+      
+      console.log("***** ");
+      var datatoprint = [];
+      var regiones = [];
+      var subregiones = [];
+      var departamentos = [];
+      var municipios = [];
+      var zonas = [];
+      var geograficas = [];
+      var theseries = [];
+      var thecategories = [];
+      var yearstoprint = [];
+      
+      //Determinan que tipos de ubicaciones geográficas se mostrarán en el gráfico
+      var printstate = true;
+      var printtown = true;
+      var printzone = true;
+      var printregion = true;
+      var printsubregion = true;
+      
+      
+      for (c = 0; c < app.years.length; c++) {
+        yearstoprint.push(false);
+      }
 
+      
+      
       var chart;
 
       app.openDB(query);
@@ -888,13 +910,43 @@ var app = {
       function query(tx) {
 
         tx.executeSql(app.buildSQL(), [], printData, app.errorCB);
-        var datatoprint = [];
-        var theyear = $("#pie-slider").val();
-        var departamentos = [];
-
 
         function printData(tx, results) {
+          
+          for (a = 0; a < app.years.length; a++) {
+            
+            
+            for (b = 0; b < results.rows.length; b++) {
+              var row = results.rows.item(b);
+              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== '-' && row["yea" + app.years[a]] !== null && parseFloat(row["yea" + app.years[a]]) !== 0.0) {
+                yearstoprint[a] = true;
+              }
+              
+            }
+            
+          }
+          
+          console.log("AÑOS A IMPRIMIR: ");
+          for (d = 0; d < app.years.length; d++) {
+            if (yearstoprint[d]) {
+              thecategories.push(app.years[d]);
+              console.log(app.years[d] + ",");
+            }
+          }
+          console.log("LAS CATEGORIAS");
+          for (e = 0; e < thecategories.length; e++) {
+            console.log(thecategories[e] + ",");
+          }
+
+          $("#pie-slider").prop({
+                                min: 0,
+                                max: thecategories.length - 1
+                                });
+          
+          var theyear = thecategories[$("#pie-slider").val()];
+          
           var indicator = results.rows.item(0).idindicador;
+          
 
           for (var j = 0; j < results.rows.length; j++) {
             var dataresults = results.rows.item(j);
@@ -975,7 +1027,7 @@ var app = {
 
         tx.executeSql(app.buildSQL(), [], printData, app.errorCB);
         var datatoprint = [];
-        var theyear = app.years[17];
+        //var theyear = [];
         var regiones = [];
         var subregiones = [];
         var departamentos = [];
@@ -1533,6 +1585,31 @@ var app = {
 
       function buildGraph(tx, results) {
 
+        tx.executeSql(app.buildSQL(), [], printData, app.errorCB);
+        var datatoprint = [];
+        //var theyear = [];
+        var regiones = [];
+        var subregiones = [];
+        var departamentos = [];
+        var municipios = [];
+        var zonas = [];
+        var geograficas = [];
+        var theseries = [];
+        var thecategories = [];
+        var yearstoprint = [];
+        
+        //Determinan que tipos de ubicaciones geográficas se mostrarán en el gráfico
+        var printstate = true;
+        var printtown = true;
+        var printzone = true;
+        var printregion = true;
+        var printsubregion = true;
+        
+        
+        for (c = 0; c < app.years.length; c++) {
+          yearstoprint.push(false);
+        }
+      
         var datafromresults = [];
         var header = ['Departamento', '2005', '2006'];
 
