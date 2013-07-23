@@ -308,3 +308,10 @@ fieldset label {
 #pie .ui-content, #lineal .ui-content, #bars .ui-content, #maps .ui-content, #table .ui-content {
 	padding: 40px 0 70px 0;
 }
+
+#pie-slider-label, #maps-slider-label {
+	font-size: 1em;
+	display: block;
+	position: absolute;
+	margin: 4px 0px 0px 10px;
+}
