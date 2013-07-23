@@ -1015,9 +1015,41 @@ var app = {
 
           for (var j = 0; j < results.rows.length; j++) {
             var dataresults = results.rows.item(j);
-            if (dataresults["yea" + theyear] !== null && dataresults["yea" + theyear] !== '' && parseFloat(results.rows.item(j).yea2005) !== 0.0) {
-              datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
-              departamentos.push(results.rows.item(j).nomdepto);
+            if ( !(isNaN(parseFloat(dataresults["yea" + theyear]))) && parseFloat(dataresults["yea" + theyear]) !== 0.0) {
+                
+                
+                if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && dataresults["nommpio"] !== '-'  && printtown) {
+                    datatoprint.push([results.rows.item(j).nommpio, parseFloat(dataresults["yea" + theyear])]);
+                    //printstate = false;
+                    console.log("Ubicacion "+results.rows.item(j).nommpio+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                }
+                else if (dataresults["nomdepto"] !== null
+                         && dataresults["nomdepto"] !== ''
+                         && dataresults["nomdepto"] !== '-'
+                         && printstate) {
+                    datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
+                    console.log("Ubicacion "+results.rows.item(j).nomdepto+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                }
+                else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && dataresults["nomzona"] !== '-'  && printzone) {
+                    datatoprint.push([results.rows.item(j).nomzona, parseFloat(dataresults["yea" + theyear])]);
+                    console.log("Ubicacion "+results.rows.item(j).nomzona+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                }
+                
+                else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && dataresults["nomsubregion"] !== '-' && printsubregion) {
+                    datatoprint.push([results.rows.item(j).nomsubregion, parseFloat(dataresults["yea" + theyear])]);
+                    console.log("Ubicacion "+results.rows.item(j).nomsubregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                    printregion = false;
+                }
+                else if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && dataresults["nomregion"] !== '-' && printregion) {
+                    datatoprint.push([results.rows.item(j).nomregion, parseFloat(dataresults["yea" + theyear])]);
+                    console.log("Ubicacion "+results.rows.item(j).nomregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                }
+                else {
+                    //var thestring = data
+                    datatoprint.push(["Colombia", parseFloat(dataresults["yea" + theyear])]);
+
+                }
+                
             }
           }
 
