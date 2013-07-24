@@ -324,6 +324,7 @@ var app = {
         app.createDB();
       }
     });
+    $("#progressLabel").html("Cargando +" + app.count + " registros!");
     console.log("load: " + url);
   },
 
@@ -333,7 +334,18 @@ var app = {
       url: url,
       dataType: 'json',
       error: function() {
-        alert('Error');
+         navigator.notification.alert('El repositorio de datos Open Data no está disponible, inténtalo más tarde!', function() {
+          navigator.app.exitApp();
+         }, 'Atención', 'Aceptar');
+      },
+      progress: function(evt) {
+        if (evt.lengthComputable) {
+            app.progressBar(parseInt( (evt.loaded / evt.total * 100), 10), $("#progressBar"));
+            // console.log("Loaded " + parseInt( (evt.loaded / evt.total * 100), 10) + "%");
+        }
+        else {
+            console.log("Length not computable.");
+        }
       }
     });
   },
@@ -2180,5 +2192,28 @@ var app = {
 
   hideLoadingBox: function() {
     $.mobile.loading('hide');
+  },
+
+  progressBar: function(percent, $element) {
+    var progressBarWidth = percent * $element.width() / 100;
+    $element.find('div').animate({ width: progressBarWidth }, 20).html(percent + "%&nbsp;");
   }
 };
+
+(function addXhrProgressEvent($) {
+    var originalXhr = $.ajaxSettings.xhr;
+    $.ajaxSetup({
+        progress: function() { console.log("standard progress callback"); },
+        xhr: function() {
+            var req = originalXhr(), that = this;
+            if (req) {
+                if (typeof req.addEventListener == "function") {
+                    req.addEventListener("progress", function(evt) {
+                        that.progress(evt);
+                    },false);
+                }
+            }
+            return req;
+        }
+    });
+})(jQuery);
