@@ -13,7 +13,7 @@
     </description>
 
     <author href="http://www.cool4code.com" email="info@cool4code.com">
-	 <!-- Alejandro Zarate azarate@cool4code.com, Marcos Aguilera maguilera@cool4code.com, Paola Vanegas <pvanegas@cool4code.com>, David Alméciga <walmeciga@cool4code.com> -->
+	 <!-- Alejandro Zarate azarate@cool4code.com, Marcos Aguilera maguilera@cool4code.com, Paola Vanegas <pvanegas@cool4code.com>, David Almï¿½ciga <walmeciga@cool4code.com> -->
 	 COOL4CODE
     </author>
 
@@ -97,6 +97,7 @@
         Otherwise, you can specify specific domains:
     -->
     <access origin="http://127.0.0.1*"/> <!-- allow local pages -->
+    <access origin="http://servicedatosabiertoscolombia.cloudapp.net*" subdomains="true" />
     <!--
         <access origin="http://phonegap.com" />                    - allow any secure requests to http://phonegap.com/
         <access origin="http://phonegap.com" subdomains="true" />  - same as above, but including subdomains, such as http://build.phonegap.com/
