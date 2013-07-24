@@ -940,8 +940,6 @@ var app = {
 
     pie: function() {
 
-
-      console.log("***** ");
       var datatoprint = [];
       var regiones = [];
       var subregiones = [];
@@ -1016,9 +1014,41 @@ var app = {
 
           for (var j = 0; j < results.rows.length; j++) {
             var dataresults = results.rows.item(j);
-            if (dataresults["yea" + theyear] !== null && dataresults["yea" + theyear] !== '' && parseFloat(results.rows.item(j).yea2005) !== 0.0) {
-              datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
-              departamentos.push(results.rows.item(j).nomdepto);
+            if ( !(isNaN(parseFloat(dataresults["yea" + theyear]))) && parseFloat(dataresults["yea" + theyear]) !== 0.0) {
+                
+                
+                if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && dataresults["nommpio"] !== '-'  && printtown) {
+                    datatoprint.push([results.rows.item(j).nommpio, parseFloat(dataresults["yea" + theyear])]);
+                    //printstate = false;
+                    console.log("Ubicacion "+results.rows.item(j).nommpio+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                }
+                else if (dataresults["nomdepto"] !== null
+                         && dataresults["nomdepto"] !== ''
+                         && dataresults["nomdepto"] !== '-'
+                         && printstate) {
+                    datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
+                    console.log("Ubicacion "+results.rows.item(j).nomdepto+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                }
+                else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && dataresults["nomzona"] !== '-'  && printzone) {
+                    datatoprint.push([results.rows.item(j).nomzona, parseFloat(dataresults["yea" + theyear])]);
+                    console.log("Ubicacion "+results.rows.item(j).nomzona+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                }
+                
+                else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && dataresults["nomsubregion"] !== '-' && printsubregion) {
+                    datatoprint.push([results.rows.item(j).nomsubregion, parseFloat(dataresults["yea" + theyear])]);
+                    console.log("Ubicacion "+results.rows.item(j).nomsubregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                    printregion = false;
+                }
+                else if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && dataresults["nomregion"] !== '-' && printregion) {
+                    datatoprint.push([results.rows.item(j).nomregion, parseFloat(dataresults["yea" + theyear])]);
+                    console.log("Ubicacion "+results.rows.item(j).nomregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                }
+                else {
+                    //var thestring = data
+                    datatoprint.push(["Colombia", parseFloat(dataresults["yea" + theyear])]);
+
+                }
+                
             }
           }
 
@@ -1071,7 +1101,7 @@ var app = {
             },
 
             tooltip: {
-              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+              //pointFormat: '{series.name}: <b>{point.percentage:.1f}</b>'
             },
 
             series: [{
@@ -1343,7 +1373,7 @@ var app = {
             },
             yAxis: {
               title: {
-                text: 'Indicador'
+                text: results.rows.item(0).nomunidad
               },
               plotLines: [{
                 value: 0,
@@ -1352,7 +1382,7 @@ var app = {
               }]
             },
             tooltip: {
-              // valueSuffix: '%'
+              //valueSuffix: '%'
             },
             legend: {
               align: "center",
@@ -1361,6 +1391,7 @@ var app = {
               margin: 20 //define el espacio entre el legend y la zona de grafico
             },
             series: theseries
+            
 
             //[{name:'Amazonas',data:[15.0,30]},{name:'Cundinamarca',data:[19.0,10]}]
           });
@@ -1615,6 +1646,16 @@ var app = {
                 }
               }
             },
+            yAxis: {
+              title: {
+                text: results.rows.item(0).nomunidad
+              },
+              plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+              }]
+            },
             legend: {
               align: "center",
               verticalAlign: "top",
@@ -1629,22 +1670,8 @@ var app = {
               y: 10,
               floating: true
             },
-            /*plotOptions: {
-                                            pie: {
-                                                allowPointSelect: true,
-                                                cursor: 'pointer',
-                                                dataLabels: {
-                                                    enabled: false,
-                                                    color: '#000000',
-                                                    connectorColor: '#000000',
-                                                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                                                },
-                                            showInLegend : true
-                                            }
-                                         },*/
-
             tooltip: {
-              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+             // pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
             },
 
             series: theseries
@@ -1655,276 +1682,150 @@ var app = {
 
     maps: function() {
 
-      $("#maps-slider").prop({
-        min: 0,
-        max: 10
-      });
 
-      $("#maps-slider-label").html(app.years[$("#maps-slider").val()]);
+      var datatoprint = [];
+      var regiones = [];
+      var subregiones = [];
+      var departamentos = [];
+      var municipios = [];
+      var zonas = [];
+      var geograficas = [];
+      var theseries = [];
+      var thecategories = [];
+      var yearstoprint = [];
+      
+      //Determinan que tipos de ubicaciones geográficas se mostrarán en el gráfico
+      var printstate = true;
+      var printtown = true;
+      var printzone = true;
+      var printregion = true;
+      var printsubregion = true;
+      
+      
+      for (c = 0; c < app.years.length; c++) {
+        yearstoprint.push(false);
+      }
+      
+      app.openDB(query);
 
-      // app.openDB(query);
+      function query(tx) {
 
-      // function query(tx) {
+        tx.executeSql(app.buildSQL(), [], printData, app.errorCB);
+        
+        function printData(tx, results) {
+          
+          for (a = 0; a < app.years.length; a++) {
+            
+            
+            for (b = 0; b < results.rows.length; b++) {
+              var row = results.rows.item(b);
+              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== '-' && row["yea" + app.years[a]] !== null && parseFloat(row["yea" + app.years[a]]) !== 0.0) {
+                yearstoprint[a] = true;
+              }
+              
+            }
+            
+          }
+          
+          console.log("AÑOS A IMPRIMIR: ");
+          for (d = 0; d < app.years.length; d++) {
+            if (yearstoprint[d]) {
+              thecategories.push(app.years[d]);
+              console.log(app.years[d] + ",");
+            }
+          }
+          console.log("LAS CATEGORIAS");
+          for (e = 0; e < thecategories.length; e++) {
+            console.log(thecategories[e] + ",");
+          }
+          
+          
+          $("#maps-slider").prop({
+                                 min: 0,
+                                 max: thecategories.length - 1
+                                 });
+          
+         $("#maps-slider-label").html(theyear);
+          
+          var theyear = thecategories[$("#maps-slider").val()];
 
-      //   tx.executeSql(app.buildSQL(), [], printData, app.errorCB);
-      //   var datatoprint = [];
-      //   //var theyear = [];
-      //   var regiones = [];
-      //   var subregiones = [];
-      //   var departamentos = [];
-      //   var municipios = [];
-      //   var zonas = [];
-      //   var geograficas = [];
-      //   var theseries = [];
-      //   var thecategories = [];
-      //   var yearstoprint = [];
+          var indicator = results.rows.item(0).idindicador;
+          
+          
+          for (var j = 0; j < results.rows.length; j++) {
+            var dataresults = results.rows.item(j);
+            if ( !(isNaN(parseFloat(dataresults["yea" + theyear]))) && parseFloat(dataresults["yea" + theyear]) !== 0.0) {
+              
+              
+              if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && dataresults["nommpio"] !== '-'  && printtown) {
+                datatoprint.push([results.rows.item(j).nommpio, parseFloat(dataresults["yea" + theyear])]);
+                //printstate = false;
+                console.log("Ubicacion "+results.rows.item(j).nommpio+" valor: "+parseFloat(dataresults["yea" + theyear]))
+              }
+              else if (dataresults["nomdepto"] !== null
+                       && dataresults["nomdepto"] !== ''
+                       && dataresults["nomdepto"] !== '-'
+                       && printstate) {
+                datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
+                console.log("Ubicacion "+results.rows.item(j).nomdepto+" valor: "+parseFloat(dataresults["yea" + theyear]))
+              }
+              else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && dataresults["nomzona"] !== '-'  && printzone) {
+                datatoprint.push([results.rows.item(j).nomzona, parseFloat(dataresults["yea" + theyear])]);
+                console.log("Ubicacion "+results.rows.item(j).nomzona+" valor: "+parseFloat(dataresults["yea" + theyear]))
+              }
+              
+              else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && dataresults["nomsubregion"] !== '-' && printsubregion) {
+                datatoprint.push([results.rows.item(j).nomsubregion, parseFloat(dataresults["yea" + theyear])]);
+                console.log("Ubicacion "+results.rows.item(j).nomsubregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                printregion = false;
+              }
+              else if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && dataresults["nomregion"] !== '-' && printregion) {
+                datatoprint.push([results.rows.item(j).nomregion, parseFloat(dataresults["yea" + theyear])]);
+                console.log("Ubicacion "+results.rows.item(j).nomregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
+              }
+              else {
+                //var thestring = data
+                datatoprint.push(["Colombia", parseFloat(dataresults["yea" + theyear])]);
+                
+              }
+              
+            }
+          }
 
-      //   //Determinan que tipos de ubicaciones geográficas se mostrarán en el gráfico
-      //   var printstate = true;
-      //   var printtown = true;
-      //   var printzone = true;
-      //   var printregion = true;
-      //   var printsubregion = true;
+             if (google && google.visualization) {
+               googleChart();
+             } else {
+               google.load("visualization", "1", {
+                 'packages': ['geochart'],
+                 callback: googleChart
+               });
+             }
 
+             function googleChart() {
+               var data = google.visualization.arrayToDataTable(datatoprint);
+               var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
+               var options = {
+                 region: 'CO',
+                 resolution: 'provinces',
+                 displayMode: 'markers',
+                 height: $("#maps").height() - 200 + "px",
+                 // magnifyingGlass: {
+                 //   enable: "true",
+                 //   zoomFactor: "10.0"
+                 // },
+                 backgroundColor: {
+                   fill: "transparent"
+                 },
+                 colorAxis: {
+                   colors: ['green', 'red']
+                 }
+               };
 
-      //   for (c = 0; c < app.years.length; c++) {
-
-      //     function buildGraph(tx, results) {
-
-      //       var datafromresults = [];
-      //       var header = ['Departamento', '2005', '2006'];
-
-      //       //ALEJANDRO - GEOCHARTS
-
-      //       var datatoprint = [];
-      //       var theseries = [];
-      //       var thecategories = [];
-      //       var yearstoprint = [];
-      //       var printstate = true;
-      //       var printtown = true;
-      //       var printzone = true;
-      //       var printregion = true;
-      //       var printsubregion = true;
-
-
-      //       for (c = 0; c < app.years.length; c++) {
-      //         yearstoprint.push(false);
-      //       }
-
-      //       //Verificar años para cuáles hay datos
-
-
-      //       for (a = 0; a < app.years.length; a++) {
-
-
-      //         for (b = 0; b < results.rows.length; b++) {
-      //           var row = results.rows.item(b);
-      //           if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== '-' && row["yea" + app.years[a]] !== null && parseFloat(row["yea" + app.years[a]]) !== 0.0) {
-      //             yearstoprint[a] = true;
-      //           }
-
-      //         }
-
-      //       }
-
-      //       // Insertar las categorias segun los años que tienen datos
-
-      //       console.log("AÑOS A IMPRIMIR: ");
-      //       for (d = 0; d < app.years.length; d++) {
-      //         if (yearstoprint[d]) {
-      //           thecategories.push(app.years[d]);
-      //           console.log(app.years[d] + ",")
-      //         }
-      //       }
-      //       console.log("LAS CATEGORIAS");
-      //       for (e = 0; e < thecategories.length; e++) {
-      //         console.log(thecategories[e] + ",");
-      //       }
-
-
-      //       // Inserción de datos en la serie
-      //       for (var p = 0; p < results.rows.length; p++) {
-      //         var dataresults = results.rows.item(p);
-      //         var serie = {};
-      //         var rowdata = [];
-
-      //         if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && parseFloat(dataresults["nomregion"]) != 0.0 && printregion) {
-      //           console.log(" Region" + p + ": " + dataresults["nomregion"]);
-      //           departamentos.push(dataresults["nomregion"]);
-      //           geograficas.push(dataresults["nomregion"]);
-      //           console.log("Numero de años:" + app.years.length);
-      //           for (var l = 0; l < app.years.length; l++) {
-      //             if (yearstoprint[l]) {
-      //               if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-' && parseFloat(dataresults["yea" + app.years[l]]) !== 0.0) {
-      //                 rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
-      //                 console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-      //               } else {
-      //                 rowdata.push(0.0);
-      //                 console.log(l + " Año " + app.years[l] + " : 0");
-      //               }
-      //             }
-      //           }
-
-      //           for (var q = 0; q < rowdata.length; q++) {
-      //             console.log("Datos guardado " + rowdata[q]);
-      //           }
-
-      //           serie["name"] = dataresults["nomregion"];
-      //           serie["data"] = rowdata;
-      //           theseries.push(serie);
-      //         } else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && parseFloat(dataresults["nomsubregion"]) != 0.0 && printsubregion) {
-      //           console.log(" Subregion" + p + ": " + dataresults["nomsubregion"]);
-      //           departamentos.push(dataresults["nomsubregion"]);
-      //           geograficas.push(dataresults["nomsubregion"]);
-      //           console.log("Numero de años:" + app.years.length);
-      //           for (var l = 0; l < app.years.length; l++) {
-      //             if (yearstoprint[l]) {
-      //               if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-' && parseFloat(dataresults["yea" + app.years[l]]) !== 0.0) {
-      //                 rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
-      //                 console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-      //               }
-      //             }
-      //           }
-
-      //           for (var q = 0; q < rowdata.length; q++) {
-      //             console.log("Datos guardado " + rowdata[q]);
-      //           }
-
-      //           serie["name"] = dataresults["nomsubregion"];
-      //           serie["data"] = rowdata;
-      //           theseries.push(serie);
-      //         }
-
-      //         //Verificación de municipios
-      //         else if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && parseFloat(dataresults["nommpio"]) != 0.0 && printtown) {
-      //           printstate = false;
-      //           console.log(" Municipio " + p + ": " + dataresults["nommpio"]);
-      //           municipios.push(dataresults["nommpio"]);
-      //           geograficas.push(dataresults["nommpio"]);
-      //           console.log("Numero de años:" + app.years.length);
-      //           for (var l = 0; l < app.years.length; l++) {
-      //             if (yearstoprint[l]) {
-      //               if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && parseFloat(dataresults["yea" + app.years[l]]) !== 0.0 && dataresults["yea" + app.years[l]] !== '-') {
-      //                 rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
-      //                 console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-      //               }
-      //             }
-      //           }
-
-      //           for (var q = 0; q < rowdata.length; q++) {
-      //             console.log("Datos guardado " + rowdata[q]);
-      //           }
-
-      //           serie["name"] = dataresults["nommpio"];
-      //           serie["data"] = rowdata;
-      //           theseries.push(serie);
-      //         }
-
-
-      //         //Verificación de zonas
-      //         else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && parseFloat(dataresults["nomzona"]) != 0.0 && printzone) {
-      //           console.log(" Zona " + p + ": " + dataresults["nomzona"]);
-      //           municipios.push(dataresults["nomzona"]);
-      //           geograficas.push(dataresults["nomzona"]);
-      //           console.log("Numero de años:" + app.years.length);
-      //           for (var l = 0; l < app.years.length; l++) {
-      //             if (yearstoprint[l]) {
-      //               if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && parseFloat(dataresults["yea" + app.years[l]]) !== 0.0 && dataresults["yea" + app.years[l]] !== '-') {
-      //                 rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
-      //                 console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-      //               }
-      //             }
-      //           }
-
-      //           for (var q = 0; q < rowdata.length; q++) {
-      //             console.log("Datos guardado " + rowdata[q]);
-      //           }
-
-      //           serie["name"] = dataresults["nomzona"];
-      //           serie["data"] = rowdata;
-      //           theseries.push(serie);
-      //         } else if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && parseFloat(dataresults["nomdepto"]) != 0.0 && printstate) {
-      //           console.log(" Departamento " + p + ": " + dataresults["nomdepto"]);
-      //           console.log("Numero de años:" + app.years.length);
-      //           for (var l = 0; l < app.years.length; l++) {
-      //             if (yearstoprint[l]) {
-      //               if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-' && parseFloat(dataresults["yea" + app.years[l]]) !== 0.0) {
-      //                 rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
-      //                 console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-      //               }
-      //             }
-      //           }
-
-      //           for (var q = 0; q < rowdata.length; q++) {
-      //             console.log("Datos guardado " + rowdata[q]);
-      //           }
-
-      //           serie["name"] = dataresults["nomdepto"];
-      //           serie["data"] = rowdata;
-      //           theseries.push(serie);
-      //         }
-
-
-      //       }
-
-      //       // var encabezado = [];
-      //       // encabezado = encabezado.concat("Region", thecategories);
-      //       // console.log(encabezado.join());
-      //       datafromresults.push(header);
-      //       //datafromresults.push(encabezado);
-      //       // console.log(theseries.length);
-      //       // console.log(results.rows.length);
-      //       // var len = theseries.length;
-      //       var len = results.rows.length;
-      //       // var theregion = [];
-      //       // for (var j = 0; j < len; j++) {
-      //       //   theregion = [];
-      //       //   theregion = [theseries[j].name]
-      //       //   for (k = 0; k < theseries[j].data.length; k++) {
-      //       //     theregion = theregion.concat(parseFloat(theseries[j].data[k]));
-      //       //   }
-      //       //   console.log(theregion.join());
-      //       //   datafromresults.push(theregion);
-      //       // }
-
-      //       //FIN ALEJANDRO - GEOCHARTS
-      //     for (var i = 0; i < len; i++) {
-      //       datafromresults.push([results.rows.item(i).nomdepto, parseFloat(results.rows.item(i).yea2005), parseFloat(results.rows.item(i).yea2006)]);
-      //     }
-
-      //       if (google && google.visualization) {
-      //         googleChart();
-      //       } else {
-      //         google.load("visualization", "1", {
-      //           'packages': ['geochart'],
-      //           callback: googleChart
-      //         });
-      //       }
-
-      //       function googleChart() {
-      //         var data = google.visualization.arrayToDataTable(datafromresults);
-      //         var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
-      //         var options = {
-      //           region: 'CO',
-      //           resolution: 'provinces',
-      //           displayMode: 'markers',
-      //           height: $("#maps").height() - 200 + "px",
-      //           // magnifyingGlass: {
-      //           //   enable: "true",
-      //           //   zoomFactor: "10.0"
-      //           // },
-      //           backgroundColor: {
-      //             fill: "transparent"
-      //           },
-      //           colorAxis: {
-      //             colors: ['green', 'red']
-      //           }
-      //         };
-
-      //         map.draw(data, options);
-      //       }
-      //     }
-      //   }
+               map.draw(data, options);
+             }
+           }
+         }
+      app.hideLoadingBox();
 
       },
 
