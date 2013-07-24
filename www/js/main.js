@@ -952,12 +952,7 @@ var app = {
       var yearstoprint = [];
 
       //Determinan que tipos de ubicaciones geográficas se mostrarán en el gráfico
-      var printstate = true;
-      var printtown = true;
-      var printzone = true;
-      var printregion = true;
-      var printsubregion = true;
-
+      
 
       for (c = 0; c < app.years.length; c++) {
         yearstoprint.push(false);
@@ -1010,42 +1005,60 @@ var app = {
           $("#pie-slider-label").html(theyear);
 
           var indicator = results.rows.item(0).idindicador;
-
+          var printstate = true;
+          var printtown = true;
+          var printzone = true;
+          var printregion = true;
+          var printsubregion = true;
+          var printdemographic = true;
 
           for (var j = 0; j < results.rows.length; j++) {
             var dataresults = results.rows.item(j);
+         
             if ( !(isNaN(parseFloat(dataresults["yea" + theyear]))) && parseFloat(dataresults["yea" + theyear]) !== 0.0) {
-                
-                
+              var thestring = [];
+              thestring = dataresults["nomregimen"]+dataresults["nomeps"]+dataresults["nomips"]+dataresults["nomregimen"]+dataresults["nomeducacion"]+dataresults["nomocupacion"]+dataresults["nomsexo"]+dataresults["nometnia"]+dataresults["nomedad"]+dataresults["nomestadocivil"];
+              var thelocation = [];
+              thelocation = dataresults["nommpio"]+dataresults["nomdepto"]+dataresults["nomzona"]+dataresults["nomsubregion"]+dataresults["nomregion"];
+              
                 if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && dataresults["nommpio"] !== '-'  && printtown) {
-                    datatoprint.push([results.rows.item(j).nommpio, parseFloat(dataresults["yea" + theyear])]);
-                    //printstate = false;
+                    datatoprint.push([results.rows.item(j).nommpio+" "+thestring, parseFloat(dataresults["yea" + theyear])]);
+                    printdemographic = false;
                     console.log("Ubicacion "+results.rows.item(j).nommpio+" valor: "+parseFloat(dataresults["yea" + theyear]))
                 }
                 else if (dataresults["nomdepto"] !== null
                          && dataresults["nomdepto"] !== ''
                          && dataresults["nomdepto"] !== '-'
                          && printstate) {
-                    datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
+                    datatoprint.push([results.rows.item(j).nomdepto+" "+thestring, parseFloat(dataresults["yea" + theyear])]);
+                    printdemographic = false;
                     console.log("Ubicacion "+results.rows.item(j).nomdepto+" valor: "+parseFloat(dataresults["yea" + theyear]))
                 }
                 else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && dataresults["nomzona"] !== '-'  && printzone) {
-                    datatoprint.push([results.rows.item(j).nomzona, parseFloat(dataresults["yea" + theyear])]);
-                    console.log("Ubicacion "+results.rows.item(j).nomzona+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                    datatoprint.push([results.rows.item(j).nomzona+" "+thestring, parseFloat(dataresults["yea" + theyear])]);
+                  printdemographic = false;
+                  console.log("Ubicacion "+results.rows.item(j).nomzona+" valor: "+parseFloat(dataresults["yea" + theyear]))
                 }
                 
                 else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && dataresults["nomsubregion"] !== '-' && printsubregion) {
-                    datatoprint.push([results.rows.item(j).nomsubregion, parseFloat(dataresults["yea" + theyear])]);
+                    datatoprint.push([results.rows.item(j).nomsubregion+" "+thestring, parseFloat(dataresults["yea" + theyear])]);
                     console.log("Ubicacion "+results.rows.item(j).nomsubregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
-                    printregion = false;
+                  printdemographic = false;
+                  printregion = false;
                 }
                 else if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && dataresults["nomregion"] !== '-' && printregion) {
-                    datatoprint.push([results.rows.item(j).nomregion, parseFloat(dataresults["yea" + theyear])]);
-                    console.log("Ubicacion "+results.rows.item(j).nomregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                    datatoprint.push([results.rows.item(j).nomregion+" "+thestring, parseFloat(dataresults["yea" + theyear])]);
+                  printdemographic = false;
+                  console.log("Ubicacion "+results.rows.item(j).nomregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
                 }
-                else {
+                else if (printdemographic){
                     //var thestring = data
-                    datatoprint.push(["Colombia", parseFloat(dataresults["yea" + theyear])]);
+                    datatoprint.push([thelocation+" "+thestring, parseFloat(dataresults["yea" + theyear])]);
+                  printstate = false;
+                  printtown = false;
+                  printzone = false;
+                  printregion = false;
+                  printsubregion = false;
 
                 }
                 
@@ -1784,8 +1797,9 @@ var app = {
                 console.log("Ubicacion "+results.rows.item(j).nomregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
               }
               else {
-                //var thestring = data
+                
                 datatoprint.push(["Colombia", parseFloat(dataresults["yea" + theyear])]);
+                
                 
               }
               
@@ -1915,11 +1929,9 @@ var app = {
               }, {
                 "sTitle": "Platform"
               }, {
-                "sTitle": "Version",
-                "sClass": "center"
+                "sTitle": "Version"
               }, {
-                "sTitle": "Grade",
-                "sClass": "center"
+                "sTitle": "Grade"
               }]
             });
           }
