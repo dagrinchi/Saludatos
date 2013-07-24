@@ -103,14 +103,6 @@ var app = {
     document.addEventListener("deviceready", app.onDeviceReady, false);
   },
 
-  buttonHeight: function() {
-    console.log("buttonHeight: Ajustando el alto de los botones!");
-    var wh = $("#home").height() - 180;
-    $.each($(".sidebar a"), function(i, item) {
-      $(item).height(wh / 3);
-    });
-  },
-
   onDeviceReady: function() {
     //window.localStorage.removeItem("updated");
 
@@ -127,6 +119,15 @@ var app = {
         navigator.app.exitApp();
       }, 'Atención', 'Aceptar');
     }
+  },
+
+  buttonHeight: function() {
+    console.log("buttonHeight: Ajustando el alto de los botones!");
+    var wh = $("#home").height() - 200;
+    $.each($(".sidebar a"), function(i, item) {
+      $(item).height(wh / 3);
+    });
+    app["homeheight"] = wh;
   },
 
   btnsEvents: function(cb) {
@@ -146,7 +147,7 @@ var app = {
       canvg(canvasObj, $("#" + chartType + " svg").clone().wrap('<div/>').parent().html());
 
       setTimeout(function() {
-          app.createFile(chartType + "-" + filedate + ".jpg", canvasObj.toDataURL("image/jpeg"));
+        app.createFile(chartType + "-" + filedate + ".jpg", canvasObj.toDataURL("image/jpeg"));
       }, 3000);
     });
 
@@ -963,10 +964,6 @@ var app = {
         yearstoprint.push(false);
       }
 
-
-
-      var chart;
-
       app.openDB(query);
 
       function query(tx) {
@@ -1014,54 +1011,44 @@ var app = {
 
           for (var j = 0; j < results.rows.length; j++) {
             var dataresults = results.rows.item(j);
-            if ( !(isNaN(parseFloat(dataresults["yea" + theyear]))) && parseFloat(dataresults["yea" + theyear]) !== 0.0) {
-                
-                
-                if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && dataresults["nommpio"] !== '-'  && printtown) {
-                    datatoprint.push([results.rows.item(j).nommpio, parseFloat(dataresults["yea" + theyear])]);
-                    //printstate = false;
-                    console.log("Ubicacion "+results.rows.item(j).nommpio+" valor: "+parseFloat(dataresults["yea" + theyear]))
-                }
-                else if (dataresults["nomdepto"] !== null
-                         && dataresults["nomdepto"] !== ''
-                         && dataresults["nomdepto"] !== '-'
-                         && printstate) {
-                    datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
-                    console.log("Ubicacion "+results.rows.item(j).nomdepto+" valor: "+parseFloat(dataresults["yea" + theyear]))
-                }
-                else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && dataresults["nomzona"] !== '-'  && printzone) {
-                    datatoprint.push([results.rows.item(j).nomzona, parseFloat(dataresults["yea" + theyear])]);
-                    console.log("Ubicacion "+results.rows.item(j).nomzona+" valor: "+parseFloat(dataresults["yea" + theyear]))
-                }
-                
-                else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && dataresults["nomsubregion"] !== '-' && printsubregion) {
-                    datatoprint.push([results.rows.item(j).nomsubregion, parseFloat(dataresults["yea" + theyear])]);
-                    console.log("Ubicacion "+results.rows.item(j).nomsubregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
-                    printregion = false;
-                }
-                else if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && dataresults["nomregion"] !== '-' && printregion) {
-                    datatoprint.push([results.rows.item(j).nomregion, parseFloat(dataresults["yea" + theyear])]);
-                    console.log("Ubicacion "+results.rows.item(j).nomregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
-                }
-                else {
-                    //var thestring = data
-                    datatoprint.push(["Colombia", parseFloat(dataresults["yea" + theyear])]);
+            if (!(isNaN(parseFloat(dataresults["yea" + theyear]))) && parseFloat(dataresults["yea" + theyear]) !== 0.0) {
 
-                }
-                
+
+              if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && dataresults["nommpio"] !== '-' && printtown) {
+                datatoprint.push([results.rows.item(j).nommpio, parseFloat(dataresults["yea" + theyear])]);
+                //printstate = false;
+                console.log("Ubicacion " + results.rows.item(j).nommpio + " valor: " + parseFloat(dataresults["yea" + theyear]))
+              } else if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && dataresults["nomdepto"] !== '-' && printstate) {
+                datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
+                console.log("Ubicacion " + results.rows.item(j).nomdepto + " valor: " + parseFloat(dataresults["yea" + theyear]))
+              } else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && dataresults["nomzona"] !== '-' && printzone) {
+                datatoprint.push([results.rows.item(j).nomzona, parseFloat(dataresults["yea" + theyear])]);
+                console.log("Ubicacion " + results.rows.item(j).nomzona + " valor: " + parseFloat(dataresults["yea" + theyear]))
+              } else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && dataresults["nomsubregion"] !== '-' && printsubregion) {
+                datatoprint.push([results.rows.item(j).nomsubregion, parseFloat(dataresults["yea" + theyear])]);
+                console.log("Ubicacion " + results.rows.item(j).nomsubregion + " valor: " + parseFloat(dataresults["yea" + theyear]))
+                printregion = false;
+              } else if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && dataresults["nomregion"] !== '-' && printregion) {
+                datatoprint.push([results.rows.item(j).nomregion, parseFloat(dataresults["yea" + theyear])]);
+                console.log("Ubicacion " + results.rows.item(j).nomregion + " valor: " + parseFloat(dataresults["yea" + theyear]))
+              } else {
+                //var thestring = data
+                datatoprint.push(["Colombia", parseFloat(dataresults["yea" + theyear])]);
+
+              }
+
             }
           }
 
           $("#pie .Title-Size").html(results.rows.item(0).nomindicador + " - Año " + theyear);
-
-          chart = new Highcharts.Chart({
+          var chart = new Highcharts.Chart({
             chart: {
               renderTo: 'piechartdiv',
               plotBackgroundColor: null,
               plotBorderWidth: null,
               plotShadow: false,
               // spacingTop: 10,
-              height: 500,
+              height: app.homeheight,
               borderRadius: 0
             },
             exporting: {
@@ -1335,15 +1322,14 @@ var app = {
           var dataforlabels = results.rows.item(0);
           $("#lineal .Title-Size").html(results.rows.item(0).nomindicador);
 
-          chart = new Highcharts.Chart({
+          var chart = new Highcharts.Chart({
             chart: {
               renderTo: 'linealchartdiv',
               plotBackgroundColor: null,
               plotBorderWidth: null,
               plotShadow: false,
-              spacingTop: 30,
-              borderRadius: 0,
-              spacingBottom: 50
+              height: app.homeheight,
+              borderRadius: 0
               // margin: [30, 10, 10, 10]
             },
             exporting: {
@@ -1391,7 +1377,7 @@ var app = {
               margin: 20 //define el espacio entre el legend y la zona de grafico
             },
             series: theseries
-            
+
 
             //[{name:'Amazonas',data:[15.0,30]},{name:'Cundinamarca',data:[19.0,10]}]
           });
@@ -1618,15 +1604,14 @@ var app = {
           }
 
           $("#bars .Title-Size").html(results.rows.item(0).nomindicador);
-          chart = new Highcharts.Chart({
+          var chart = new Highcharts.Chart({
             chart: {
               type: 'column',
               renderTo: 'columnchartdiv',
               plotBackgroundColor: null,
               plotBorderWidth: null,
               plotShadow: false,
-              spacingTop: 50,
-              spacingBottom: 50,
+              height: app.homeheight,
               borderRadius: 0
             },
             exporting: {
@@ -1671,7 +1656,7 @@ var app = {
               floating: true
             },
             tooltip: {
-             // pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+              // pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
             },
 
             series: theseries
@@ -1693,40 +1678,40 @@ var app = {
       var theseries = [];
       var thecategories = [];
       var yearstoprint = [];
-      
+
       //Determinan que tipos de ubicaciones geográficas se mostrarán en el gráfico
       var printstate = true;
       var printtown = true;
       var printzone = true;
       var printregion = true;
       var printsubregion = true;
-      
-      
+
+
       for (c = 0; c < app.years.length; c++) {
         yearstoprint.push(false);
       }
-      
+
       app.openDB(query);
 
       function query(tx) {
 
         tx.executeSql(app.buildSQL(), [], printData, app.errorCB);
-        
+
         function printData(tx, results) {
-          
+
           for (a = 0; a < app.years.length; a++) {
-            
-            
+
+
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
               if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== '-' && row["yea" + app.years[a]] !== null && parseFloat(row["yea" + app.years[a]]) !== 0.0) {
                 yearstoprint[a] = true;
               }
-              
+
             }
-            
+
           }
-          
+
           console.log("AÑOS A IMPRIMIR: ");
           for (d = 0; d < app.years.length; d++) {
             if (yearstoprint[d]) {
@@ -1738,223 +1723,213 @@ var app = {
           for (e = 0; e < thecategories.length; e++) {
             console.log(thecategories[e] + ",");
           }
-          
-          
-          $("#maps-slider").prop({
-                                 min: 0,
-                                 max: thecategories.length - 1
-                                 });
-          
-         $("#maps-slider-label").html(theyear);
-          
+
           var theyear = thecategories[$("#maps-slider").val()];
 
           var indicator = results.rows.item(0).idindicador;
-          
-          
+
+          $("#maps-slider-label").html(theyear);
+
+          $("#maps-slider").prop({
+            min: 0,
+            max: thecategories.length - 1
+          });
+
+
           for (var j = 0; j < results.rows.length; j++) {
             var dataresults = results.rows.item(j);
-            if ( !(isNaN(parseFloat(dataresults["yea" + theyear]))) && parseFloat(dataresults["yea" + theyear]) !== 0.0) {
-              
-              
-              if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && dataresults["nommpio"] !== '-'  && printtown) {
+            if (!(isNaN(parseFloat(dataresults["yea" + theyear]))) && parseFloat(dataresults["yea" + theyear]) !== 0.0) {
+
+
+              if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && dataresults["nommpio"] !== '-' && printtown) {
                 datatoprint.push([results.rows.item(j).nommpio, parseFloat(dataresults["yea" + theyear])]);
                 //printstate = false;
-                console.log("Ubicacion "+results.rows.item(j).nommpio+" valor: "+parseFloat(dataresults["yea" + theyear]))
-              }
-              else if (dataresults["nomdepto"] !== null
-                       && dataresults["nomdepto"] !== ''
-                       && dataresults["nomdepto"] !== '-'
-                       && printstate) {
+                console.log("Ubicacion " + results.rows.item(j).nommpio + " valor: " + parseFloat(dataresults["yea" + theyear]))
+              } else if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && dataresults["nomdepto"] !== '-' && printstate) {
                 datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
-                console.log("Ubicacion "+results.rows.item(j).nomdepto+" valor: "+parseFloat(dataresults["yea" + theyear]))
-              }
-              else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && dataresults["nomzona"] !== '-'  && printzone) {
+                console.log("Ubicacion " + results.rows.item(j).nomdepto + " valor: " + parseFloat(dataresults["yea" + theyear]))
+              } else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && dataresults["nomzona"] !== '-' && printzone) {
                 datatoprint.push([results.rows.item(j).nomzona, parseFloat(dataresults["yea" + theyear])]);
-                console.log("Ubicacion "+results.rows.item(j).nomzona+" valor: "+parseFloat(dataresults["yea" + theyear]))
-              }
-              
-              else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && dataresults["nomsubregion"] !== '-' && printsubregion) {
+                console.log("Ubicacion " + results.rows.item(j).nomzona + " valor: " + parseFloat(dataresults["yea" + theyear]))
+              } else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && dataresults["nomsubregion"] !== '-' && printsubregion) {
                 datatoprint.push([results.rows.item(j).nomsubregion, parseFloat(dataresults["yea" + theyear])]);
-                console.log("Ubicacion "+results.rows.item(j).nomsubregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
+                console.log("Ubicacion " + results.rows.item(j).nomsubregion + " valor: " + parseFloat(dataresults["yea" + theyear]))
                 printregion = false;
-              }
-              else if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && dataresults["nomregion"] !== '-' && printregion) {
+              } else if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && dataresults["nomregion"] !== '-' && printregion) {
                 datatoprint.push([results.rows.item(j).nomregion, parseFloat(dataresults["yea" + theyear])]);
-                console.log("Ubicacion "+results.rows.item(j).nomregion+" valor: "+parseFloat(dataresults["yea" + theyear]))
-              }
-              else {
+                console.log("Ubicacion " + results.rows.item(j).nomregion + " valor: " + parseFloat(dataresults["yea" + theyear]))
+              } else {
                 //var thestring = data
                 datatoprint.push(["Colombia", parseFloat(dataresults["yea" + theyear])]);
-                
+
               }
-              
+
             }
           }
 
-             if (google && google.visualization) {
-               googleChart();
-             } else {
-               google.load("visualization", "1", {
-                 'packages': ['geochart'],
-                 callback: googleChart
-               });
-             }
-
-             function googleChart() {
-               var data = google.visualization.arrayToDataTable(datatoprint);
-               var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
-               var options = {
-                 region: 'CO',
-                 resolution: 'provinces',
-                 displayMode: 'markers',
-                 height: $("#maps").height() - 200 + "px",
-                 // magnifyingGlass: {
-                 //   enable: "true",
-                 //   zoomFactor: "10.0"
-                 // },
-                 backgroundColor: {
-                   fill: "transparent"
-                 },
-                 colorAxis: {
-                   colors: ['green', 'red']
-                 }
-               };
-
-               map.draw(data, options);
-             }
-           }
-         }
-      app.hideLoadingBox();
-
-      },
-
-      table: function() {
-
-        app.openDB(query);
-
-        function query(tx) {
-
-          tx.executeSql(app.buildSQL(), [], buildTable, app.errorCB);
-
-          function buildTable() {
-
-            var aDataSet = [
-              ['Trident', 'Internet Explorer 4.0', 'Win 95+', '4', 'X'],
-              ['Trident', 'Internet Explorer 5.0', 'Win 95+', '5', 'C'],
-              ['Trident', 'Internet Explorer 5.5', 'Win 95+', '5.5', 'A'],
-              ['Trident', 'Internet Explorer 6', 'Win 98+', '6', 'A'],
-              ['Trident', 'Internet Explorer 7', 'Win XP SP2+', '7', 'A'],
-              ['Trident', 'AOL browser (AOL desktop)', 'Win XP', '6', 'A'],
-              ['Gecko', 'Firefox 1.0', 'Win 98+ / OSX.2+', '1.7', 'A'],
-              ['Gecko', 'Firefox 1.5', 'Win 98+ / OSX.2+', '1.8', 'A'],
-              ['Gecko', 'Firefox 2.0', 'Win 98+ / OSX.2+', '1.8', 'A'],
-              ['Gecko', 'Firefox 3.0', 'Win 2k+ / OSX.3+', '1.9', 'A'],
-              ['Gecko', 'Camino 1.0', 'OSX.2+', '1.8', 'A'],
-              ['Gecko', 'Camino 1.5', 'OSX.3+', '1.8', 'A'],
-              ['Gecko', 'Netscape 7.2', 'Win 95+ / Mac OS 8.6-9.2', '1.7', 'A'],
-              ['Gecko', 'Netscape Browser 8', 'Win 98SE+', '1.7', 'A'],
-              ['Gecko', 'Netscape Navigator 9', 'Win 98+ / OSX.2+', '1.8', 'A'],
-              ['Gecko', 'Mozilla 1.0', 'Win 95+ / OSX.1+', 1, 'A'],
-              ['Gecko', 'Mozilla 1.1', 'Win 95+ / OSX.1+', 1.1, 'A'],
-              ['Gecko', 'Mozilla 1.2', 'Win 95+ / OSX.1+', 1.2, 'A'],
-              ['Gecko', 'Mozilla 1.3', 'Win 95+ / OSX.1+', 1.3, 'A'],
-              ['Gecko', 'Mozilla 1.4', 'Win 95+ / OSX.1+', 1.4, 'A'],
-              ['Gecko', 'Mozilla 1.5', 'Win 95+ / OSX.1+', 1.5, 'A'],
-              ['Gecko', 'Mozilla 1.6', 'Win 95+ / OSX.1+', 1.6, 'A'],
-              ['Gecko', 'Mozilla 1.7', 'Win 98+ / OSX.1+', 1.7, 'A'],
-              ['Gecko', 'Mozilla 1.8', 'Win 98+ / OSX.1+', 1.8, 'A'],
-              ['Gecko', 'Seamonkey 1.1', 'Win 98+ / OSX.2+', '1.8', 'A'],
-              ['Gecko', 'Epiphany 2.20', 'Gnome', '1.8', 'A'],
-              ['Webkit', 'Safari 1.2', 'OSX.3', '125.5', 'A'],
-              ['Webkit', 'Safari 1.3', 'OSX.3', '312.8', 'A'],
-              ['Webkit', 'Safari 2.0', 'OSX.4+', '419.3', 'A'],
-              ['Webkit', 'Safari 3.0', 'OSX.4+', '522.1', 'A'],
-              ['Webkit', 'OmniWeb 5.5', 'OSX.4+', '420', 'A'],
-              ['Webkit', 'iPod Touch / iPhone', 'iPod', '420.1', 'A'],
-              ['Webkit', 'S60', 'S60', '413', 'A'],
-              ['Presto', 'Opera 7.0', 'Win 95+ / OSX.1+', '-', 'A'],
-              ['Presto', 'Opera 7.5', 'Win 95+ / OSX.2+', '-', 'A'],
-              ['Presto', 'Opera 8.0', 'Win 95+ / OSX.2+', '-', 'A'],
-              ['Presto', 'Opera 8.5', 'Win 95+ / OSX.2+', '-', 'A'],
-              ['Presto', 'Opera 9.0', 'Win 95+ / OSX.3+', '-', 'A'],
-              ['Presto', 'Opera 9.2', 'Win 88+ / OSX.3+', '-', 'A'],
-              ['Presto', 'Opera 9.5', 'Win 88+ / OSX.3+', '-', 'A'],
-              ['Presto', 'Opera for Wii', 'Wii', '-', 'A'],
-              ['Presto', 'Nokia N800', 'N800', '-', 'A'],
-              ['Presto', 'Nintendo DS browser', 'Nintendo DS', '8.5', 'C/A<sup>1</sup>'],
-              ['KHTML', 'Konqureror 3.1', 'KDE 3.1', '3.1', 'C'],
-              ['KHTML', 'Konqureror 3.3', 'KDE 3.3', '3.3', 'A'],
-              ['KHTML', 'Konqureror 3.5', 'KDE 3.5', '3.5', 'A'],
-              ['Tasman', 'Internet Explorer 4.5', 'Mac OS 8-9', '-', 'X'],
-              ['Tasman', 'Internet Explorer 5.1', 'Mac OS 7.6-9', '1', 'C'],
-              ['Tasman', 'Internet Explorer 5.2', 'Mac OS 8-X', '1', 'C'],
-              ['Misc', 'NetFront 3.1', 'Embedded devices', '-', 'C'],
-              ['Misc', 'NetFront 3.4', 'Embedded devices', '-', 'A'],
-              ['Misc', 'Dillo 0.8', 'Embedded devices', '-', 'X'],
-              ['Misc', 'Links', 'Text only', '-', 'X'],
-              ['Misc', 'Lynx', 'Text only', '-', 'X'],
-              ['Misc', 'IE Mobile', 'Windows Mobile 6', '-', 'C'],
-              ['Misc', 'PSP browser', 'PSP', '-', 'C'],
-              ['Other browsers', 'All others', '-', '-', 'U']
-            ];
-
-            $('#dtable').dataTable({
-              "fnInitComplete": function(oSettings, json) {
-                $('#dtable').table();
-              },
-              "bDestroy": true,
-              "bFilter": false,
-              "bInfo": false,
-              "bPaginate": false,
-              aaData: aDataSet,
-              aoColumns: [{
-                "sTitle": "Engine"
-              }, {
-                "sTitle": "Browser"
-              }, {
-                "sTitle": "Platform"
-              }, {
-                "sTitle": "Version",
-                "sClass": "center"
-              }, {
-                "sTitle": "Grade",
-                "sClass": "center"
-              }]
+          if (google && google.visualization) {
+            googleChart();
+          } else {
+            google.load("visualization", "1", {
+              'packages': ['geochart'],
+              callback: googleChart
             });
+          }
+
+          function googleChart() {
+            var data = google.visualization.arrayToDataTable(datatoprint);
+            var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
+            var options = {
+              region: 'CO',
+              resolution: 'provinces',
+              displayMode: 'markers',
+              height: $("#maps").height() - 200 + "px",
+              // magnifyingGlass: {
+              //   enable: "true",
+              //   zoomFactor: "10.0"
+              // },
+              backgroundColor: {
+                fill: "transparent"
+              },
+              colorAxis: {
+                colors: ['green', 'red']
+              }
+            };
+
+            map.draw(data, options);
           }
         }
       }
+      app.hideLoadingBox();
+
     },
 
-    counterAnim: function(selector, number) {
-      $({
-        value: 0
-      }).animate({
-        value: number
-      }, {
-        duration: 1000,
-        easing: 'swing',
-        step: function() {
-          $(selector).text(Math.ceil(this.value));
-        },
-        complete: function() {
-          $(selector).css({
-            color: '#ddd'
+    table: function() {
+
+      app.openDB(query);
+
+      function query(tx) {
+
+        tx.executeSql(app.buildSQL(), [], buildTable, app.errorCB);
+
+        function buildTable() {
+
+          var aDataSet = [
+            ['Trident', 'Internet Explorer 4.0', 'Win 95+', '4', 'X'],
+            ['Trident', 'Internet Explorer 5.0', 'Win 95+', '5', 'C'],
+            ['Trident', 'Internet Explorer 5.5', 'Win 95+', '5.5', 'A'],
+            ['Trident', 'Internet Explorer 6', 'Win 98+', '6', 'A'],
+            ['Trident', 'Internet Explorer 7', 'Win XP SP2+', '7', 'A'],
+            ['Trident', 'AOL browser (AOL desktop)', 'Win XP', '6', 'A'],
+            ['Gecko', 'Firefox 1.0', 'Win 98+ / OSX.2+', '1.7', 'A'],
+            ['Gecko', 'Firefox 1.5', 'Win 98+ / OSX.2+', '1.8', 'A'],
+            ['Gecko', 'Firefox 2.0', 'Win 98+ / OSX.2+', '1.8', 'A'],
+            ['Gecko', 'Firefox 3.0', 'Win 2k+ / OSX.3+', '1.9', 'A'],
+            ['Gecko', 'Camino 1.0', 'OSX.2+', '1.8', 'A'],
+            ['Gecko', 'Camino 1.5', 'OSX.3+', '1.8', 'A'],
+            ['Gecko', 'Netscape 7.2', 'Win 95+ / Mac OS 8.6-9.2', '1.7', 'A'],
+            ['Gecko', 'Netscape Browser 8', 'Win 98SE+', '1.7', 'A'],
+            ['Gecko', 'Netscape Navigator 9', 'Win 98+ / OSX.2+', '1.8', 'A'],
+            ['Gecko', 'Mozilla 1.0', 'Win 95+ / OSX.1+', 1, 'A'],
+            ['Gecko', 'Mozilla 1.1', 'Win 95+ / OSX.1+', 1.1, 'A'],
+            ['Gecko', 'Mozilla 1.2', 'Win 95+ / OSX.1+', 1.2, 'A'],
+            ['Gecko', 'Mozilla 1.3', 'Win 95+ / OSX.1+', 1.3, 'A'],
+            ['Gecko', 'Mozilla 1.4', 'Win 95+ / OSX.1+', 1.4, 'A'],
+            ['Gecko', 'Mozilla 1.5', 'Win 95+ / OSX.1+', 1.5, 'A'],
+            ['Gecko', 'Mozilla 1.6', 'Win 95+ / OSX.1+', 1.6, 'A'],
+            ['Gecko', 'Mozilla 1.7', 'Win 98+ / OSX.1+', 1.7, 'A'],
+            ['Gecko', 'Mozilla 1.8', 'Win 98+ / OSX.1+', 1.8, 'A'],
+            ['Gecko', 'Seamonkey 1.1', 'Win 98+ / OSX.2+', '1.8', 'A'],
+            ['Gecko', 'Epiphany 2.20', 'Gnome', '1.8', 'A'],
+            ['Webkit', 'Safari 1.2', 'OSX.3', '125.5', 'A'],
+            ['Webkit', 'Safari 1.3', 'OSX.3', '312.8', 'A'],
+            ['Webkit', 'Safari 2.0', 'OSX.4+', '419.3', 'A'],
+            ['Webkit', 'Safari 3.0', 'OSX.4+', '522.1', 'A'],
+            ['Webkit', 'OmniWeb 5.5', 'OSX.4+', '420', 'A'],
+            ['Webkit', 'iPod Touch / iPhone', 'iPod', '420.1', 'A'],
+            ['Webkit', 'S60', 'S60', '413', 'A'],
+            ['Presto', 'Opera 7.0', 'Win 95+ / OSX.1+', '-', 'A'],
+            ['Presto', 'Opera 7.5', 'Win 95+ / OSX.2+', '-', 'A'],
+            ['Presto', 'Opera 8.0', 'Win 95+ / OSX.2+', '-', 'A'],
+            ['Presto', 'Opera 8.5', 'Win 95+ / OSX.2+', '-', 'A'],
+            ['Presto', 'Opera 9.0', 'Win 95+ / OSX.3+', '-', 'A'],
+            ['Presto', 'Opera 9.2', 'Win 88+ / OSX.3+', '-', 'A'],
+            ['Presto', 'Opera 9.5', 'Win 88+ / OSX.3+', '-', 'A'],
+            ['Presto', 'Opera for Wii', 'Wii', '-', 'A'],
+            ['Presto', 'Nokia N800', 'N800', '-', 'A'],
+            ['Presto', 'Nintendo DS browser', 'Nintendo DS', '8.5', 'C/A<sup>1</sup>'],
+            ['KHTML', 'Konqureror 3.1', 'KDE 3.1', '3.1', 'C'],
+            ['KHTML', 'Konqureror 3.3', 'KDE 3.3', '3.3', 'A'],
+            ['KHTML', 'Konqureror 3.5', 'KDE 3.5', '3.5', 'A'],
+            ['Tasman', 'Internet Explorer 4.5', 'Mac OS 8-9', '-', 'X'],
+            ['Tasman', 'Internet Explorer 5.1', 'Mac OS 7.6-9', '1', 'C'],
+            ['Tasman', 'Internet Explorer 5.2', 'Mac OS 8-X', '1', 'C'],
+            ['Misc', 'NetFront 3.1', 'Embedded devices', '-', 'C'],
+            ['Misc', 'NetFront 3.4', 'Embedded devices', '-', 'A'],
+            ['Misc', 'Dillo 0.8', 'Embedded devices', '-', 'X'],
+            ['Misc', 'Links', 'Text only', '-', 'X'],
+            ['Misc', 'Lynx', 'Text only', '-', 'X'],
+            ['Misc', 'IE Mobile', 'Windows Mobile 6', '-', 'C'],
+            ['Misc', 'PSP browser', 'PSP', '-', 'C'],
+            ['Other browsers', 'All others', '-', '-', 'U']
+          ];
+
+          $('#dtable').dataTable({
+            "fnInitComplete": function(oSettings, json) {
+              $('#dtable').table();
+            },
+            "bDestroy": true,
+            "bFilter": false,
+            "bInfo": false,
+            "bPaginate": false,
+            aaData: aDataSet,
+            aoColumns: [{
+              "sTitle": "Engine"
+            }, {
+              "sTitle": "Browser"
+            }, {
+              "sTitle": "Platform"
+            }, {
+              "sTitle": "Version",
+              "sClass": "center"
+            }, {
+              "sTitle": "Grade",
+              "sClass": "center"
+            }]
           });
         }
-      });
-    },
-
-    showLoadingBox: function(txt) {
-      $.mobile.loading('show', {
-        text: txt,
-        textVisible: true,
-        theme: 'a'
-      });
-    },
-
-    hideLoadingBox: function() {
-      $.mobile.loading('hide');
+      }
     }
-  };
+  },
+
+  counterAnim: function(selector, number) {
+    $({
+      value: 0
+    }).animate({
+      value: number
+    }, {
+      duration: 1000,
+      easing: 'swing',
+      step: function() {
+        $(selector).text(Math.ceil(this.value));
+      },
+      complete: function() {
+        $(selector).css({
+          color: '#ddd'
+        });
+      }
+    });
+  },
+
+  showLoadingBox: function(txt) {
+    $.mobile.loading('show', {
+      text: txt,
+      textVisible: true,
+      theme: 'a'
+    });
+  },
+
+  hideLoadingBox: function() {
+    $.mobile.loading('hide');
+  }
+};
