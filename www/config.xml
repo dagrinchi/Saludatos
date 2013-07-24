@@ -6,14 +6,14 @@
         id        = "com.cool4code.saludatos"
         version   = "1.0.0">
 
-    <name>Saludaots</name>
+    <name>Saludatos</name>
 
     <description>
-        Saludatos es una herramienta de acceso publico y libre. Ministerio de Salud Nacional Gobierno en linea 2013
+        Saludatos es una herramienta de acceso publico y libre. Ministerio de Salud y Protección Social 2013
     </description>
 
-    <author href="http://cool4code.com" email="info@cool4code.com">
-        Cool4Code Team
+    <author href="http://www.cool4code.com" email="info@cool4code.com">
+        <azarate@cool4code.com> Alejandro Zarate, <maguilera@cool4code.com>, Paola Vanegas <pvanegas@cool4code.com>, David Alméciga <walmeciga@cool4code.com>
     </author>
 
     <!--
