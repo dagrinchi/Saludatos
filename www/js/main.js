@@ -1850,69 +1850,244 @@ var app = {
         function query(tx) {
 
           tx.executeSql(app.buildSQL(), [], buildTable, app.errorCB);
+          var datatoprint = [];
+          var regiones = [];
+          var subregiones = [];
+          var departamentos = [];
+          var municipios = [];
+          var zonas = [];
+          var geograficas = [];
+          var theseries = [];
+          var thecategories = [];
+          var yearstoprint = [];
+          
+          //Determinan que tipos de ubicaciones geográficas se mostrarán en el gráfico
+          var printstate = true;
+          var printtown = true;
+          var printzone = true;
+          var printregion = true;
+          var printsubregion = true;
+          
+          
+          for (c = 0; c < app.years.length; c++) {
+            yearstoprint.push(false);
+          }
+          
 
-          function buildTable() {
 
-            var aDataSet = [
-              ['Trident', 'Internet Explorer 4.0', 'Win 95+', '4', 'X'],
-              ['Trident', 'Internet Explorer 5.0', 'Win 95+', '5', 'C'],
-              ['Trident', 'Internet Explorer 5.5', 'Win 95+', '5.5', 'A'],
-              ['Trident', 'Internet Explorer 6', 'Win 98+', '6', 'A'],
-              ['Trident', 'Internet Explorer 7', 'Win XP SP2+', '7', 'A'],
-              ['Trident', 'AOL browser (AOL desktop)', 'Win XP', '6', 'A'],
-              ['Gecko', 'Firefox 1.0', 'Win 98+ / OSX.2+', '1.7', 'A'],
-              ['Gecko', 'Firefox 1.5', 'Win 98+ / OSX.2+', '1.8', 'A'],
-              ['Gecko', 'Firefox 2.0', 'Win 98+ / OSX.2+', '1.8', 'A'],
-              ['Gecko', 'Firefox 3.0', 'Win 2k+ / OSX.3+', '1.9', 'A'],
-              ['Gecko', 'Camino 1.0', 'OSX.2+', '1.8', 'A'],
-              ['Gecko', 'Camino 1.5', 'OSX.3+', '1.8', 'A'],
-              ['Gecko', 'Netscape 7.2', 'Win 95+ / Mac OS 8.6-9.2', '1.7', 'A'],
-              ['Gecko', 'Netscape Browser 8', 'Win 98SE+', '1.7', 'A'],
-              ['Gecko', 'Netscape Navigator 9', 'Win 98+ / OSX.2+', '1.8', 'A'],
-              ['Gecko', 'Mozilla 1.0', 'Win 95+ / OSX.1+', 1, 'A'],
-              ['Gecko', 'Mozilla 1.1', 'Win 95+ / OSX.1+', 1.1, 'A'],
-              ['Gecko', 'Mozilla 1.2', 'Win 95+ / OSX.1+', 1.2, 'A'],
-              ['Gecko', 'Mozilla 1.3', 'Win 95+ / OSX.1+', 1.3, 'A'],
-              ['Gecko', 'Mozilla 1.4', 'Win 95+ / OSX.1+', 1.4, 'A'],
-              ['Gecko', 'Mozilla 1.5', 'Win 95+ / OSX.1+', 1.5, 'A'],
-              ['Gecko', 'Mozilla 1.6', 'Win 95+ / OSX.1+', 1.6, 'A'],
-              ['Gecko', 'Mozilla 1.7', 'Win 98+ / OSX.1+', 1.7, 'A'],
-              ['Gecko', 'Mozilla 1.8', 'Win 98+ / OSX.1+', 1.8, 'A'],
-              ['Gecko', 'Seamonkey 1.1', 'Win 98+ / OSX.2+', '1.8', 'A'],
-              ['Gecko', 'Epiphany 2.20', 'Gnome', '1.8', 'A'],
-              ['Webkit', 'Safari 1.2', 'OSX.3', '125.5', 'A'],
-              ['Webkit', 'Safari 1.3', 'OSX.3', '312.8', 'A'],
-              ['Webkit', 'Safari 2.0', 'OSX.4+', '419.3', 'A'],
-              ['Webkit', 'Safari 3.0', 'OSX.4+', '522.1', 'A'],
-              ['Webkit', 'OmniWeb 5.5', 'OSX.4+', '420', 'A'],
-              ['Webkit', 'iPod Touch / iPhone', 'iPod', '420.1', 'A'],
-              ['Webkit', 'S60', 'S60', '413', 'A'],
-              ['Presto', 'Opera 7.0', 'Win 95+ / OSX.1+', '-', 'A'],
-              ['Presto', 'Opera 7.5', 'Win 95+ / OSX.2+', '-', 'A'],
-              ['Presto', 'Opera 8.0', 'Win 95+ / OSX.2+', '-', 'A'],
-              ['Presto', 'Opera 8.5', 'Win 95+ / OSX.2+', '-', 'A'],
-              ['Presto', 'Opera 9.0', 'Win 95+ / OSX.3+', '-', 'A'],
-              ['Presto', 'Opera 9.2', 'Win 88+ / OSX.3+', '-', 'A'],
-              ['Presto', 'Opera 9.5', 'Win 88+ / OSX.3+', '-', 'A'],
-              ['Presto', 'Opera for Wii', 'Wii', '-', 'A'],
-              ['Presto', 'Nokia N800', 'N800', '-', 'A'],
-              ['Presto', 'Nintendo DS browser', 'Nintendo DS', '8.5', 'C/A<sup>1</sup>'],
-              ['KHTML', 'Konqureror 3.1', 'KDE 3.1', '3.1', 'C'],
-              ['KHTML', 'Konqureror 3.3', 'KDE 3.3', '3.3', 'A'],
-              ['KHTML', 'Konqureror 3.5', 'KDE 3.5', '3.5', 'A'],
-              ['Tasman', 'Internet Explorer 4.5', 'Mac OS 8-9', '-', 'X'],
-              ['Tasman', 'Internet Explorer 5.1', 'Mac OS 7.6-9', '1', 'C'],
-              ['Tasman', 'Internet Explorer 5.2', 'Mac OS 8-X', '1', 'C'],
-              ['Misc', 'NetFront 3.1', 'Embedded devices', '-', 'C'],
-              ['Misc', 'NetFront 3.4', 'Embedded devices', '-', 'A'],
-              ['Misc', 'Dillo 0.8', 'Embedded devices', '-', 'X'],
-              ['Misc', 'Links', 'Text only', '-', 'X'],
-              ['Misc', 'Lynx', 'Text only', '-', 'X'],
-              ['Misc', 'IE Mobile', 'Windows Mobile 6', '-', 'C'],
-              ['Misc', 'PSP browser', 'PSP', '-', 'C'],
-              ['Other browsers', 'All others', '-', '-', 'U']
-            ];
+          function buildTable(tx, results) {
+            
+            var indicator = results.rows.item(0).idindicador;
+            console.log("El indicador fué: " + indicator);
+            console.log("El número de resultados fué: " + results.rows.length);
+            console.log("Consulta realizada");
+            console.log("Numero de resultados de la consulta " + results.rows.length);
+            console.log("Indicador para insertar datos en el gráfico:" + indicator);
+            
+            
+            //Verificar años para cuáles hay datos
+            
+            
+            for (a = 0; a < app.years.length; a++) {
+              
+              
+              for (b = 0; b < results.rows.length; b++) {
+                var row = results.rows.item(b);
+                if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== '-' && row["yea" + app.years[a]] !== null && parseFloat(row["yea" + app.years[a]]) !== 0.0) {
+                  yearstoprint[a] = true;
+                }
+                
+              }
+              
+            }
+            
+            // Insertar las categorias segun los años que tienen datos
+            
+            console.log("AÑOS A IMPRIMIR: ");
+            for (d = 0; d < app.years.length; d++) {
+              if (yearstoprint[d]) {
+                thecategories.push(app.years[d]);
+                console.log(app.years[d] + ",");
+              }
+            }
+            console.log("LAS CATEGORIAS");
+            for (e = 0; e < thecategories.length; e++) {
+              console.log(thecategories[e] + ",");
+            }
+            
+            for (var p = 0; p < results.rows.length; p++) {
+              var dataresults = results.rows.item(p);
+              var serie = {};
+              var rowdata = [];
+              
+              
+              //Verificacion de Regiones
+              
+              if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && parseFloat(dataresults["nomregion"]) != 0.0 && printregion) {
+                console.log(" Region" + p + ": " + dataresults["nomregion"]);
+                departamentos.push(dataresults["nomregion"]);
+                geograficas.push(dataresults["nomregion"]);
+                console.log("Numero de años:" + app.years.length);
+                for (var l = 0; l < app.years.length; l++) {
+                  if (yearstoprint[l]) {
+                    if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-' && parseFloat(dataresults["yea" + app.years[l]]) !== 0.0) {
+                      rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
+                      console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
+                    } else {
+                      rowdata.push(0.0);
+                      console.log(l + " Año " + app.years[l] + " : 0");
+                    }
+                  }
+                }
+                
+                for (var q = 0; q < rowdata.length; q++) {
+                  console.log("Datos guardado " + rowdata[q]);
+                }
+                
+                serie["name"] = dataresults["nomregion"];
+                serie["data"] = rowdata;
+                theseries.push(serie);
+              }
+              
+              
+              //Verificacion de Subregiones
+              
+              if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && parseFloat(dataresults["nomsubregion"]) != 0.0 && printsubregion) {
+                console.log(" Subregion" + p + ": " + dataresults["nomsubregion"]);
+                departamentos.push(dataresults["nomsubregion"]);
+                geograficas.push(dataresults["nomsubregion"]);
+                console.log("Numero de años:" + app.years.length);
+                for (var l = 0; l < app.years.length; l++) {
+                  if (yearstoprint[l]) {
+                    if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-' && parseFloat(dataresults["yea" + app.years[l]]) !== 0.0) {
+                      rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
+                      console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
+                    }else {
+                      rowdata.push(0.0);
+                      console.log(l + " Año " + app.years[l] + " : 0");
+                    }
+                  }
+                }
+                
+                for (var q = 0; q < rowdata.length; q++) {
+                  console.log("Datos guardado " + rowdata[q]);
+                }
+                
+                serie["name"] = dataresults["nomsubregion"];
+                serie["data"] = rowdata;
+                theseries.push(serie);
+              }
+              
+              //Verificación de municipios
+              
+              if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && parseFloat(dataresults["nommpio"]) != 0.0 && printtown) {
+                printstate = false;
+                console.log(" Municipio " + p + ": " + dataresults["nommpio"]);
+                municipios.push(dataresults["nommpio"]);
+                geograficas.push(dataresults["nommpio"]);
+                console.log("Numero de años:" + app.years.length);
+                for (var l = 0; l < app.years.length; l++) {
+                  if (yearstoprint[l]) {
+                    if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && parseFloat(dataresults["yea" + app.years[l]]) !== 0.0 && dataresults["yea" + app.years[l]] !== '-') {
+                      rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
+                      console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
+                    }else {
+                      rowdata.push(0.0);
+                      console.log(l + " Año " + app.years[l] + " : 0");
+                    }
+                  }
+                }
+                
+                for (var q = 0; q < rowdata.length; q++) {
+                  console.log("Datos guardado " + rowdata[q]);
+                }
+                
+                serie["name"] = dataresults["nommpio"];
+                serie["data"] = rowdata;
+                theseries.push(serie);
+              }
+              
+              
+              
+              //Verificación de departamentos
+              
+              if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && parseFloat(dataresults["nomdepto"]) != 0.0 && printstate) {
+                console.log(" Departamento " + p + ": " + dataresults["nomdepto"]);
+                departamentos.push(dataresults["nomdepto"]);
+                geograficas.push(dataresults["nomdepto"]);
+                console.log("Numero de años:" + app.years.length);
+                for (var l = 0; l < app.years.length; l++) {
+                  if (yearstoprint[l]) {
+                    if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-' && parseFloat(dataresults["yea" + app.years[l]]) !== 0.0) {
+                      rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
+                      console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
+                    }else {
+                      rowdata.push(0.0);
+                      console.log(l + " Año " + app.years[l] + " : 0");
+                    }
+                  }
+                }
+                
+                for (var q = 0; q < rowdata.length; q++) {
+                  console.log("Datos guardado " + rowdata[q]);
+                }
+                
+                serie["name"] = dataresults["nomdepto"];
+                serie["data"] = rowdata;
+                theseries.push(serie);
+              }
+              
+              //Verificación de zonas
+              
+              if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && parseFloat(dataresults["nomzona"]) != 0.0 && printzone) {
+                console.log(" Zona " + p + ": " + dataresults["nomzona"]);
+                municipios.push(dataresults["nomzona"]);
+                geograficas.push(dataresults["nomzona"]);
+                console.log("Numero de años:" + app.years.length);
+                for (var l = 0; l < app.years.length; l++) {
+                  if (yearstoprint[l]) {
+                    if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && parseFloat(dataresults["yea" + app.years[l]]) !== 0.0 && dataresults["yea" + app.years[l]] !== '-') {
+                      rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
+                      console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
+                    }else {
+                      rowdata.push(0.0);
+                      console.log(l + " Año " + app.years[l] + " : 0");
+                    }
+                  }
+                }
+                
+                for (var q = 0; q < rowdata.length; q++) {
+                  console.log("Datos guardado " + rowdata[q]);
+                }
+                
+                serie["name"] = dataresults["nomzona"];
+                serie["data"] = rowdata;
+                theseries.push(serie);
+              }
+            }
+            
+            //var aDataSet = [
+            //  ['Trident', 'Internet Explorer 4.0', 'Win 95+', '4', 'X']
+            //];
+            var aDataSet = [];
 
+            for(s=0;s<theseries.length;s++){
+              var aSingle = [];
+              aSingle.push(theseries[s].name);
+              for(t=0;t<theseries[s].data.length;t++){
+                aSingle.push(theseries[s].data[t]);
+              }
+              aDataSet.push(aSingle);
+            }
+            
+            var theaoColumns = [];
+            theaoColumns.push({sTitle:"Ubicación Geográfica"});
+            for(q=0;q<thecategories.length;q++){
+              var aoColumn = {};
+              aoColumn["sTitle"]=thecategories[q];
+              theaoColumns.push(aoColumn);
+            }
+            
             $('#dtable').dataTable({
               "fnInitComplete": function(oSettings, json) {
                 $('#dtable').table();
@@ -1922,17 +2097,9 @@ var app = {
               "bInfo": false,
               "bPaginate": false,
               aaData: aDataSet,
-              aoColumns: [{
-                "sTitle": "Engine"
-              }, {
-                "sTitle": "Browser"
-              }, {
-                "sTitle": "Platform"
-              }, {
-                "sTitle": "Version"
-              }, {
-                "sTitle": "Grade"
-              }]
+              //aoColumns: thecategories
+                                   aoColumns: theaoColumns
+                                   
             });
           }
         }
