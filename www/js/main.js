@@ -136,7 +136,7 @@ var app = {
     $(".share").on("click", function(e) {
       console.log("btnsEvents: Convirtiendo svg a canvas!");
 
-      $(this).buttonMarkup("disable");
+      app.showLoadingBox("Descargando gráfico!");
 
       var canvasObj = document.getElementById('canvas');
       var now = new Date();
@@ -146,14 +146,7 @@ var app = {
       canvg(canvasObj, $("#" + chartType + " svg").clone().wrap('<div/>').parent().html());
 
       setTimeout(function() {
-        if (canvasObj.toBlob) {
-          canvasObj.toBlob(
-            function(blob) {
-              app.createFile(chartType + "-" + filedate + ".jpg", blob);
-            },
-            'image/jpeg'
-          );
-        }
+          app.createFile(chartType + "-" + filedate + ".jpg", canvasObj.toDataURL("image/jpeg"));
       }, 3000);
     });
 
@@ -203,7 +196,7 @@ var app = {
     });
   },
 
-  createFile: function(fileName, blob) {
+  createFile: function(fileName, dataURI) {
     console.log("createFile: Escribiendo " + fileName + "!");
 
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, FSfail);
@@ -216,21 +209,29 @@ var app = {
     }
 
     function gotFileEntry(fileEntry) {
-      fileEntry.createWriter(gotFileWriter, FSfail);
+      var localPath = fileEntry.fullPath;
+      if (device.platform === "Android" && localPath.indexOf("file://") === 0) {
+        localPath = localPath.substring(7);
+      }
+
+      var ft = new FileTransfer();
+      ft.download(dataURI, localPath, function(entry) {
+        app.hideLoadingBox();
+      }, FSfail);
     }
 
-    function gotFileWriter(writer) {
-      writer.onwriteend = function(evt) {
-        console.log("createFile: Imagen guardada con exito!");
-      };
-      var reader = new FileReader();
-      reader.onloadend = function(evt) {
-        if (evt.target.readyState == FileReader.DONE) {
-          writer.write(evt.target.result);
-        }
-      };
-      reader.readAsBinaryString(blob);
-    }
+    // function gotFileWriter(writer) {
+    //   writer.onwriteend = function(evt) {
+    //     console.log("createFile: Imagen guardada con exito!");
+    //   };
+    //   var reader = new FileReader();
+    //   reader.onloadend = function(evt) {
+    //     if (evt.target.readyState == FileReader.DONE) {
+    //       writer.write(evt.target.result);
+    //     }
+    //   };
+    //   reader.readAsBinaryString(blob);
+    // }
 
     function FSfail(error) {
       console.log("FSfail: Opps! " + error.code);
