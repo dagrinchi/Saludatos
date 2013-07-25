@@ -1804,6 +1804,7 @@ var app = {
             max: thecategories.length - 1
           });
 
+          datatoprint.push(["Departamento", results.rows.item(0).nomunidad]);
 
           for (var j = 0; j < results.rows.length; j++) {
             var dataresults = results.rows.item(j);
