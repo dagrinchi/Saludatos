@@ -1553,7 +1553,7 @@ var app = {
 
             //Verificacion de Subregiones
 
-            if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && parseFloat(dataresults["nomsubregion"]) != 0.0 && printsubregion) {
+            else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && parseFloat(dataresults["nomsubregion"]) != 0.0 && printsubregion) {
               console.log(" Subregion" + p + ": " + dataresults["nomsubregion"]);
               departamentos.push(dataresults["nomsubregion"]);
               geograficas.push(dataresults["nomsubregion"]);
@@ -1578,7 +1578,7 @@ var app = {
 
             //Verificación de municipios
 
-            if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && parseFloat(dataresults["nommpio"]) != 0.0 && printtown) {
+            else if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && parseFloat(dataresults["nommpio"]) != 0.0 && printtown) {
               printstate = false;
               console.log(" Municipio " + p + ": " + dataresults["nommpio"]);
               municipios.push(dataresults["nommpio"]);
@@ -1606,7 +1606,7 @@ var app = {
 
             //Verificación de departamentos
 
-            if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && parseFloat(dataresults["nomdepto"]) != 0.0 && printstate) {
+            else if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && parseFloat(dataresults["nomdepto"]) != 0.0 && printstate) {
               console.log(" Departamento " + p + ": " + dataresults["nomdepto"]);
               departamentos.push(dataresults["nomdepto"]);
               geograficas.push(dataresults["nomdepto"]);
@@ -1631,7 +1631,7 @@ var app = {
 
             //Verificación de zonas
 
-            if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && parseFloat(dataresults["nomzona"]) != 0.0 && printzone) {
+            else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && parseFloat(dataresults["nomzona"]) != 0.0 && printzone) {
               console.log(" Zona " + p + ": " + dataresults["nomzona"]);
               municipios.push(dataresults["nomzona"]);
               geograficas.push(dataresults["nomzona"]);
@@ -1694,7 +1694,7 @@ var app = {
                 align: 'right',
                 style: {
                   fontSize: '13px',
-                  fontFamily: 'Verdana, sans-serif'
+                  fontFamily: 'Open Sans, sans-serif'
                 }
               }
             },
