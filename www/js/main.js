@@ -283,10 +283,10 @@ var app = {
     console.log("startApp: Iniciando estructura de la applicación!");
     navigator.splashscreen.hide();
     if (app.checkUpdatedData()) {
-        setTimeout(function() {
-                   $.mobile.changePage("#help_step1");
-                   }, 7000);
-        //app.openDB(app.queryDB);
+      setTimeout(function() {
+        $.mobile.changePage("#home");
+      }, 7000);
+      //app.openDB(app.queryDB);
     } else {
       app.load();
     }
@@ -334,17 +334,16 @@ var app = {
       url: url,
       dataType: 'json',
       error: function() {
-         navigator.notification.alert('El repositorio de datos Open Data no está disponible, inténtalo más tarde!', function() {
+        navigator.notification.alert('El repositorio de datos Open Data no está disponible, inténtalo más tarde!', function() {
           navigator.app.exitApp();
-         }, 'Atención', 'Aceptar');
+        }, 'Atención', 'Aceptar');
       },
       progress: function(evt) {
         if (evt.lengthComputable) {
-            app.progressBar(parseInt( (evt.loaded / evt.total * 100), 10), $("#progressBar"));
-            // console.log("Loaded " + parseInt( (evt.loaded / evt.total * 100), 10) + "%");
-        }
-        else {
-            console.log("Length not computable.");
+          app.progressBar(parseInt((evt.loaded / evt.total * 100), 10), $("#progressBar"));
+          // console.log("Loaded " + parseInt( (evt.loaded / evt.total * 100), 10) + "%");
+        } else {
+          console.log("Length not computable.");
         }
       }
     });
@@ -392,9 +391,9 @@ var app = {
     var updated = new Date();
     window.localStorage.setItem("updated", updated);
     $.mobile.changePage("#help_step1");
-},
-    
-yea: function(tx, results) {
+  },
+
+  yea: function(tx, results) {
     for (var j = 0; j < results.rows.length; j++) {
       app.years.push(results.rows.item(j).columnName.substring(3));
     }
@@ -1552,7 +1551,6 @@ yea: function(tx, results) {
 
 
             //Verificacion de Subregiones
-
             else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && parseFloat(dataresults["nomsubregion"]) != 0.0 && printsubregion) {
               console.log(" Subregion" + p + ": " + dataresults["nomsubregion"]);
               departamentos.push(dataresults["nomsubregion"]);
@@ -1577,7 +1575,6 @@ yea: function(tx, results) {
             }
 
             //Verificación de municipios
-
             else if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && parseFloat(dataresults["nommpio"]) != 0.0 && printtown) {
               printstate = false;
               console.log(" Municipio " + p + ": " + dataresults["nommpio"]);
@@ -1605,7 +1602,6 @@ yea: function(tx, results) {
 
 
             //Verificación de departamentos
-
             else if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && parseFloat(dataresults["nomdepto"]) != 0.0 && printstate) {
               console.log(" Departamento " + p + ": " + dataresults["nomdepto"]);
               departamentos.push(dataresults["nomdepto"]);
@@ -1630,7 +1626,6 @@ yea: function(tx, results) {
             }
 
             //Verificación de zonas
-
             else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && parseFloat(dataresults["nomzona"]) != 0.0 && printzone) {
               console.log(" Zona " + p + ": " + dataresults["nomzona"]);
               municipios.push(dataresults["nomzona"]);
@@ -1862,7 +1857,7 @@ yea: function(tx, results) {
               backgroundColor: {
                 fill: "transparent"
               },
-              colors : ["#C23B22","#FDFD96","#77DD77"]
+              colors: ["#C23B22", "#FDFD96", "#77DD77"]
             };
 
             map.draw(data, options);
@@ -2197,24 +2192,29 @@ yea: function(tx, results) {
 
   progressBar: function(percent, $element) {
     var progressBarWidth = percent * $element.width() / 100;
-    $element.find('div').animate({ width: progressBarWidth }, 20).html(percent + "%&nbsp;");
+    $element.find('div').animate({
+      width: progressBarWidth
+    }, 20).html(percent + "%&nbsp;");
   }
 };
 
 (function addXhrProgressEvent($) {
-    var originalXhr = $.ajaxSettings.xhr;
-    $.ajaxSetup({
-        progress: function() { console.log("standard progress callback"); },
-        xhr: function() {
-            var req = originalXhr(), that = this;
-            if (req) {
-                if (typeof req.addEventListener == "function") {
-                    req.addEventListener("progress", function(evt) {
-                        that.progress(evt);
-                    },false);
-                }
-            }
-            return req;
+  var originalXhr = $.ajaxSettings.xhr;
+  $.ajaxSetup({
+    progress: function() {
+      console.log("standard progress callback");
+    },
+    xhr: function() {
+      var req = originalXhr(),
+        that = this;
+      if (req) {
+        if (typeof req.addEventListener == "function") {
+          req.addEventListener("progress", function(evt) {
+            that.progress(evt);
+          }, false);
         }
-    });
+      }
+      return req;
+    }
+  });
 })(jQuery);
