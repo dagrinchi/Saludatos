@@ -284,7 +284,7 @@ startApp: function() {
     navigator.splashscreen.hide();
     if (app.checkUpdatedData()) {
         setTimeout(function() {
-                   $.mobile.changePage("#home");
+                   $.mobile.changePage("#help_step1");
                    }, 7000);
         //app.openDB(app.queryDB);
     } else {
@@ -379,7 +379,7 @@ successCB: function() {
     console.log("successCB: Guardando fecha de actualización!");
     var updated = new Date();
     window.localStorage.setItem("updated", updated);
-    $.mobile.changePage("#home");
+    $.mobile.changePage("#help_step1");
 },
     
 yea: function(tx, results) {
