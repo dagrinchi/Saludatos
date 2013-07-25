@@ -18,3 +18,17 @@ maguilera@cool4code.com
 
 David Alméciga 
 walmeciga@cool4code.com
+
+Tecnologías
+===========
+
+Xcode 4.6.3
+Phonegap 2.9.0
+Jquery 1.9.1
+Jquery Mobile 1.3.1
+Jquery Highcharts
+Jquery DataTables
+Canvg
+normalice.css
+
+
