@@ -194,12 +194,31 @@ body {
 /*****End Media screen types******/
 
 /*Tutorial screen*/
-.tutorial {
-    background:url(../img/manual.jpg) no-repeat center center fixed; /* 170px x 200px */           
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;  
-    background-size: cover;
+#help_step1 > div{
+	background:url(../img/manual.jpg) no-repeat top center fixed; /* 170px x 200px */ 
+}
+
+#help_step2 > div{
+	background:url(../img/tutoriales/tuto_categorias.jpg) no-repeat top center fixed; /* 170px x 200px */ 
+}
+
+#help_step3 > div{
+	background:url(../img/tutoriales/tuto_geografica.jpg) no-repeat top center fixed; /* 170px x 200px */ 
+}
+
+#help_step4 > div{
+	background:url(../img/tutoriales/tuto_demografica.jpg) no-repeat top center fixed; /* 170px x 200px */ 
+}
+
+#help_step5 > div{
+	background:url(../img/tutoriales/tuto_pie.jpg) no-repeat top center fixed; /* 170px x 200px */ 
+}
+
+.tutorial {      
+    -webkit-background-size: 90%;
+    -moz-background-size: 90%;
+    -o-background-size: 90%;  
+    background-size: 90%;
     min-width: 100%;
     min-height: 100%;
     width: 100%;
@@ -208,6 +227,24 @@ body {
     position: fixed;
     top: 0;
     left: 0;
+    padding: 0 !important;
+}
+
+.help_btns{
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	width: 255px;
+	margin-left: -128px !important;
+}
+
+.help_btns > div {
+	width: 255px;
+
+}
+
+.help_btns a{
+	background: #29abe2 !important;
 }
 
 /* Reponsive chart */
@@ -286,6 +323,7 @@ fieldset label {
 
 .sidebar a {
 	text-shadow: none !important;
+	/*font-size: 80%;*/
 	font-size: 80%;
 	text-decoration: none;
 	color: #fff !important;
@@ -295,6 +333,9 @@ fieldset label {
 	margin: 4% 0;
 	overflow: hidden;
 	font-weight: bold !important;
+	text-shadow: 0px 0px 6px #949494;
+	letter-spacing: -1px;
+	font-family: "Helvetica Neue";
 }
 
 .icon_health {
@@ -308,7 +349,8 @@ fieldset label {
 }
 
 .icon_person {
-	background: url('images/person_end.png') #fcee21 no-repeat center 70%;
+	/*background: url('images/person_end.png') #FFCC11 no-repeat center 70%;*/ /*no eliminar linea*/
+	background: url('images/person_end.png') #FFC125 no-repeat center 70%;
 	background-size: 40%;
 }
 

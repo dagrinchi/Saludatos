@@ -283,10 +283,10 @@ var app = {
     console.log("startApp: Iniciando estructura de la applicación!");
     navigator.splashscreen.hide();
     if (app.checkUpdatedData()) {
-      setTimeout(function() {
-        $.mobile.changePage("#home");
-      }, 7000);
-      //app.openDB(app.queryDB);
+        setTimeout(function() {
+                   $.mobile.changePage("#help_step1");
+                   }, 7000);
+        //app.openDB(app.queryDB);
     } else {
       app.load();
     }
@@ -391,10 +391,10 @@ var app = {
     console.log("successCB: Guardando fecha de actualización!");
     var updated = new Date();
     window.localStorage.setItem("updated", updated);
-    $.mobile.changePage("#home");
-  },
-
-  yea: function(tx, results) {
+    $.mobile.changePage("#help_step1");
+},
+    
+yea: function(tx, results) {
     for (var j = 0; j < results.rows.length; j++) {
       app.years.push(results.rows.item(j).columnName.substring(3));
     }

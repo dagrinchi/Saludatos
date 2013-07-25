@@ -39,14 +39,46 @@
             </div>
         </div>
         <!-- START PAGE TUTORIAL -->
-        <div data-role="page">    
-            <div class="tutorial"></div>
+        <div data-role="page" id="help_step1">    
+            <div class="tutorial" data-role="content"></div>
+            <div class="help_btns" data-role="controlgroup" data-type="horizontal">
+                <a href="#home" data-role="button" data-theme="b" data-icon="forward" data-iconpos="right">Omitir</a>
+                <a href="#help_step2" data-role="button" data-theme="b" data-icon="arrow-r" data-iconpos="right">Siguiente</a>            
+            </div>
+        </div>
+        <div data-role="page" id="help_step2">    
+            <div class="tutorial" data-role="content"></div>
+            <div class="help_btns" data-role="controlgroup" data-type="horizontal">
+                <a href="#home" data-role="button" data-theme="b" data-icon="forward" data-iconpos="right">Omitir</a>
+                <a href="#help_step3" data-role="button" data-theme="b" data-icon="arrow-r" data-iconpos="right">Siguiente</a>            
+            </div>
+        </div>
+        <div data-role="page" id="help_step3">    
+            <div class="tutorial" data-role="content"></div>
+            <div class="help_btns" data-role="controlgroup" data-type="horizontal">
+                <a href="#home" data-role="button" data-theme="b" data-icon="forward" data-iconpos="right">Omitir</a>
+                <a href="#help_step4" data-role="button" data-theme="b" data-icon="arrow-r" data-iconpos="right">Siguiente</a>            
+            </div>
+        </div>
+        <div data-role="page" id="help_step4">    
+            <div class="tutorial" data-role="content"></div>
+            <div class="help_btns" data-role="controlgroup" data-type="horizontal">
+                <a href="#home" data-role="button" data-theme="b" data-icon="forward" data-iconpos="right">Omitir</a>
+                <a href="#help_step5" data-role="button" data-theme="b" data-icon="arrow-r" data-iconpos="right">Siguiente</a>            
+            </div>
+        </div>
+        <div data-role="page" id="help_step5">    
+            <div class="tutorial" data-role="content"></div>
+            <div class="help_btns" data-role="controlgroup" data-type="horizontal">
+                <a href="#home" data-role="button" data-theme="b" data-icon="check" data-iconpos="right" style="width: 100%;">Terminar</a>            
+            </div>
         </div>
         <!-- START PAGE HOME -->
         <div data-role="page" id="home"> 
             <div data-role="header" data-position="fixed">
                 <a href="#acerca" class="ui-btn-left" data-icon="info" data-rel="dialog">Acerca</a>
                 <h1>Saludatos</h1>
+                <a href="#help_step1" class="ui-btn-right" data-icon="grid">Ayuda</a>
             </div>
             <div data-role="content" class="ui-grid-a">
                 <div class="ui-block-a">
