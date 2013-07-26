@@ -628,7 +628,16 @@ var app = {
         var html = '<legend>Seleccione uno varias regiones para evaluar:</legend> \n';
         html += '<input name="selectall-region" id="selectall-region" data-vista="region" data-col="idregion" data-checkall="regList" type="checkbox" /> \n';
         html += '<label for="selectall-region">Seleccionar todos</label> \n';
+
+        if (len === 0) {
+          $("#regionBtn").on("click", function(e) {
+            e.preventDefault();
+          });
+        } else {
+          $("#regionBtn").off();
+        }
         $("#regionCount").html(len);
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="region" data-col="idregion" name="region-' + results.rows.item(i).idregion + '" id="region-' + results.rows.item(i).idregion + '" value="' + results.rows.item(i).idregion + '"/>';
           html += '<label for="region-' + results.rows.item(i).idregion + '">' + results.rows.item(i).nomregion + '</label>';
@@ -653,8 +662,12 @@ var app = {
         html += '<label for="selectall-subregion">Seleccionar todos</label> \n';
         if (len === 0) {
           $("#subregionCount").html("PROXIMAMENTE");
+          $("#subregionBtn").on("click", function(e) {
+            e.preventDefault();
+          });
         } else {
           $("#subregionCount").html(len);
+          $("#subregionBtn").off();
         }
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="subregion" data-col="idsubregion" name="subregion-' + results.rows.item(i).idsubregion + '" id="subregion-' + results.rows.item(i).idsubregion + '" value="' + results.rows.item(i).idsubregion + '"/>';
@@ -678,7 +691,16 @@ var app = {
         var html = '<legend>Seleccione uno varios departamentos para evaluar:</legend> \n';
         html += '<input name="selectall-departamento" id="selectall-departamento" data-vista="departamento" data-col="iddepto" data-checkall="depList" type="checkbox" /> \n';
         html += '<label for="selectall-departamento">Seleccionar todos</label> \n';
+
+        if (len === 0) {
+          $("#departamentoBtn").on("click", function(e) {
+            e.preventDefault();
+          });
+        } else {
+          $("#departamentoBtn").off();
+        }
         $("#departamentoCount").html(len);
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="departamento" data-col="iddepto" name="departamento-' + results.rows.item(i).iddepto + '" id="departamento-' + results.rows.item(i).iddepto + '" value="' + results.rows.item(i).iddepto + '"/>';
           html += '<label for="departamento-' + results.rows.item(i).iddepto + '">' + results.rows.item(i).nomdepto + '</label>';
@@ -702,7 +724,16 @@ var app = {
         var html = "<legend>Seleccione uno varios municipios para evaluar:</legend> \n";
         html += '<input name="selectall-municipio" id="selectall-municipio" data-vista="municipio" data-col="idmpio" data-checkall="munList" type="checkbox" /> \n';
         html += '<label for="selectall-municipio">Seleccionar todos</label>';
+
+        if (len === 0) {
+          $("#municipioBtn").on("click", function(e) {
+            e.preventDefault();
+          });
+        } else {
+          $("#municipioBtn").off();
+        }
         $("#municipioCount").html(len);
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="municipio" data-col="idmpio" name="municipio-' + results.rows.item(i).idmpio + '" id="municipio-' + results.rows.item(i).idmpio + '" value="' + results.rows.item(i).idmpio + '"/> \n';
           html += '<label for="municipio-' + results.rows.item(i).idmpio + '">' + results.rows.item(i).nommpio + '</label> \n';
@@ -728,8 +759,12 @@ var app = {
         html += '<label for="selectall-zona">Seleccionar todos</label>';
         if (len === 0) {
           $("#zonaCount").html("PROXIMAMENTE");
+          $("#zonaBtn").on("click", function(e) {
+            e.preventDefault();
+          });
         } else {
           $("#zonaCount").html(len);
+          $("#zonaBtn").off();
         }
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="zona" data-col="idzona" name="zona-' + results.rows.item(i).idzona + '" id="zona-' + results.rows.item(i).idzona + '" value="' + results.rows.item(i).idzona + '"/>';
@@ -754,7 +789,16 @@ var app = {
         var html = '<legend>Seleccione uno varias categorías de educación:</legend> \n';
         html += '<input name="selectall-educacion" id="selectall-educacion" data-vista="educacion" data-col="ideducacion" data-checkall="eduList" type="checkbox" /> \n';
         html += '<label for="selectall-educacion">Seleccionar todos</label> \n';
-        $("#eduCount").html(len);
+
+        if (len === 0) {
+          $("#educacionBtn").on("click", function(e) {
+            e.preventDefault();
+          });
+        } else {
+          $("#eduCount").html(len);
+          $("#educacionBtn").off();
+        }
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="educacion" data-col="ideducacion" name="educacion-' + results.rows.item(i).ideducacion + '" id="educacion-' + results.rows.item(i).ideducacion + '" value="' + results.rows.item(i).ideducacion + '"/>';
           html += '<label for="educacion-' + results.rows.item(i).ideducacion + '">' + results.rows.item(i).nomeducacion + '</label>';
@@ -777,7 +821,16 @@ var app = {
         var html = '<legend>Seleccione uno varias categorías de ocupación:</legend>\n';
         html += '<input name="selectall-ocupacion" id="selectall-ocupacion" data-vista="ocupacion" data-col="idocupacion" data-checkall="ocuList" type="checkbox" />\n';
         html += '<label for="selectall-ocupacion">Seleccionar todos</label>\n';
-        $("#ocuCount").html(len);
+
+        if (len === 0) {
+          $("#ocupacionBtn").on("click", function(e) {
+            e.preventDefault();
+          });
+        } else {
+          $("#ocuCount").html(len);
+          $("#ocupacionBtn").off();
+        }
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="ocupacion" data-col="idocupacion" name="ocupacion-' + results.rows.item(i).idocupacion + '" id="ocupacion-' + results.rows.item(i).idocupacion + '" value="' + results.rows.item(i).idocupacion + '"/>';
           html += '<label for="ocupacion-' + results.rows.item(i).idocupacion + '">' + results.rows.item(i).nomocupacion + '</label>';
@@ -800,7 +853,16 @@ var app = {
         var html = '<legend>Seleccione uno varias categorías de edad:</legend>\n';
         html += '<input name="selectall-edad" id="selectall-edad" data-vista="edad" data-col="idedad" data-checkall="edaList" type="checkbox" /> \n';
         html += '<label for="selectall-edad">Seleccionar todos</label> \n';
-        $("#edaCount").html(len);
+
+        if (len === 0) {
+          $("#edadBtn").on("click", function(e) {
+            e.preventDefault();
+          });
+        } else {
+          $("#edaCount").html(len);
+          $("#edadBtn").off();
+        }
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="edad" data-col="idedad" name="edad-' + results.rows.item(i).idedad + '" id="edad-' + results.rows.item(i).idedad + '" value="' + results.rows.item(i).idedad + '"/>';
           html += '<label for="edad-' + results.rows.item(i).idedad + '">' + results.rows.item(i).nomedad + '</label>';
@@ -823,7 +885,16 @@ var app = {
         var html = '<legend>Seleccione uno varias categorías de estado civil:</legend> \n';
         html += '<input name="selectall-estadocivil" id="selectall-estadocivil" data-vista="estadocivil" data-col="idestadocivil" data-checkall="estList" type="checkbox" /> \n';
         html += '<label for="selectall-estadocivil">Seleccionar todos</label> \n';
-        $("#estCount").html(len);
+
+        if (len === 0) {
+          $("#estadocivilBtn").on("click", function(e) {
+            e.preventDefault();
+          });
+        } else {
+          $("#estCount").html(len);
+          $("#estadocivilBtn").off();
+        }
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="estadocivil" data-col="idestadocivil" name="estadocivil-' + results.rows.item(i).idestadocivil + '" id="estadocivil-' + results.rows.item(i).idestadocivil + '" value="' + results.rows.item(i).idestadocivil + '"/>';
           html += '<label for="estadocivil-' + results.rows.item(i).idestadocivil + '">' + results.rows.item(i).nomestadocivil + '</label>';
@@ -846,7 +917,16 @@ var app = {
         var html = '<legend>Seleccione uno varias categorías de género:</legend> \n';
         html += '<input name="selectall-genero" id="selectall-genero" data-vista="sexo" data-col="idsexo" data-checkall="genList" type="checkbox" /> \n';
         html += '<label for="selectall-genero">Seleccionar todos</label> \n';
-        $("#genCount").html(len);
+
+        if (len === 0) {
+          $("#generoBtn").on("click", function(e) {
+            e.preventDefault();
+          });
+        } else {
+          $("#genCount").html(len);
+          $("#generoBtn").off();
+        }
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="sexo" data-col="idsexo" name="genero-' + results.rows.item(i).idsexo + '" id="genero-' + results.rows.item(i).idsexo + '" value="' + results.rows.item(i).idsexo + '"/>';
           html += '<label for="genero-' + results.rows.item(i).idsexo + '">' + results.rows.item(i).nomsexo + '</label>';
@@ -871,9 +951,14 @@ var app = {
         html += '<label for="selectall-etnia">Seleccionar todos</label> \n';
         if (len === 0) {
           $("#etnCount").html("PROXIMAMENTE");
+          $("#etniaBtn").on("click", function(e) {
+            e.preventDefault();
+          });
         } else {
           $("#etnCount").html(len);
+          $("#etniaBtn").off();
         }
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="etnia" data-col="idetnia" name="etnia-' + results.rows.item(i).idetnia + '" id="etnia-' + results.rows.item(i).idetnia + '" value="' + results.rows.item(i).idetnia + '"/>';
           html += '<label for="etnia-' + results.rows.item(i).idetnia + '">' + results.rows.item(i).nometnia + '</label>';
@@ -896,11 +981,17 @@ var app = {
         var html = '<legend>Seleccione uno varias EPS:</legend> \n';
         html += '<input name="selectall-eps" id="selectall-eps" data-vista="eps" data-col="ideps" data-checkall="epsList" type="checkbox" /> \n';
         html += '<label for="selectall-eps">Seleccionar todos</label> \n';
+
         if (len === 0) {
           $("#epsCount").html("PROXIMAMENTE");
+          $("#epsBtn").on("click", function(e) {
+            e.preventDefault();
+          });
         } else {
           $("#epsCount").html(len);
+          $("#epsBtn").off();
         }
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="eps" data-col="ideps" name="eps-' + results.rows.item(i).ideps + '" id="eps-' + results.rows.item(i).ideps + '" value="' + results.rows.item(i).ideps + '"/>';
           html += '<label for="eps-' + results.rows.item(i).ideps + '">' + results.rows.item(i).nomeps + '</label>';
@@ -925,9 +1016,14 @@ var app = {
         html += '<label for="selectall-ips">Seleccionar todos</label> \n';
         if (len === 0) {
           $("#ipsCount").html("PROXIMAMENTE");
+          $("#ipsBtn").on("click", function(e) {
+            e.preventDefault();
+          });
         } else {
           $("#ipsCount").html(len);
+          $("#ipsBtn").off();
         }
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="ips" data-col="idips" name="ips-' + results.rows.item(i).idips + '" id="ips-' + results.rows.item(i).idips + '" value="' + results.rows.item(i).idips + '"/>';
           html += '<label for="ips-' + results.rows.item(i).idips + '">' + results.rows.item(i).nomips + '</label>';
@@ -950,11 +1046,17 @@ var app = {
         var html = '<legend>Seleccione uno varias categorías de régimen:</legend> \n';
         html += '<input name="selectall-regimen" id="selectall-regimen" data-vista="regimen" data-col="idregimen" data-checkall="regimenList" type="checkbox" /> \n';
         html += '<label for="selectall-regimen">Seleccionar todos</label> \n';
+
         if (len === 0) {
           $("#regiCount").html("PROXIMAMENTE");
+          $("#regimenBtn").on("click", function(e) {
+            e.preventDefault();
+          });
         } else {
           $("#regiCount").html(len);
+          $("#regimenBtn").off();
         }
+
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="regimen" data-col="idregimen" name="regimen-' + results.rows.item(i).idregimen + '" id="regimen-' + results.rows.item(i).idregimen + '" value="' + results.rows.item(i).idregimen + '"/>';
           html += '<label for="regimen-' + results.rows.item(i).idregimen + '">' + results.rows.item(i).nomregimen + '</label>';
