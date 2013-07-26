@@ -20,6 +20,18 @@
 #
 -->
 <widget>
+    
+    <name>Saludatos</name>
+    
+    <description>
+        Saludatos es una herramienta de acceso publico y libre. Ministerio de Salud y Proteccion Social 2013
+    </description>
+    
+    <author href="http://www.cool4code.com" email="info@cool4code.com">
+        COOL4CODE
+    </author>
+    
+    <preference name="orientation" value="portrait" />
     <preference name="AllowInlineMediaPlayback" value="false" />
     <preference name="AutoHideSplashScreen" value="true" />
     <preference name="BackupWebStorage" value="cloud" />
@@ -35,6 +47,8 @@
     <preference name="ShowSplashScreenSpinner" value="true" />
     <preference name="SuppressesIncrementalRendering" value="false" />
     <preference name="TopActivityIndicator" value="gray" />
+    
+    <preference name="show-splash-screen-spinner" value="false" />
 
     <content src="index.html" />
 
@@ -57,6 +71,7 @@
         <plugin name="Battery" value="CDVBattery" />
         <plugin name="Globalization" value="CDVGlobalization" />
         <plugin name="InAppBrowser" value="CDVInAppBrowser" />
+        <plugin name="Canvas2ImagePlugin" value="Canvas2ImagePlugin" />
     </plugins>
 
     <access origin="*" />

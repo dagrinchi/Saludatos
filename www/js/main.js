@@ -147,7 +147,28 @@ var app = {
       canvg(canvasObj, $("#" + chartType + " svg").clone().wrap('<div/>').parent().html());
 
       setTimeout(function() {
-        app.createFile(chartType + "-" + filedate + ".jpg", canvasObj.toDataURL("image/jpeg"));
+        switch (device.platform) {
+          case "Android":
+            app.createFile(chartType + "-" + filedate + ".png", canvasObj.toDataURL());
+            break;
+          case "iOS":
+            var canvas2ImagePlugin = window.plugins.canvas2ImagePlugin;
+            canvas2ImagePlugin.saveImageDataToLibrary(
+              function(msg) {
+                navigator.notification.alert('Imagen guardada en tus fotos!', function() {
+                  app.hideLoadingBox();
+                }, 'Atención', 'Aceptar');
+              },
+              function(err) {
+                navigator.notification.alert('No se pudo descargar la imagen!', function() {
+                  app.hideLoadingBox();
+                }, 'Atención', 'Aceptar');
+              },
+              'canvas'
+            );
+            break;
+        }
+
       }, 3000);
     });
 
@@ -281,11 +302,11 @@ var app = {
 
   startApp: function() {
     console.log("startApp: Iniciando estructura de la applicación!");
-    navigator.splashscreen.hide();
+    // navigator.splashscreen.hide();
     if (app.checkUpdatedData()) {
       setTimeout(function() {
         $.mobile.changePage("#home");
-      }, 7000);
+      }, 5000);
       //app.openDB(app.queryDB);
     } else {
       app.load();
