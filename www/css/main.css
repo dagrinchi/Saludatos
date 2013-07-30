@@ -195,23 +195,23 @@ body {
 
 /*Tutorial screen*/
 #help_step1 > div{
-	background:url(../img/manual.jpg) no-repeat top center fixed; /* 170px x 200px */ 
+	background:url(../img/manual.jpg) no-repeat top center; /* 170px x 200px */ 
 }
 
 #help_step2 > div{
-	background:url(../img/tutoriales/tuto_categorias.jpg) no-repeat top center fixed; /* 170px x 200px */ 
+	background:url(../img/tutoriales/tuto_categorias.jpg) no-repeat top center; /* 170px x 200px */ 
 }
 
 #help_step3 > div{
-	background:url(../img/tutoriales/tuto_geografica.jpg) no-repeat top center fixed; /* 170px x 200px */ 
+	background:url(../img/tutoriales/tuto_geografica.jpg) no-repeat top center; /* 170px x 200px */ 
 }
 
 #help_step4 > div{
-	background:url(../img/tutoriales/tuto_demografica.jpg) no-repeat top center fixed; /* 170px x 200px */ 
+	background:url(../img/tutoriales/tuto_demografica.jpg) no-repeat top center; /* 170px x 200px */ 
 }
 
 #help_step5 > div{
-	background:url(../img/tutoriales/tuto_pie.jpg) no-repeat top center fixed; /* 170px x 200px */ 
+	background:url(../img/tutoriales/tuto_pie.jpg) no-repeat top center; /* 170px x 200px */ 
 }
 
 .tutorial {      
