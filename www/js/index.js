@@ -98,14 +98,19 @@ var app = {
     }
   },
 
-  init: function() {
+  initialize: function() {
     console.log("init: Iniciando app!");
-    document.addEventListener("deviceready", app.onDeviceReady, false);
+    this.bindEvents();
   },
-
+    
+bindEvents: function() {
+    document.addEventListener('deviceready', this.onDeviceReady, false);
+},
+    
   onDeviceReady: function() {
     //window.localStorage.removeItem("updated");
-
+    app.receivedEvent('deviceready');
+      
     console.log("onDeviceReady: Dispositivo listo!");
 
     app.buttonHeight();
@@ -123,6 +128,17 @@ var app = {
       }, 'Atención', 'Aceptar');
     }
   },
+
+receivedEvent: function(id) {
+    var parentElement = document.getElementById(id);
+    var listeningElement = parentElement.querySelector('.listening');
+    var receivedElement = parentElement.querySelector('.received');
+    
+    listeningElement.setAttribute('style', 'display:none;');
+    receivedElement.setAttribute('style', 'display:block;');
+    
+    console.log('Received Event: ' + id);
+},
 
   buttonHeight: function() {
     console.log("buttonHeight: Ajustando el alto de los botones!");
