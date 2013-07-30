@@ -27,7 +27,7 @@
                 <iframe id="manual-animation-2" class="animation-size-for-iframe" src="motion_intro/motion.html" frameborder="0"></iframe>
             </div>
         </div> -->
-        <div data-role="page" style="background-color: #fff !important;">    
+        <div id="intro" data-role="page" style="background-color: #fff !important;">
             <div class="app">
                 <div class="title">Saludatos</div>
                 <div class="subtitle">Esta es una herramienta de acceso público y libre.</div>
@@ -64,7 +64,7 @@
             <div class="tutorial" data-role="content"></div>
             <div class="help_btns" data-role="controlgroup" data-type="horizontal">
                 <a href="#home" data-role="button" data-theme="b" data-icon="forward" data-iconpos="right">Omitir</a>
-                <a href="#help_step5" data-role="button" data-theme="b" data-icon="arrow-r" data-iconpos="right">Siguiente</a>            
+                <a href="#help_step5" data-role="button" data-theme="b" data-icon="arrow-r" data-iconpos="right">Siguiente</a>
             </div>
         </div>
         <div data-role="page" id="help_step5">    
@@ -76,9 +76,12 @@
         <!-- START PAGE HOME -->
         <div data-role="page" id="home"> 
             <div data-role="header" data-position="fixed">
-                <a href="#acerca" class="ui-btn-left" data-icon="info" data-rel="dialog">Acerca</a>
-                <h1>Saludatos</h1>
-                <a href="#help_step1" class="ui-btn-right" data-icon="grid">Ayuda</a>
+                <a href="#acerca" class="ui-btn-left" data-mini="true" data-icon="info" data-rel="dialog">Acerca</a>
+                <select id="options" class="ui-btn-right" data-mini="true" data-icon="gear" data-native-menu="false" data-iconpos="right">
+                    <option value="">Opciones</option>
+                    <option value="#help_step1">Ayuda</option>
+                    <option value="#updated">Última actualización</option>
+                </select>
             </div>
             <div data-role="content" class="ui-grid-a">
                 <div class="ui-block-a">
@@ -552,6 +555,21 @@
                 <p>Esta acción restablece las gráficas y contadores a las consultas iniciales.</p>
                 <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancelar</a>
                 <a href="#home" id="reset" data-role="button" data-inline="true" data-transition="flow" data-theme="b">Aceptar</a>
+            </div>
+        </div>
+        <div data-role="dialog" id="updated" data-overlay-theme="a" data-theme="c" data-dismissible="false">
+            <div data-role="header" data-theme="a" class="ui-corner-top">
+                <h1>Última fecha de actualización</h1>
+            </div>
+            <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+                <h3 class="ui-title">¿Desea continuar?</h3>
+                <p>Última fecha de actualización:</p>
+                <p id="date"></p>
+                <p>Frecuencia de actualización:</p>
+                <p><strong>6 meses</strong></p>
+                <p>Esta acción restablece las bases de datos descargando la información nuevamente a su dispositivo, tenga presente que requiere de una conexión a internet.</p>
+                <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancelar</a>
+                <a href="#intro" id="update" data-role="button" data-inline="true" data-transition="flow" data-theme="b">Actualizar</a>
             </div>
         </div>
         <canvas id="canvas" style="display: none;"></canvas> 

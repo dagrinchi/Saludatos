@@ -405,3 +405,7 @@ fieldset label {
 	background: -ms-linear-gradient(top, #0099FF, #1a82f7); 
 	background: -o-linear-gradient(top, #0099FF, #1a82f7);
 }
+
+div[data-role="header"] {
+	height: 42px !important;
+}

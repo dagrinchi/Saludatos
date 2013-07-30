@@ -111,6 +111,9 @@ var app = {
     app.buttonHeight();
     app.btnsEvents(app.sliderEvents);
     app.pageEvents();
+    $("#options").on("change", function(e){
+                     $.mobile.changePage($(this).val());
+                     });
 
     if (app.checkConnection()) {
       app.initGoogleLoader(app.startApp);
@@ -133,6 +136,16 @@ var app = {
   btnsEvents: function(cb) {
 
     console.log("btnsEvents: Asignando eventos a los botones de las gráficas!");
+      
+    $("#update").on("click", function(){
+                    if (app.checkConnection()) {
+                            app.load();
+                    } else {
+                            navigator.notification.alert('No hay una conexión a internet!', function() {
+                                                 navigator.app.exitApp();
+                                                 }, 'Atención', 'Aceptar');
+                    }
+    });
 
     $(".share").on("click", function(e) {
       console.log("btnsEvents: Convirtiendo svg a canvas!");
@@ -213,6 +226,9 @@ var app = {
     var pages = ["home", "ubicaciones", "demografia"];
     $.each(pages, function(k, v) {
       $("#" + v).on("pagebeforeshow", function() {
+                    if (v === "home") {
+                        $("select#options").prop('selectedIndex', 0).selectmenu("refresh");
+                    }
         app.openDB(app.queryDB[v]);
       });
     });
@@ -321,6 +337,7 @@ var app = {
     var u = new Date(updated);
     if (updated && u > s) {
       console.log("checkUpdatedData: Los datos están actualizados! " + updated);
+      $("#date").html("<strong>" + updated + "</strong>");
       return true;
     } else {
       console.log("checkUpdatedData: Los datos no están actualizados!");
@@ -411,6 +428,7 @@ var app = {
     console.log("successCB: Guardando fecha de actualización!");
     var updated = new Date();
     window.localStorage.setItem("updated", updated);
+    $("#date").html("<strong>" + updated + "</strong>");
     $.mobile.changePage("#help_step1");
   },
 
