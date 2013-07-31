@@ -132,6 +132,9 @@
             <div data-role="content">
                 <p>Seleccione una o varias ubicaciones para evaluar:</p>
                 <ul id="ubiList" data-role="listview" data-inset="true">           
+                	<li>
+                        <a id="paisBtn" href="#pais" data-rel="dialog"><h1>País</h1><span id="paisCount" class="ui-li-count"></span></a>
+                    </li>
                     <li>
                         <a id="regionBtn" href="#region" data-rel="dialog"><h1>Región</h1><span id="regionCount" class="ui-li-count"></span></a>
                     </li>
@@ -151,6 +154,17 @@
             </div>
         </div>
         <!-- END PAGE UBICACIONES -->
+        <!-- START DIALOG PAIS -->
+        <div data-role="dialog" id="pais">
+            <div data-role="header" data-theme="c">
+                <h1>País</h1>
+            </div>
+            <div data-role="content">
+                <fieldset data-role="controlgroup" id="paisList"></fieldset>
+                <a href="#" data-role="button" data-icon="check" data-rel="back">Aceptar</a>
+            </div>
+        </div>
+        <!-- END DIALOG PAIS -->
         <!-- START DIALOG REGIONES -->
         <div data-role="dialog" id="region">
             <div data-role="header" data-theme="c">

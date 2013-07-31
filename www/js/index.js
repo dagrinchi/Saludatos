@@ -26,6 +26,11 @@ var app = {
         idindicador: []
       }
     },
+    pais : {
+	  cols: {
+        iddepto: []
+      }  
+    },
     region: {
       cols: {
         idregion: []
@@ -481,9 +486,10 @@ receivedEvent: function(id) {
       console.log("queryDB: Consultas!");
       app.showLoadingBox("Consultando!");
 
+      app.ent.pais(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' AND iddepto = '170' OR iddepto = '09' OR iddepto = '75' GROUP BY iddepto ORDER BY nomdepto", function(tx) {
       app.ent.region(tx, "SELECT DISTINCT idregion, nomregion FROM (" + app.buildSQL() + ") WHERE nomregion <> '' GROUP BY idregion ORDER BY nomregion", function(tx) {
         app.ent.subregion(tx, "SELECT DISTINCT idsubregion, nomsubregion FROM (" + app.buildSQL() + ") WHERE nomsubregion <> '' GROUP BY idsubregion ORDER BY nomsubregion", function(tx) {
-          app.ent.departamento(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' GROUP BY iddepto ORDER BY nomdepto", function(tx) {
+          app.ent.departamento(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' AND iddepto <> '170' AND iddepto <> '09' AND iddepto <> '75' GROUP BY iddepto ORDER BY nomdepto", function(tx) {
             app.ent.municipio(tx, "SELECT DISTINCT idmpio, nommpio FROM (" + app.buildSQL() + ") WHERE nommpio <> '' GROUP BY idmpio ORDER BY nommpio LIMIT 25", function(tx) {
               app.ent.zona(tx, "SELECT DISTINCT idzona, nomzona FROM (" + app.buildSQL() + ") WHERE nomzona <> '' GROUP BY idzona ORDER BY nomzona", function(tx) {
                 app.hideLoadingBox();
@@ -491,6 +497,7 @@ receivedEvent: function(id) {
             });
           });
         });
+      });
       });
     },
     demografia: function(tx) {
@@ -652,6 +659,39 @@ receivedEvent: function(id) {
         }
         $(list).html(html).trigger('create');
         app.registerInputs(list, "radio");
+        cb(tx);
+      }
+    },
+    
+    pais: function(tx, sql, cb) {
+
+      console.log("ent.region: Construye paises!");
+
+      tx.executeSql(sql, [], pais, app.errorCB);
+
+      function pais(tx, results) {
+        var list = "#paisList";
+        var len = results.rows.length;
+
+        var html = '<legend>Seleccione uno varias opciones para evaluar:</legend> \n';
+        html += '<input name="selectall-pais" id="selectall-pais" data-vista="pais" data-col="iddepto" data-checkall="paisList" type="checkbox" /> \n';
+        html += '<label for="selectall-pais">Seleccionar todos</label> \n';
+
+        if (len === 0) {
+          $("#paisBtn").on("click", function(e) {
+            e.preventDefault();
+          });
+        } else {
+          $("#paisBtn").off();
+        }
+        $("#paisCount").html(len);
+
+        for (var i = 0; i < len; i++) {
+          html += '<input type="checkbox" data-vista="pais" data-col="iddepto" name="pais-' + results.rows.item(i).iddepto + '" id="pais-' + results.rows.item(i).iddepto + '" value="' + results.rows.item(i).iddepto + '"/>';
+          html += '<label for="pais-' + results.rows.item(i).iddepto + '">' + results.rows.item(i).nomdepto + '</label>';
+        }
+        $(list).html(html).trigger('create');
+        app.registerInputs(list, "checkbox");
         cb(tx);
       }
     },
