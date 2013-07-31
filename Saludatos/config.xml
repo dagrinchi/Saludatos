@@ -72,6 +72,7 @@
         <plugin name="Globalization" value="CDVGlobalization" />
         <plugin name="InAppBrowser" value="CDVInAppBrowser" />
         <plugin name="Canvas2ImagePlugin" value="Canvas2ImagePlugin" />
+        <plugin name="Social" value="Social" />
     </plugins>
 
     <access origin="*" />

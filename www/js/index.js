@@ -167,35 +167,21 @@ receivedEvent: function(id) {
       console.log("btnsEvents: Convirtiendo svg a canvas!");
 
       app.showLoadingBox("Descargando gráfico!");
+      
+      var pageID = $(this).parents('[data-role="page"]').prop("id");
+/* 	var content = $('#' + pageID + ' [data-role="content"] > div'); */
+	  var title = $('#' + pageID + ' .Title-Size').text();
 
       var canvasObj = document.getElementById('canvas');
-      var now = new Date();
-      var filedate = now.getDate().toString() + now.getMonth().toString() + now.getFullYear().toString() + "-" + now.getHours().toString() + now.getMinutes().toString();
       var chartType = $(this).data("chart");
-
       canvg(canvasObj, $("#" + chartType + " svg").clone().wrap('<div/>').parent().html());
 
       setTimeout(function() {
-        switch (device.platform) {
-          case "Android":
-            app.createFile(chartType + "-" + filedate + ".png", canvasObj.toDataURL());
-            break;
-          case "iOS":
-            var canvas2ImagePlugin = window.plugins.canvas2ImagePlugin;
-            canvas2ImagePlugin.saveImageDataToLibrary(
-              function(msg) {
-                navigator.notification.alert('Imagen guardada en tus fotos!', function() {
-                  app.hideLoadingBox();
-                }, 'Atención', 'Aceptar');
-              },
-              function(err) {
-                navigator.notification.alert('No se pudo descargar la imagen!', function() {
-                  app.hideLoadingBox();
-                }, 'Atención', 'Aceptar');
-              },
-              'canvas'
-            );
-            break;
+        if (device.platform === "iOS") {
+          	console.log("Compartiendo en iOS!");
+          	var social = window.plugins.social;
+          	social.share(title, 'http://cool4code.com', 'canvas');
+          	app.hideLoadingBox();
         }
 
       }, 3000);
