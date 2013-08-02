@@ -462,7 +462,7 @@ receivedEvent: function(id) {
       app.years = [];
       tx.executeSql('SELECT columnName from columnNames where columnName like "%yea%"', [], app.yea, app.errorCB);
 
-      tx.executeSql("SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' GROUP BY iddepto ORDER BY nomdepto", [], function(tx, results) {
+      tx.executeSql("SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> ''  AND iddepto <> '170' AND iddepto <> '09' AND iddepto <> '75' AND iddepto <> '11' GROUP BY iddepto ORDER BY nomdepto", [], function(tx, results) {
         app.counters["counter-dep"] = results.rows.length;
       }, app.errorCB);
 
@@ -1613,6 +1613,8 @@ receivedEvent: function(id) {
 
             //[{name:'Amazonas',data:[15.0,30]},{name:'Cundinamarca',data:[19.0,10]}]
           });
+        
+          app.hideLoadingBox();
         }
 
 
@@ -1906,6 +1908,8 @@ receivedEvent: function(id) {
 
             series: theseries
           });
+        
+          app.hideLoadingBox();
         }
       }
     },
