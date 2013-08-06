@@ -61,7 +61,7 @@ body {
 }
 
 .subtitle{
-   font-size: 15px;
+   font-size: 1em;
    margin:0px;
    overflow:visible;
    padding:0px;
@@ -364,9 +364,9 @@ fieldset label {
 	color: #ccc;
 }
 
-#pie .ui-content, #lineal .ui-content, #bars .ui-content, #maps .ui-content, #table .ui-content {
+/*#pie .ui-content, #lineal .ui-content, #bars .ui-content, #maps .ui-content, #table .ui-content {
 	padding: 40px 0 70px 0;
-}
+}*/
 
 #pie-slider-label, #maps-slider-label {
 	font-size: 1em;
@@ -408,4 +408,9 @@ fieldset label {
 
 div[data-role="header"] {
 	height: 42px !important;
+}
+
+.dataTables_wrapper {
+	overflow: scroll;
+	margin-top: 20px;
 }
