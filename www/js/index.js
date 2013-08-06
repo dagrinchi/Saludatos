@@ -2033,6 +2033,7 @@ receivedEvent: function(id) {
             var data = google.visualization.arrayToDataTable(datatoprint);
             var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
             var options = {
+              legend: 'none',
               region: 'CO',
               resolution: 'provinces',
               displayMode: 'regions',
@@ -2044,7 +2045,16 @@ receivedEvent: function(id) {
               backgroundColor: {
                 fill: "transparent"
               },
-              colors: ["#C23B22", "#FDFD96", "#77DD77"]
+              colors: 
+                  [
+                  "#C23B22",  "#FDFD96",  "#77DD77",
+                  "#E90AA5",  "#725263",  "#1A9E03",  "#55962E",  "#C41B0D",  
+                  "#1F6290",  "#813D3A",  "#054A44",  "#E9A70C",  "#6C0781",  
+                  "#4A0BC9",  "#C4AF1E",  "#A23ED7",  "#3B1D31",  "#99EA07",  
+                  "#B51C1E",  "#6D20D4",  "#F77254",  "#A80B63",  "#DFCBAD",  
+                  "#262423",  "#28159E",  "#9861BC",  "#56562B",  "#9FB6B6",
+                  "#4EC62F",  "#A58BB1",  "#A4A156",  "#DBC22E",  "#DCE929"  
+                  ]
             };
 
             map.draw(data, options);
