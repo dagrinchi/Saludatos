@@ -157,8 +157,8 @@ var app = {
         app.load();
       } else {
         navigator.notification.alert('No hay una conexión a internet!', function() {
-          navigator.app.exitApp();
-        }, 'Atención', 'Aceptar');
+          app.onDeviceReady();
+        }, 'Atención', 'Reintentar');
       }
     });
 
@@ -318,9 +318,12 @@ var app = {
       script.addEventListener("error", function(e) {
         console.log("Error: " + e);
       }, false);
-    } else {
-      navigator.notification.alert('No hay una conexión a internet, no podrá visualizar correctamente el gráfico mapa!', function() {
-        }, 'Atención', 'Aceptar');
+
+      if (google && !google.visualization) {
+        google.load("visualization", "1", {
+          'packages': ['geochart']
+        });
+      }
     }
     cb();
   },
@@ -382,8 +385,8 @@ var app = {
       dataType: 'json',
       error: function() {
         navigator.notification.alert('El repositorio de datos Open Data no está disponible, inténtalo más tarde!', function() {
-          navigator.app.exitApp();
-        }, 'Atención', 'Aceptar');
+          app.onDeviceReady();
+        }, 'Atención', 'Reintentar');
       },
       progress: function(evt) {
         if (evt.lengthComputable) {
@@ -2024,11 +2027,6 @@ var app = {
 
           if (google && google.visualization) {
             googleChart();
-          } else {
-            google.load("visualization", "1", {
-              'packages': ['geochart'],
-              callback: googleChart
-            });
           }
 
           function googleChart() {
