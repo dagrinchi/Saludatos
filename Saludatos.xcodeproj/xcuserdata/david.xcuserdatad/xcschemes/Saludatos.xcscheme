@@ -17,7 +17,7 @@
                BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
                BuildableName = "Saludatos.app"
                BlueprintName = "Saludatos"
-               ReferencedContainer = "container:Saludatos.xcodeproj">
+               ReferencedContainer = "container:SaluDatos.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
             BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
             BuildableName = "Saludatos.app"
             BlueprintName = "Saludatos"
-            ReferencedContainer = "container:Saludatos.xcodeproj">
+            ReferencedContainer = "container:SaluDatos.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -54,7 +54,7 @@
             BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
             BuildableName = "Saludatos.app"
             BlueprintName = "Saludatos"
-            ReferencedContainer = "container:Saludatos.xcodeproj">
+            ReferencedContainer = "container:SaluDatos.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -72,7 +72,7 @@
             BlueprintIdentifier = "1D6058900D05DD3D006BFB54"
             BuildableName = "Saludatos.app"
             BlueprintName = "Saludatos"
-            ReferencedContainer = "container:Saludatos.xcodeproj">
+            ReferencedContainer = "container:SaluDatos.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
