@@ -189,8 +189,8 @@ var app = {
     $(".btn_secundario").on("click", function(e) {
       console.log("btnsEvents: Validando si hay un indicador!");
       if (app.selection.indicador.cols.idindicador[0]) {
-        var $this = $(this);
-        cb(app.chart[$this.data("graph")]);
+        var graph = $(this).data("graph");        
+        cb(app.chart[graph]);
         //app.openDB(app.chart[$this.data("graph")]);
       } else {
         navigator.notification.alert(
@@ -235,7 +235,14 @@ var app = {
     });
 
     $("#table").on("pageshow", function() {
-      $(".dataTables_wrapper").scrollTo("100%", {duration:1500, onAfter:function(){ $(".dataTables_wrapper").scrollTo(0, {duration:1000}); } });
+      $(".dataTables_wrapper").scrollTo("100%", {
+        duration: 1500,
+        onAfter: function() {
+          $(".dataTables_wrapper").scrollTo(0, {
+            duration: 1000
+          });
+        }
+      });
     });
   },
 
@@ -311,31 +318,31 @@ var app = {
       s.parentNode.insertBefore(wf, s);
 
       var script = document.createElement("script");
-      script.src = "https://www.google.com/jsapi";
+      script.src = "https://www.google.com/jsapi?callback=app.googleVisualization";
       script.type = "text/javascript";
       document.getElementsByTagName("head")[0].appendChild(script);
 
       script.addEventListener("error", function(e) {
         console.log("Error: " + e);
       }, false);
-
-      if (google && !google.visualization) {
-        google.load("visualization", "1", {
-          'packages': ['geochart']
-        });
-      }
+    } else {
+      navigator.notification.alert('No hay una conexión a internet, el mapa no podrá funcionar correctamente!', function() {
+          $('[data-graph="maps"]').addClass("ui-disabled");
+          $('[data-graph="maps"]').on("click", function(e) {
+            e.preventDefault();
+          });
+        }, 'Atención', 'Aceptar');
     }
+
     cb();
   },
 
   startApp: function() {
     console.log("startApp: Iniciando estructura de la applicación!");
-    // navigator.splashscreen.hide();
     if (app.checkUpdatedData()) {
       setTimeout(function() {
         $.mobile.changePage("#home");
-      }, 1000);
-      //app.openDB(app.queryDB);
+      }, 4000);
     } else {
       app.load();
     }
@@ -384,8 +391,8 @@ var app = {
       url: url,
       dataType: 'json',
       error: function() {
-        navigator.notification.alert('El repositorio de datos Open Data no está disponible, inténtalo más tarde!', function() {
-          app.onDeviceReady();
+        navigator.notification.alert('El repositorio de datos Open Data no está disponible ó se ha perdido la conexión con la red, inténtalo más tarde!', function() {
+          app.load();
         }, 'Atención', 'Reintentar');
       },
       progress: function(evt) {
@@ -534,14 +541,17 @@ var app = {
 
   googleVisualization: function() {
     if (google && google.visualization) {
-      console.log("Librería graficos ya existe!");
-      app.startApp();
+      console.log("googleVisualization: Librería graficos ya existe!");
     } else {
-      console.log("Cargando librería graficos!");
+      console.log("googleVisualization: Cargando librería graficos!");
       google.load("visualization", "1", {
-        packages: ['corechart', 'geochart'],
-        callback: app.startApp
+        packages: ['geochart'],
+        callback: ok
       });
+    }
+
+    function ok() {
+      console.log("googleVisualization: Librería google OK!");
     }
   },
 
@@ -2024,41 +2034,33 @@ var app = {
 
             }
           }
+          var data = google.visualization.arrayToDataTable(datatoprint);
+          var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
+          var options = {
+            legend: 'none',
+            region: 'CO',
+            resolution: 'provinces',
+            displayMode: 'regions',
+            height: app.homeheight - 150,
+            // magnifyingGlass: {
+            //   enable: "true",
+            //   zoomFactor: "10.0"
+            // },
+            backgroundColor: {
+              fill: "transparent"
+            },
+            colors: [
+              "#C23B22", "#FDFD96", "#77DD77",
+              "#E90AA5", "#725263", "#1A9E03", "#55962E", "#C41B0D",
+              "#1F6290", "#813D3A", "#054A44", "#E9A70C", "#6C0781",
+              "#4A0BC9", "#C4AF1E", "#A23ED7", "#3B1D31", "#99EA07",
+              "#B51C1E", "#6D20D4", "#F77254", "#A80B63", "#DFCBAD",
+              "#262423", "#28159E", "#9861BC", "#56562B", "#9FB6B6",
+              "#4EC62F", "#A58BB1", "#A4A156", "#DBC22E", "#DCE929"
+            ]
+          };
 
-          if (google && google.visualization) {
-            googleChart();
-          }
-
-          function googleChart() {
-            var data = google.visualization.arrayToDataTable(datatoprint);
-            var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
-            var options = {
-              legend: 'none',
-              region: 'CO',
-              resolution: 'provinces',
-              displayMode: 'regions',
-              height: app.homeheight - 150,
-              // magnifyingGlass: {
-              //   enable: "true",
-              //   zoomFactor: "10.0"
-              // },
-              backgroundColor: {
-                fill: "transparent"
-              },
-              colors: 
-                  [
-                  "#C23B22",  "#FDFD96",  "#77DD77",
-                  "#E90AA5",  "#725263",  "#1A9E03",  "#55962E",  "#C41B0D",  
-                  "#1F6290",  "#813D3A",  "#054A44",  "#E9A70C",  "#6C0781",  
-                  "#4A0BC9",  "#C4AF1E",  "#A23ED7",  "#3B1D31",  "#99EA07",  
-                  "#B51C1E",  "#6D20D4",  "#F77254",  "#A80B63",  "#DFCBAD",  
-                  "#262423",  "#28159E",  "#9861BC",  "#56562B",  "#9FB6B6",
-                  "#4EC62F",  "#A58BB1",  "#A4A156",  "#DBC22E",  "#DCE929"  
-                  ]
-            };
-
-            map.draw(data, options);
-          }
+          map.draw(data, options);
         }
       }
       app.hideLoadingBox();
@@ -2172,8 +2174,7 @@ var app = {
 
 
             //Verificacion de Subregiones
-
-             else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && parseFloat(dataresults["nomsubregion"]) != 0.0 && printsubregion) {
+            else if (dataresults["nomsubregion"] !== null && dataresults["nomsubregion"] !== '' && parseFloat(dataresults["nomsubregion"]) != 0.0 && printsubregion) {
               console.log(" Subregion" + p + ": " + dataresults["nomsubregion"]);
               departamentos.push(dataresults["nomsubregion"]);
               geograficas.push(dataresults["nomsubregion"]);
@@ -2193,7 +2194,6 @@ var app = {
             }
 
             //Verificación de municipios
-
             else if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && parseFloat(dataresults["nommpio"]) != 0.0 && printtown) {
               printstate = false;
               console.log(" Municipio " + p + ": " + dataresults["nommpio"]);
@@ -2218,7 +2218,6 @@ var app = {
 
 
             //Verificación de departamentos
-
             else if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && parseFloat(dataresults["nomdepto"]) != 0.0 && printstate) {
               console.log(" Departamento " + p + ": " + dataresults["nomdepto"]);
               departamentos.push(dataresults["nomdepto"]);
@@ -2239,7 +2238,6 @@ var app = {
             }
 
             //Verificación de zonas
-
             else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && parseFloat(dataresults["nomzona"]) != 0.0 && printzone) {
               console.log(" Zona " + p + ": " + dataresults["nomzona"]);
               municipios.push(dataresults["nomzona"]);
