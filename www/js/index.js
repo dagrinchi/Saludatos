@@ -1706,7 +1706,7 @@ var app = {
 
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
-              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== '-' && row["yea" + app.years[a]] !== null) {
+              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== null) {
                 yearstoprint[a] = true;
               }
 
@@ -1894,7 +1894,7 @@ var app = {
                   else {
                     rowdata.push(0.0);
                     console.log(l + " Año " + app.years[l] + " : 0");
-                  } 
+                  }
                 }
               }
 
@@ -2009,7 +2009,7 @@ var app = {
 
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
-              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== '-' && row["yea" + app.years[a]] !== null) {
+              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== null) {
                 yearstoprint[a] = true;
               }
 
@@ -2160,7 +2160,7 @@ var app = {
 
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
-              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== '-' && row["yea" + app.years[a]] !== null) {
+              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== null) {
                 yearstoprint[a] = true;
               }
 
