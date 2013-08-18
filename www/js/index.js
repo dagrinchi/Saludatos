@@ -1384,7 +1384,7 @@ var app = {
 
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
-              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== '-' && row["yea" + app.years[a]] !== null) {
+              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== null) {
                 yearstoprint[a] = true;
               }
 
@@ -1460,6 +1460,10 @@ var app = {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[z]]));
                     console.log(z + " Año " + app.years[z] + " :" + dataresults["yea" + app.years[z]]);
                   }
+                  else {
+                    rowdata.push(0.0);
+                    console.log(l + " Año " + app.years[l] + " : 0");
+                  }
                 }
               }
 
@@ -1484,6 +1488,10 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
+                  }
+                  else {
+                    rowdata.push(0.0);
+                    console.log(l + " Año " + app.years[l] + " : 0");
                   }
                 }
               }
@@ -1511,6 +1519,10 @@ var app = {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
                   }
+                  else {
+                    rowdata.push(0.0);
+                    console.log(l + " Año " + app.years[l] + " : 0");
+                  }
                 }
               }
 
@@ -1535,6 +1547,10 @@ var app = {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
                   }
+                  else {
+                    rowdata.push(0.0);
+                    console.log(l + " Año " + app.years[l] + " : 0");
+                  }
                 }
               }
 
@@ -1551,6 +1567,10 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
+                  }
+                  else {
+                    rowdata.push(0.0);
+                    console.log(l + " Año " + app.years[l] + " : 0");
                   }
                 }
               }
@@ -1763,6 +1783,10 @@ var app = {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
                   }
+                  else {
+                    rowdata.push(0.0);
+                    console.log(l + " Año " + app.years[l] + " : 0");
+                  }
                 }
               }
 
@@ -1787,6 +1811,10 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
+                  }
+                  else {
+                    rowdata.push(0.0);
+                    console.log(l + " Año " + app.years[l] + " : 0");
                   }
                 }
               }
@@ -1814,6 +1842,10 @@ var app = {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
                   }
+                  else {
+                    rowdata.push(0.0);
+                    console.log(l + " Año " + app.years[l] + " : 0");
+                  }
                 }
               }
 
@@ -1838,6 +1870,10 @@ var app = {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
                   }
+                  else {
+                    rowdata.push(0.0);
+                    console.log(l + " Año " + app.years[l] + " : 0");
+                  }
                 }
               }
 
@@ -1855,6 +1891,10 @@ var app = {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
                   }
+                  else {
+                    rowdata.push(0.0);
+                    console.log(l + " Año " + app.years[l] + " : 0");
+                  } 
                 }
               }
 
