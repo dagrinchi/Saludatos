@@ -65,8 +65,8 @@
             </div>
         </div>
         <!-- START PAGE HOME -->
-        <div data-role="page" id="home"> 
-            <div data-role="header" data-position="fixed">
+        <div data-role="page" id="home" data-add-back-btn="true"> 
+            <div data-role="header" data-position="fixed" data-add-back-btn="true">
                 <a href="#acerca" class="ui-btn-left" data-mini="true" data-icon="info" data-rel="dialog">Acerca</a>
                 <select id="options" class="ui-btn-right" data-mini="true" data-icon="gear" data-native-menu="false" data-iconpos="right">
                     <option value="">Opciones</option>
@@ -74,7 +74,7 @@
                     <option value="#updated">Última actualización</option>
                 </select>
             </div>
-            <div data-role="content" class="ui-grid-a">
+            <div data-role="content" class="ui-grid-a" data-add-back-btn="true">
                 <div class="ui-block-a">
                     <p>Número de Registros:</p>
                     <span id="counter-reg">0</span>
@@ -86,9 +86,11 @@
                     <a href="#popupDialog" data-rel="dialog" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-icon="delete" data-theme="b">Restablecer</a>
                 </div>
                 <div class="ui-block-b sidebar">
-                    <a href="#cat" class="icon_health" data-rel="dialog">CATEGORÍAS<br/>DE SALUD<br/></a>
+                    <!-- INDICADORES DE SALUD -->
+                    <a href="#cat" class="icon_health" data-rel="dialog">INDICADORES<br/>DE SALUD<br/></a>
                     <a href="#ubicaciones" class="icon_location" data-transition="slide">UBICACIÓN<br/>GEOGRÁFICA<br/></a>
-                    <a href="#demografia" class="icon_person" data-transition="slide">INFORMACIÓN<br/>DEMOGRÁFICA<br/></a>
+                    <a href="#demografia" class="icon_person" data-transition="slide">VARIABLES DE<br/>DESAGREGACIÓN<br/></a>
+                    <!-- VARIABLES DE DESAGREGACIÓN -->
                 </div>
             </div>
             <div data-role="footer" data-position="fixed">
