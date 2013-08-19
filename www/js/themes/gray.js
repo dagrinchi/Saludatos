@@ -24,13 +24,13 @@ Highcharts.theme = {
 	title: {
 		style: {
 			color: '#FFF',
-			font: '16px Open Sans'
+			font: '16px Open Sans, Verdana, sans-serif'
 		}
 	},
 	subtitle: {
 		style: {
 			color: '#DDD',
-			font: '12px Open Sans'
+			font: '12px Open Sans, Verdana, sans-serif'
 		}
 	},
 	xAxis: {
@@ -46,7 +46,7 @@ Highcharts.theme = {
 		title: {
 			style: {
 				color: '#AAA',
-				font: '300 12px Open Sans'
+				font: '300 12px Open Sans, Verdana, sans-serif'
 			}
 		}
 	},
@@ -66,22 +66,22 @@ Highcharts.theme = {
 		title: {
 			style: {
 				color: '#AAA',
-				font: '300 12px Open Sans'
+				font: '300 12px Open Sans, Verdana, sans-serif'
 			}
 		}
 	},
 	legend: {
 		itemStyle: {
-			color: '#CCC',
-			font: '300 12px Open Sans'
+			color: '#fff',
+			font: '300 10px Open Sans, Verdana, sans-serif'
 		},
 		itemHoverStyle: {
-			color: '#FFF',
-			font: '300 12px Open Sans'
+			color: '#fff',
+			font: '300 10px Open Sans, Verdana, sans-serif'
 		},
 		itemHiddenStyle: {
 			color: '#333',
-			font: '300 12px Open Sans'
+			font: '300 10px Open Sans, Verdana, sans-serif'
 		}
 	},
 	labels: {

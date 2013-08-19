@@ -119,7 +119,7 @@
         <!-- START DIALOG INDICADORES -->
         <div data-role="dialog" id="cat" data-theme="b">
             <div data-role="header" data-position="fixed" data-theme="b">
-                <h1>Categorías de Salud</h1>
+                <h1>Indicadores de Salud</h1>
             </div>
             <div data-role="content" data-theme="b">
                 <fieldset data-role="controlgroup" id="indList" data-theme="b"></fieldset>
@@ -227,7 +227,7 @@
         <div data-role="page" id="demografia"> 
             <div data-role="header" data-position="fixed" data-theme="d">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
-                <h1>Información Demográfica</h1>        
+                <h1>Variables de Desagregación</h1>        
             </div>
             <div data-role="content">
                 <p>Seleccione una o varias clasificaciones demográficas para evaluar:</p>
@@ -368,10 +368,10 @@
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
                 <a href="#" class="ui-btn-right share" data-icon="arrow-d" data-chart="pie">Compartir</a>
             </div>
-            <div data-role="content" class="chart-wrapper">
+            <div data-role="content">
                 <div class="chart-inner">
                     <p class="Title-Size"></p>
-                    <div id="piechartdiv" style="width: 100%; height: 100%;"></div>
+                    <div id="piechartdiv"></div>
                 </div>
             </div>
             <div data-role="footer" data-position="fixed">
@@ -407,10 +407,10 @@
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
                 <a href="#" class="ui-btn-right share" data-icon="arrow-d" data-chart="lineal">Compartir</a>
             </div>
-            <div data-role="content" class="chart-wrapper">
+            <div data-role="content">
                 <div class="chart-inner">
                     <div class="Title-Size"></div>
-                    <div id="linealchartdiv" style="width: 100%; height: 100%;"></div>
+                    <div id="linealchartdiv"></div>
                 </div>
             </div>    
             <div data-role="footer" data-position="fixed">
@@ -442,10 +442,10 @@
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
                 <a href="#" class="ui-btn-right share" data-icon="arrow-d" data-chart="bars">Compartir</a>
             </div>
-            <div data-role="content" class="chart-wrapper">
+            <div data-role="content">
                 <div class="chart-inner">
                     <p class="Title-Size"></p>
-                    <div id="columnchartdiv" style="width: 100%; height: 100%;"></div>
+                    <div id="columnchartdiv"></div>
                 </div>
             </div> 
             <div data-role="footer" data-position="fixed">
@@ -477,10 +477,11 @@
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
                 <a href="#" class="ui-btn-right share" data-icon="arrow-d" data-chart="maps">Compartir</a>
             </div>
-            <div data-role="content" class="chart-wrapper">
+            <div data-role="content">
                 <div class="chart-inner">
                     <p class="Title-Size"></p>
-                    <div id="geochartdiv" style="width: 100%; height: 100%;"></div>
+                    <p id="paisReferente" style="width: 100%; text-align: center;"></p>
+                    <div id="geochartdiv"></div>
                 </div>
             </div> 
             <div data-role="footer" data-position="fixed">
@@ -514,6 +515,7 @@
         <div data-role="page" id="table"> 
             <div data-role="header" data-position="fixed">
                 <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
+                <a href="#" class="ui-btn-right share" data-icon="arrow-d" data-chart="table">Compartir</a>
             </div>
             <div data-role="content">
                 <p class="Title-Size"></p>
@@ -591,7 +593,6 @@
                 <a href="#intro" id="update" data-role="button" data-inline="true" data-transition="flow" data-theme="b">Actualizar</a>
             </div>
         </div>
-        <canvas id="canvas" style="display: none;"></canvas> 
         <script type="text/javascript" src="cordova-2.7.0.js"></script>
         <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="js/jquery.mobile-1.3.1.min.js"></script>
@@ -604,6 +605,7 @@
         <script type="text/javascript" src="js/canvg/canvg.js"></script>
         <script type="text/javascript" src="js/canvas-to-blob.min.js"></script>
         <script type="text/javascript" src="js/Canvas2ImagePlugin.js"></script>
+        <script type="text/javascript" src="js/html2canvas.js"></script>
         <script type="text/javascript" src="js/social.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">

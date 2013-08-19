@@ -15,7 +15,7 @@ body {
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     background-color: #fff;				
     background-attachment:fixed;
-    font-family: 'Open Sans', sans-serif;
+/*     font-family: 'Open Sans', sans-serif; */
     height:100%;
     margin:0px;
     padding:0px;
@@ -256,7 +256,6 @@ body {
 }
 
 .chart-inner {
-	/*position: absolute;*/
     width: 100%; 
     height: 100%;
 }
@@ -364,9 +363,10 @@ fieldset label {
 	color: #ccc;
 }
 
-/*#pie .ui-content, #lineal .ui-content, #bars .ui-content, #maps .ui-content, #table .ui-content {
-	padding: 40px 0 70px 0;
-}*/
+#pie .ui-content, #lineal .ui-content, #bars .ui-content, #maps .ui-content, #table .ui-content {
+	padding: 0;
+	margin: 0;
+}
 
 #pie-slider-label, #maps-slider-label {
 	font-size: 1em;
@@ -413,4 +413,6 @@ div[data-role="header"] {
 .dataTables_wrapper {
 	overflow: scroll;
 	margin-top: 20px;
+	background-color: #000;
+	width: 100%;
 }

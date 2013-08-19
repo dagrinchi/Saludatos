@@ -142,6 +142,13 @@ var app = {
 
     console.log('Received Event: ' + id);
   },
+  
+  chartHeight: function() { 
+  	var charts = ["#linealchartdiv", "#piechartdiv", "#columnchartdiv", "#geochartdiv"];
+  	$.each(charts, function(k, v) {
+	  	$($(v).parents()[1]).width();
+  	});
+  },
 
   buttonHeight: function() {
     console.log("buttonHeight: Ajustando el alto de los botones!");
@@ -165,28 +172,37 @@ var app = {
         }, 'Atención', 'Reintentar');
       }
     });
-
+    
     $(".share").on("click", function(e) {
-      console.log("btnsEvents: Convirtiendo svg a canvas!");
+      console.log("btnsEvents: Convirtiendo a canvas!");
 
       app.showLoadingBox("Descargando gráfico!");
 
       var pageID = $(this).parents('[data-role="page"]').prop("id");
       /*  var content = $('#' + pageID + ' [data-role="content"] > div'); */
       var title = $('#' + pageID + ' .Title-Size').text();
-
-      var canvasObj = document.getElementById('canvas');
       var chartType = $(this).data("chart");
-      canvg(canvasObj, $("#" + chartType + " svg").clone().wrap('<div/>').parent().html());
+      var canvasObj;
+      
+      if (chartType === "table") {
+	      html2canvas($(".dataTables_wrapper"), {
+			  onrendered: function(canvas) {
+				canvasObj = canvas;
+			  }
+		  });
+      } else {
+      	  canvasObj = document.createElement("canvas");
+		  canvg(canvasObj, $("#" + chartType + " svg").clone().wrap('<div/>').parent().html());
+      }
 
       setTimeout(function() {
         if (device.platform === "iOS") {
           console.log("Compartiendo en iOS!");
           var social = window.plugins.social;
-          social.share(title, 'http://www.minsalud.gov.co', 'canvas');
+          social.share(title, 'http://www.minsalud.gov.co', canvasObj);
+//          document.body.appendChild(canvasObj);
           app.hideLoadingBox();
         }
-
       }, 3000);
     });
 
@@ -895,9 +911,9 @@ var app = {
             e.preventDefault();
           });
         } else {
-          $("#eduCount").html(len);
           $("#educacionBtn").off();
         }
+        $("#eduCount").html(len);
 
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="educacion" data-col="ideducacion" name="educacion-' + results.rows.item(i).ideducacion + '" id="educacion-' + results.rows.item(i).ideducacion + '" value="' + results.rows.item(i).ideducacion + '"/>';
@@ -927,9 +943,9 @@ var app = {
             e.preventDefault();
           });
         } else {
-          $("#ocuCount").html(len);
           $("#ocupacionBtn").off();
         }
+        $("#ocuCount").html(len);
 
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="ocupacion" data-col="idocupacion" name="ocupacion-' + results.rows.item(i).idocupacion + '" id="ocupacion-' + results.rows.item(i).idocupacion + '" value="' + results.rows.item(i).idocupacion + '"/>';
@@ -959,9 +975,9 @@ var app = {
             e.preventDefault();
           });
         } else {
-          $("#edaCount").html(len);
           $("#edadBtn").off();
         }
+        $("#edaCount").html(len);
 
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="edad" data-col="idedad" name="edad-' + results.rows.item(i).idedad + '" id="edad-' + results.rows.item(i).idedad + '" value="' + results.rows.item(i).idedad + '"/>';
@@ -991,9 +1007,9 @@ var app = {
             e.preventDefault();
           });
         } else {
-          $("#estCount").html(len);
           $("#estadocivilBtn").off();
         }
+        $("#estCount").html(len);
 
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="estadocivil" data-col="idestadocivil" name="estadocivil-' + results.rows.item(i).idestadocivil + '" id="estadocivil-' + results.rows.item(i).idestadocivil + '" value="' + results.rows.item(i).idestadocivil + '"/>';
@@ -1023,9 +1039,9 @@ var app = {
             e.preventDefault();
           });
         } else {
-          $("#genCount").html(len);
           $("#generoBtn").off();
         }
+        $("#genCount").html(len);
 
         for (var i = 0; i < len; i++) {
           html += '<input type="checkbox" data-vista="sexo" data-col="idsexo" name="genero-' + results.rows.item(i).idsexo + '" id="genero-' + results.rows.item(i).idsexo + '" value="' + results.rows.item(i).idsexo + '"/>';
@@ -1286,7 +1302,8 @@ var app = {
               plotShadow: false,
               // spacingTop: 10,
               height: app.homeheight,
-              borderRadius: 0
+              borderRadius: 0,
+              width: $($("#piechartdiv").parents()[1]).width()
             },
             exporting: {
               enabled: false
@@ -1600,8 +1617,9 @@ var app = {
               plotBorderWidth: null,
               plotShadow: false,
               height: app.homeheight,
-              borderRadius: 0
-              // margin: [30, 10, 10, 10]
+              borderRadius: 0,
+              width: $(document).width() - 5
+//              margin: [10, 10, 10, 10]
             },
             exporting: {
               enabled: false
@@ -1621,12 +1639,7 @@ var app = {
               categories: thecategories,
               labels: {
                 rotation: -45,
-                align: 'right',
-                style: {
-                  fontSize: '13px',
-                  fontFamily: 'Verdana, sans-serif'
-                }
-              }
+                align: 'right'              }
             },
             yAxis: {
               title: {
@@ -1646,7 +1659,8 @@ var app = {
               align: "center",
               verticalAlign: "top",
               borderWidth: 1,
-              margin: 20 //define el espacio entre el legend y la zona de grafico
+              margin: 5,
+              x: 15,
             },
             series: theseries
 
@@ -1919,7 +1933,8 @@ var app = {
               plotBorderWidth: null,
               plotShadow: false,
               height: app.homeheight,
-              borderRadius: 0
+              borderRadius: 0,
+              width: $(document).width()
             },
             exporting: {
               enabled: false
@@ -1951,9 +1966,9 @@ var app = {
             legend: {
               align: "center",
               verticalAlign: "top",
-              x: 0,
-              y: 20,
-              borderWidth: 0
+              borderWidth: 0,
+              margin: 5,
+              x: 10
             },
             title: {
               text: '',
@@ -1968,7 +1983,8 @@ var app = {
 
             series: theseries
           });
-
+          
+          chart.redraw();
           app.hideLoadingBox();
         }
       }
@@ -2051,7 +2067,11 @@ var app = {
           for (var j = 0; j < results.rows.length; j++) {
             var dataresults = results.rows.item(j);
             if (!(isNaN(parseFloat(dataresults["yea" + theyear])))) {
-
+            
+            	if (dataresults["iddepto"] === "170") {
+	               $("#paisReferente").html("<strong>" + dataresults["nomdepto"] +  ": </strong>" + parseFloat(dataresults["yea" + theyear]) + " " + dataresults["nomunidad"]);
+            	}
+	            
 
               if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && dataresults["nommpio"] !== '-' && printtown) {
                 datatoprint.push([results.rows.item(j).nommpio, parseFloat(dataresults["yea" + theyear])]);
@@ -2087,6 +2107,7 @@ var app = {
             resolution: 'provinces',
             displayMode: 'regions',
             height: app.homeheight - 150,
+            width: $(document).width(),
             // magnifyingGlass: {
             //   enable: "true",
             //   zoomFactor: "10.0"
@@ -2358,6 +2379,7 @@ var app = {
             aoColumns: theaoColumns
 
           });
+          app.hideLoadingBox();
         }
       }
     }
