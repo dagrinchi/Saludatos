@@ -195,7 +195,7 @@ body {
 
 /*Tutorial screen*/
 #help_step1 > div{
-	background:url(../img/manual.jpg) no-repeat top center; /* 170px x 200px */ 
+	background:url(../img/tutoriales/tuto_home.jpg) no-repeat top center; /* 170px x 200px */ 
 }
 
 #help_step2 > div{
@@ -211,7 +211,7 @@ body {
 }
 
 #help_step5 > div{
-	background:url(../img/tutoriales/tuto_pie.jpg) no-repeat top center; /* 170px x 200px */ 
+	background:url(../img/tutoriales/tuto_lineal.jpg) no-repeat top center; /* 170px x 200px */ 
 }
 
 .tutorial {      
