@@ -401,7 +401,6 @@ var app = {
         app.createDB();
       }
     });
-    $("#progressLabel").html("Cargando +" + app.count + " registros!");
     console.log("load: " + url);
   },
 
@@ -418,6 +417,7 @@ var app = {
       progress: function(evt) {
         if (evt.lengthComputable) {
           app.progressBar(parseInt((evt.loaded / evt.total * 100), 10), $("#progressBar"));
+          $("#progressLabel").html("Cargando " + parseInt((evt.loaded / evt.total * 1000), 10) + " de " + parseInt(app.count + 1000) + " registros!");
           // console.log("Loaded " + parseInt( (evt.loaded / evt.total * 100), 10) + "%");
         } else {
           console.log("Length not computable.");
