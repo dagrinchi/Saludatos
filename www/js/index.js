@@ -185,7 +185,7 @@ var app = {
       var canvasObj;
       
       if (chartType === "table") {
-	      html2canvas($(".dataTables_wrapper"), {
+	      html2canvas($(".table-cont"), {
 			  onrendered: function(canvas) {
 				canvasObj = canvas;
 			  }
@@ -255,10 +255,10 @@ var app = {
     });
 
     $("#table").on("pageshow", function() {
-      $(".dataTables_wrapper").scrollTo("100%", {
+      $(".table-cont").scrollTo("100%", {
         duration: 1500,
         onAfter: function() {
-          $(".dataTables_wrapper").scrollTo(0, {
+          $(".table-cont").scrollTo(0, {
             duration: 1000
           });
         }

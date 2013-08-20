@@ -264,6 +264,7 @@ body {
 	text-align: center;
 	display: block;
 	margin-bottom: 0;
+	font-weight: bold;
 }
 
 iframe {
@@ -410,9 +411,14 @@ div[data-role="header"] {
 	height: 42px !important;
 }
 
-.dataTables_wrapper {
+.table-cont {
 	overflow: scroll;
 	margin-top: 20px;
 	background-color: #000;
-	width: 100%;
+	width: 100%;	
+}
+
+
+.dataTables_wrapper {	
+	background-color: #000;
 }
