@@ -2185,7 +2185,7 @@ var app = {
 
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
-              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== null) {
+              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== null && row["yea" + app.years[a]] !== ' ') {
                 yearstoprint[a] = true;
               }
 
