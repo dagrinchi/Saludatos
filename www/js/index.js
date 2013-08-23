@@ -1403,16 +1403,16 @@ var app = {
 
 
           for (a = 0; a < app.years.length; a++) {
-
-
+            
+            
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
-              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== null) {
+              if (row["yea" + app.years[a]] !== null && row["yea" + app.years[a]] !== '') {
                 yearstoprint[a] = true;
               }
-
+              
             }
-
+            
           }
 
           // Insertar las categorias segun los años que tienen datos
@@ -1716,16 +1716,16 @@ var app = {
 
 
           for (a = 0; a < app.years.length; a++) {
-
-
+            
+            
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
-              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== null) {
+              if (row["yea" + app.years[a]] !== null && row["yea" + app.years[a]] !== '') {
                 yearstoprint[a] = true;
               }
-
+              
             }
-
+            
           }
 
           // Insertar las categorias segun los años que tienen datos
@@ -2014,16 +2014,16 @@ var app = {
         function printData(tx, results) {
 
           for (a = 0; a < app.years.length; a++) {
-
-
+            
+            
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
-              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== null) {
+              if (row["yea" + app.years[a]] !== null && row["yea" + app.years[a]] !== '') {
                 yearstoprint[a] = true;
               }
-
+              
             }
-
+            
           }
 
           console.log("AÑOS A IMPRIMIR: ");
@@ -2173,7 +2173,7 @@ var app = {
 
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
-              if (row["yea" + app.years[a]] !== '' && row["yea" + app.years[a]] !== null) {
+              if (row["yea" + app.years[a]] !== null && row["yea" + app.years[a]] !== '') {
                 yearstoprint[a] = true;
               }
 
