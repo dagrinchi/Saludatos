@@ -1,6 +1,6 @@
-$(document).bind("mobileinit", function(){
-        $.mobile.page.prototype.options.addBackBtn= true;
-    });
+$(document).bind("mobileinit", function() {
+  $.mobile.page.prototype.options.addBackBtn = true;
+});
 
 var app = {
 
@@ -142,12 +142,12 @@ var app = {
 
     console.log('Received Event: ' + id);
   },
-  
-  chartHeight: function() { 
-  	var charts = ["#linealchartdiv", "#piechartdiv", "#columnchartdiv", "#geochartdiv"];
-  	$.each(charts, function(k, v) {
-	  	$($(v).parents()[1]).width();
-  	});
+
+  chartHeight: function() {
+    var charts = ["#linealchartdiv", "#piechartdiv", "#columnchartdiv", "#geochartdiv"];
+    $.each(charts, function(k, v) {
+      $($(v).parents()[1]).width();
+    });
   },
 
   buttonHeight: function() {
@@ -172,7 +172,7 @@ var app = {
         }, 'Atención', 'Reintentar');
       }
     });
-    
+
     $(".share").on("click", function(e) {
       console.log("btnsEvents: Convirtiendo a canvas!");
 
@@ -183,16 +183,16 @@ var app = {
       var title = $('#' + pageID + ' .Title-Size').text();
       var chartType = $(this).data("chart");
       var canvasObj;
-      
+
       if (chartType === "table") {
-	      html2canvas($(".table-cont"), {
-			  onrendered: function(canvas) {
-				canvasObj = canvas;
-			  }
-		  });
+        html2canvas($(".table-cont"), {
+          onrendered: function(canvas) {
+            canvasObj = canvas;
+          }
+        });
       } else {
-      	  canvasObj = document.createElement("canvas");
-		  canvg(canvasObj, $("#" + chartType + " svg").clone().wrap('<div/>').parent().html());
+        canvasObj = document.createElement("canvas");
+        canvg(canvasObj, $("#" + chartType + " svg").clone().wrap('<div/>').parent().html());
       }
 
       setTimeout(function() {
@@ -200,7 +200,7 @@ var app = {
           console.log("Compartiendo en iOS!");
           var social = window.plugins.social;
           social.share(title, 'http://www.minsalud.gov.co', canvasObj);
-//          document.body.appendChild(canvasObj);
+          //          document.body.appendChild(canvasObj);
           app.hideLoadingBox();
         }
       }, 3000);
@@ -209,7 +209,7 @@ var app = {
     $(".btn_secundario").on("click", function(e) {
       console.log("btnsEvents: Validando si hay un indicador!");
       if (app.selection.indicador.cols.idindicador[0]) {
-        var graph = $(this).data("graph");        
+        var graph = $(this).data("graph");
         cb(app.chart[graph]);
         //app.openDB(app.chart[$this.data("graph")]);
       } else {
@@ -347,11 +347,11 @@ var app = {
       }, false);
     } else {
       navigator.notification.alert('No hay una conexión a internet, el mapa no podrá funcionar correctamente!', function() {
-          $('[data-graph="maps"]').addClass("ui-disabled");
-          $('[data-graph="maps"]').on("click", function(e) {
-            e.preventDefault();
-          });
-        }, 'Atención', 'Aceptar');
+        $('[data-graph="maps"]').addClass("ui-disabled");
+        $('[data-graph="maps"]').on("click", function(e) {
+          e.preventDefault();
+        });
+      }, 'Atención', 'Aceptar');
     }
 
     cb();
@@ -417,7 +417,7 @@ var app = {
       progress: function(evt) {
         if (evt.lengthComputable) {
           app.progressBar(parseInt((evt.loaded / evt.total * 100), 10), $("#progressBar"));
-          $("#progressLabel").html("Cargando " + parseInt((evt.loaded / evt.total * 1000), 10) + " de " + parseInt(app.count + 1000) + " registros!");
+          $("#progressLabel").html("Cargando " + parseInt((evt.loaded / evt.total * 1000), 10) + " de " + parseInt(app.count + 1000, 10) + " registros!");
           // console.log("Loaded " + parseInt( (evt.loaded / evt.total * 100), 10) + "%");
         } else {
           console.log("Length not computable.");
@@ -632,6 +632,8 @@ var app = {
         break;
       case "radio":
         $(list + " :" + type).on("click", app.eventRadios);
+        break;
+      default:
         break;
     }
   },
@@ -1480,8 +1482,7 @@ var app = {
                   if (dataresults["yea" + app.years[z]] !== '' && dataresults["yea" + app.years[z]] !== null && dataresults["yea" + app.years[z]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[z]]));
                     console.log(z + " Año " + app.years[z] + " :" + dataresults["yea" + app.years[z]]);
-                  }
-                  else {
+                  } else {
                     rowdata.push(0.0);
                     console.log(l + " Año " + app.years[l] + " : 0");
                   }
@@ -1509,8 +1510,7 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-                  }
-                  else {
+                  } else {
                     rowdata.push(0.0);
                     console.log(l + " Año " + app.years[l] + " : 0");
                   }
@@ -1527,7 +1527,6 @@ var app = {
             }
 
 
-
             //Verificación de departamentos
             else if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && printstate) {
               console.log(" Departamento " + p + ": " + dataresults["nomdepto"]);
@@ -1539,8 +1538,7 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-                  }
-                  else {
+                  } else {
                     rowdata.push(0.0);
                     console.log(l + " Año " + app.years[l] + " : 0");
                   }
@@ -1567,8 +1565,7 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-                  }
-                  else {
+                  } else {
                     rowdata.push(0.0);
                     console.log(l + " Año " + app.years[l] + " : 0");
                   }
@@ -1588,8 +1585,7 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-                  }
-                  else {
+                  } else {
                     rowdata.push(0.0);
                     console.log(l + " Año " + app.years[l] + " : 0");
                   }
@@ -1600,7 +1596,6 @@ var app = {
               serie["data"] = rowdata;
               theseries.push(serie);
             }
-
 
 
             //FIN DE printData
@@ -1619,7 +1614,7 @@ var app = {
               height: app.homeheight,
               borderRadius: 0,
               width: $(document).width() - 5
-//              margin: [10, 10, 10, 10]
+              //              margin: [10, 10, 10, 10]
             },
             exporting: {
               enabled: false
@@ -1639,13 +1634,14 @@ var app = {
               categories: thecategories,
               labels: {
                 rotation: -45,
-                align: 'right'              }
+                align: 'right'
+              }
             },
             yAxis: {
               title: {
                 text: results.rows.item(0).nomunidad
               },
-              min:0,
+              min: 0,
               plotLines: [{
                 value: 0,
                 width: 1,
@@ -1759,7 +1755,6 @@ var app = {
             thelocation = dataresults["nommpio"] + dataresults["nomdepto"] + dataresults["nomzona"] + dataresults["nomsubregion"] + dataresults["nomregion"];
 
 
-
             //Verificacion de Regiones
 
             if (dataresults["nomregion"] !== null && dataresults["nomregion"] !== '' && printregion) {
@@ -1800,8 +1795,7 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-                  }
-                  else {
+                  } else {
                     rowdata.push(0.0);
                     console.log(l + " Año " + app.years[l] + " : 0");
                   }
@@ -1829,8 +1823,7 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-                  }
-                  else {
+                  } else {
                     rowdata.push(0.0);
                     console.log(l + " Año " + app.years[l] + " : 0");
                   }
@@ -1847,7 +1840,6 @@ var app = {
             }
 
 
-
             //Verificación de departamentos
             else if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && printstate) {
               console.log(" Departamento " + p + ": " + dataresults["nomdepto"]);
@@ -1859,8 +1851,7 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-                  }
-                  else {
+                  } else {
                     rowdata.push(0.0);
                     console.log(l + " Año " + app.years[l] + " : 0");
                   }
@@ -1887,8 +1878,7 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-                  }
-                  else {
+                  } else {
                     rowdata.push(0.0);
                     console.log(l + " Año " + app.years[l] + " : 0");
                   }
@@ -1908,8 +1898,7 @@ var app = {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
                     rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
                     console.log(l + " Año " + app.years[l] + " :" + dataresults["yea" + app.years[l]]);
-                  }
-                  else {
+                  } else {
                     rowdata.push(0.0);
                     console.log(l + " Año " + app.years[l] + " : 0");
                   }
@@ -1983,7 +1972,7 @@ var app = {
 
             series: theseries
           });
-          
+
           chart.redraw();
           app.hideLoadingBox();
         }
@@ -2067,11 +2056,11 @@ var app = {
           for (var j = 0; j < results.rows.length; j++) {
             var dataresults = results.rows.item(j);
             if (!(isNaN(parseFloat(dataresults["yea" + theyear])))) {
-            
-            	if (dataresults["iddepto"] === "170") {
-	               $("#paisReferente").html("<strong>" + dataresults["nomdepto"] +  ": </strong>" + parseFloat(dataresults["yea" + theyear]) + " " + dataresults["nomunidad"]);
-            	}
-	            
+
+              if (dataresults["iddepto"] === "170") {
+                $("#paisReferente").html("<strong>" + dataresults["nomdepto"] + ": </strong>" + parseFloat(dataresults["yea" + theyear]) + " " + dataresults["nomunidad"]);
+              }
+
 
               if (dataresults["nommpio"] !== null && dataresults["nommpio"] !== '' && dataresults["nommpio"] !== '-' && printtown) {
                 datatoprint.push([results.rows.item(j).nommpio, parseFloat(dataresults["yea" + theyear])]);
@@ -2164,7 +2153,6 @@ var app = {
         }
 
 
-
         function buildTable(tx, results) {
 
           $("#table .Title-Size").html(results.rows.item(0).nomindicador);
@@ -2202,7 +2190,6 @@ var app = {
             }
           }
           console.log("LAS CATEGORIAS");
-          for (e = 0; e < thecategories.length; e++) {}
 
           for (var p = 0; p < results.rows.length; p++) {
             var dataresults = results.rows.item(p);
@@ -2214,7 +2201,6 @@ var app = {
             thestring = dataresults["nomregimen"] + dataresults["nomeps"] + dataresults["nomips"] + dataresults["nomregimen"] + dataresults["nomeducacion"] + dataresults["nomocupacion"] + dataresults["nomsexo"] + dataresults["nometnia"] + dataresults["nomedad"] + dataresults["nomestadocivil"];
             var thelocation = [];
             thelocation = dataresults["nommpio"] + dataresults["nomdepto"] + dataresults["nomzona"] + dataresults["nomsubregion"] + dataresults["nomregion"];
-
 
 
             //Verificacion de Regiones
@@ -2282,7 +2268,6 @@ var app = {
             }
 
 
-
             //Verificación de departamentos
             else if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && printstate) {
               console.log(" Departamento " + p + ": " + dataresults["nomdepto"]);
@@ -2337,7 +2322,6 @@ var app = {
               serie["data"] = rowdata;
               theseries.push(serie);
             }
-
 
 
           }
