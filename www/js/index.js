@@ -164,6 +164,8 @@ var app = {
     console.log("btnsEvents: Asignando eventos a los botones de las gráficas!");
 
     $("#update").on("click", function() {
+      app.data = [];
+      app.count = 0;
       if (app.checkConnection()) {
         app.load();
       } else {
