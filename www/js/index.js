@@ -2199,6 +2199,7 @@ var app = {
           for (d = 0; d < app.years.length; d++) {
             if (yearstoprint[d]) {
               thecategories.push(app.years[d]);
+              console.log(app.years[d]);
             }
           }
           console.log("LAS CATEGORIAS");
@@ -2223,6 +2224,7 @@ var app = {
               console.log(" Region" + p + ": " + dataresults["nomregion"]);
               departamentos.push(dataresults["nomregion"]);
               geograficas.push(dataresults["nomregion"]);
+              
               for (var l = 0; l < app.years.length; l++) {
                 if (yearstoprint[l]) {
                   if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
