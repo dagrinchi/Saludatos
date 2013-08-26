@@ -84,7 +84,7 @@ body {
 }
 
 .event.received {
-    background-color:#4B946A;
+    background-color:#29abe2;
     display:none;
 }
 
@@ -376,35 +376,44 @@ fieldset label {
 	margin: 4px 0px 0px 10px;
 }
 
-#progressBar {
+#progressLabel {
+	margin:0;
+	padding:0;
+}
+
+.pb {
+	position: relative;
+	background: #000;
+	border: 1px solid #111;	
+	overflow: hidden;
 	margin: 5px auto;
 	width: 200px;
 	height: 22px;
 }
-
-#progressBar div {
-	height: 100%;
-	color: #fff;
-	text-align: right;
-	font-size: 12px;
-	line-height: 22px;
+.pb > div {
 	width: 0;
-}
-
-.pb {
-	background: #000;
-	border: 1px solid #111;	
-	border-radius: 5px;	
-	overflow: hidden;
-	box-shadow: 0 0 5px #333;
-}
-.pb div {
+	height: 22px;
+	position: absolute;
+	top: 0;
+	left: 0;
 	background-color: #1a82f7;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0099FF), to(#1a82f7)); 
 	background: -webkit-linear-gradient(top, #0099FF, #1a82f7); 
 	background: -moz-linear-gradient(top, #0099FF, #1a82f7); 
 	background: -ms-linear-gradient(top, #0099FF, #1a82f7); 
 	background: -o-linear-gradient(top, #0099FF, #1a82f7);
+}
+
+.pb > p {
+	position: absolute;
+	font-weight: bold;
+	display: block;
+	width: 100%;
+	height: 20px;
+	text-align: center;
+	top: 0;
+	margin: 0;
+	padding: 0;
 }
 
 div[data-role="header"] {

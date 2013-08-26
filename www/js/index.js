@@ -12,7 +12,11 @@ var app = {
 
   count: 0,
 
+  total: 0,
+
   totalCount: 0,
+
+  totalCount2: 1000,
 
   data: [],
 
@@ -385,6 +389,7 @@ var app = {
     var xhr = app.getJson2(url);
     xhr.success(function(r) {
       app.totalCount = parseInt(r.d[0]["consecutivo"]);
+      app.total = parseInt(r.d[0]["consecutivo"]);
     });
 
     cb();
@@ -411,6 +416,12 @@ var app = {
     var url = "http://servicedatosabiertoscolombia.cloudapp.net/v1/Ministerio_de_Salud/indicadoresdesalud?$format=json&$filter=id>" + app.count;
     var xhr = app.getJson(url);
     xhr.success(function(r) {
+      app.totalCount -= 1000;
+      if (app.totalCount > 1000) {
+        app.totalCount2 = 1000;
+      } else {
+        app.totalCount2 = app.totalCount; 
+      }
       $.each(r.d, function(k, v) {
         app.data.push(v);
       });
@@ -434,10 +445,6 @@ var app = {
     });
   },
 
-  loaded: 0,
-
-  total: 0,
-
   getJson: function(url) {
     return $.ajax({
       type: "GET",
@@ -450,12 +457,11 @@ var app = {
       },
       progress: function(evt) {
         if (evt.lengthComputable) {
-          app.loaded += parseInt(evt.loaded);
-          var total = parseInt(app.totalCount) * 61943;
-          var porcentaje = app.loaded / total;
-          app.progressBar(parseInt((porcentaje * 100), 10), $("#progressBar"));
-          //$("#progressLabel").html("Cargando " + parseInt((evt.loaded / evt.total * 1000), 10) + " de " + parseInt(app.count + 1000, 10) + " registros!");
-          // console.log("Loaded " + parseInt( (evt.loaded / evt.total * 100), 10) + "%");
+          var unit = app.totalCount2 / evt.total;
+          cant = parseInt(unit * evt.loaded, 10) + app.count;
+          porcentaje = parseInt((cant / app.total * 100), 10);
+          app.progressBar(porcentaje, $("#progressBar"));
+          $("#progressLabel").html("Cargando " + cant + " de " + app.total + " registros!");
         } else {
           console.log("Length not computable.");
         }
