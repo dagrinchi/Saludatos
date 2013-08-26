@@ -12,11 +12,15 @@ var app = {
 
   count: 0,
 
+  totalCount: 0,
+
   data: [],
 
   results: {},
 
   years: [],
+
+  start: true,
 
   counters: {
     "counter-reg": 0,
@@ -164,10 +168,11 @@ var app = {
     console.log("btnsEvents: Asignando eventos a los botones de las gráficas!");
 
     $("#update").on("click", function() {
+      app.start = false;
       app.data = [];
       app.count = 0;
       if (app.checkConnection()) {
-        app.load();
+        app.getTotal(app.load);
       } else {
         navigator.notification.alert('No hay una conexión a internet!', function() {
           app.onDeviceReady();
@@ -226,6 +231,8 @@ var app = {
 
     $("#reset").on("click", function(e) {
       $("#dtable").empty();
+      //$("#paisReferente").html("");
+      //$("#maps-slider").val(0);
       //app["dataTable"].fnClearTable(0);
       //app["dataTable"].fnDraw();
       $.each(app.selection, function(k1, v1) {
@@ -369,8 +376,18 @@ var app = {
         $.mobile.changePage("#home");
       }, 4000);
     } else {
-      app.load();
+      app.getTotal(app.load);
     }
+  },
+
+  getTotal: function(cb) {
+    var url = "http://servicedatosabiertoscolombia.cloudapp.net/v1/Ministerio_de_Salud/indicadoresdesalud/consecutivo?$top=1&$orderby=consecutivo%20desc&$format=json";
+    var xhr = app.getJson2(url);
+    xhr.success(function(r) {
+      app.totalCount = parseInt(r.d[0]["consecutivo"]);
+    });
+
+    cb();
   },
 
   checkUpdatedData: function() {
@@ -409,6 +426,18 @@ var app = {
     console.log("load: " + url);
   },
 
+  getJson2: function(url) {
+    return $.ajax({
+      type: "GET",
+      url: url,
+      dataType: 'json'
+    });
+  },
+
+  loaded: 0,
+
+  total: 0,
+
   getJson: function(url) {
     return $.ajax({
       type: "GET",
@@ -416,13 +445,16 @@ var app = {
       dataType: 'json',
       error: function() {
         navigator.notification.alert('El repositorio de datos Open Data no está disponible ó se ha perdido la conexión con la red, inténtalo más tarde!', function() {
-          app.load();
+          app.getTotal(app.load);
         }, 'Atención', 'Reintentar');
       },
       progress: function(evt) {
         if (evt.lengthComputable) {
-          app.progressBar(parseInt((evt.loaded / evt.total * 100), 10), $("#progressBar"));
-          $("#progressLabel").html("Cargando " + parseInt((evt.loaded / evt.total * 1000), 10) + " de " + parseInt(app.count + 1000, 10) + " registros!");
+          app.loaded += parseInt(evt.loaded);
+          var total = parseInt(app.totalCount) * 61943;
+          var porcentaje = app.loaded / total;
+          app.progressBar(parseInt((porcentaje * 100), 10), $("#progressBar"));
+          //$("#progressLabel").html("Cargando " + parseInt((evt.loaded / evt.total * 1000), 10) + " de " + parseInt(app.count + 1000, 10) + " registros!");
           // console.log("Loaded " + parseInt( (evt.loaded / evt.total * 100), 10) + "%");
         } else {
           console.log("Length not computable.");
@@ -473,7 +505,12 @@ var app = {
     var updated = new Date();
     window.localStorage.setItem("updated", updated);
     $("#date").html("<strong>" + updated + "</strong>");
-    $.mobile.changePage("#help_step1");
+    if (app.start) {
+      $.mobile.changePage("#help_step1");
+    } else {
+      $.mobile.changePage("#home");
+    }
+    
   },
 
   yea: function(tx, results) {
@@ -1986,6 +2023,9 @@ var app = {
 
     maps: function() {
 
+      if (app.selection.departamento.cols.iddepto.length > 0 && app.selection.departamento.cols.iddepto.indexOf("170") === -1) {
+        app.selection.departamento.cols.iddepto.push("170");
+      }
 
       var datatoprint = [];
       var regiones = [];
@@ -2013,8 +2053,8 @@ var app = {
       app.openDB(query);
 
       function query(tx) {
-
-        tx.executeSql(app.buildSQL(), [], printData, app.errorCB);
+        var sql = app.buildSQL();
+        tx.executeSql(sql, [], printData, app.errorCB);
 
         function printData(tx, results) {
 
