@@ -225,6 +225,9 @@ var app = {
     });
 
     $("#reset").on("click", function(e) {
+      $("#dtable").empty();
+      //app["dataTable"].fnClearTable(0);
+      //app["dataTable"].fnDraw();
       $.each(app.selection, function(k1, v1) {
         $.each(v1['cols'], function(k2, v2) {
           app.selection[k1]['cols'][k2] = [];
@@ -1405,16 +1408,16 @@ var app = {
 
 
           for (a = 0; a < app.years.length; a++) {
-            
-            
+
+
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
               if (row["yea" + app.years[a]] !== null && row["yea" + app.years[a]] !== '') {
                 yearstoprint[a] = true;
               }
-              
+
             }
-            
+
           }
 
           // Insertar las categorias segun los años que tienen datos
@@ -1718,16 +1721,16 @@ var app = {
 
 
           for (a = 0; a < app.years.length; a++) {
-            
-            
+
+
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
               if (row["yea" + app.years[a]] !== null && row["yea" + app.years[a]] !== '') {
                 yearstoprint[a] = true;
               }
-              
+
             }
-            
+
           }
 
           // Insertar las categorias segun los años que tienen datos
@@ -2016,16 +2019,16 @@ var app = {
         function printData(tx, results) {
 
           for (a = 0; a < app.years.length; a++) {
-            
-            
+
+
             for (b = 0; b < results.rows.length; b++) {
               var row = results.rows.item(b);
               if (row["yea" + app.years[a]] !== null && row["yea" + app.years[a]] !== '') {
                 yearstoprint[a] = true;
               }
-              
+
             }
-            
+
           }
 
           console.log("AÑOS A IMPRIMIR: ");
@@ -2156,10 +2159,10 @@ var app = {
               }
             }
             cb1(yearstoprint, cb2, cb3);
-            
+
           }
 
-          
+
 
           function printYears(yearstoprint, cb1, cb2) {
             console.log("chart.table: printYears");
@@ -2247,7 +2250,7 @@ var app = {
                 printstate = false;
                 municipios.push(dataresults["nommpio"]);
                 geograficas.push(dataresults["nommpio"]);
-                
+
                 for (var l = 0; l < app.years.length; l++) {
                   if (yearstoprint[l]) {
                     if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
@@ -2344,20 +2347,22 @@ var app = {
               theaoColumns.push(aoColumn);
             }
 
-            $('#dtable').dataTable({
+            app["dataTable"] = $('#dtable').dataTable({
               "fnInitComplete": function(oSettings, json) {
                 $('#dtable').table();
+                app.hideLoadingBox();
               },
-              "bDestroy": true,
               "bFilter": false,
               "bInfo": false,
               "bPaginate": false,
-              aaData: aDataSet,
+              "aaData": aDataSet,
+              "bDestroy": true,
               //aoColumns: thecategories
-              aoColumns: theaoColumns
-
+              "aoColumns": theaoColumns,
+              "fnDrawCallback": function() {
+                $('#dtable thead').html('');
+              }
             });
-            app.hideLoadingBox();
           }
         }
       }
