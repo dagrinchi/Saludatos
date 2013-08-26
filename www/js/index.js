@@ -207,13 +207,21 @@ var app = {
       }
 
       setTimeout(function() {
-        if (device.platform === "iOS") {
-          console.log("Compartiendo en iOS!");
-          var social = window.plugins.social;
-          social.share(title, 'http://www.minsalud.gov.co', canvasObj);
-          //          document.body.appendChild(canvasObj);
-          app.hideLoadingBox();
+        switch (device.platform) {
+          case "Android":
+            console.log("Compartiendo en Android!");
+            var social = window.plugins.social;
+            social.share(title, canvasObj);
+            //          document.body.appendChild(canvasObj);
+            break;
+          case "iOS":
+            console.log("Compartiendo en iOS!");
+            var social = window.plugins.social;
+            social.share(title, 'http://www.minsalud.gov.co', canvasObj);
+            //          document.body.appendChild(canvasObj);
+            break;
         }
+        app.hideLoadingBox();
       }, 3000);
     });
 
