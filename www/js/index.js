@@ -234,11 +234,13 @@ var app = {
     });
 
     $("#reset").on("click", function(e) {
-      $("#dtable").empty();
       //$("#paisReferente").html("");
       //$("#maps-slider").val(0);
-      //app["dataTable"].fnClearTable(0);
-      //app["dataTable"].fnDraw();
+      // if (app["dataTable"] === "object") {
+      //   app.dataTable.fnClearTable(1);
+      //   app.dataTable.fnDestroy();  
+      // }
+      // $("#dtable").empty();
       $.each(app.selection, function(k1, v1) {
         $.each(v1['cols'], function(k2, v2) {
           app.selection[k1]['cols'][k2] = [];
@@ -2175,6 +2177,11 @@ var app = {
 
     table: function() {
 
+      if (typeof app.dataTable === "object") {
+        app.dataTable.fnDestroy();
+        $("#dtable").empty();
+      }
+
       app.openDB(query);
 
       function query(tx) {
@@ -2190,6 +2197,9 @@ var app = {
           checkYears(printYears, categories, dataset);
 
           function checkYears(cb1, cb2, cb3) {
+            app["colums"] = [];
+            app["tabledata"] = [];
+
             console.log("chart.table: checkYears");
             var yearstoprint = [];
             for (c = 0; c < app.years.length; c++) {
@@ -2393,6 +2403,9 @@ var app = {
               theaoColumns.push(aoColumn);
             }
 
+            app["colums"] = theaoColumns;
+            app["tabledata"] = aDataSet;
+            
             app["dataTable"] = $('#dtable').dataTable({
               "fnInitComplete": function(oSettings, json) {
                 $('#dtable').table();
@@ -2403,11 +2416,7 @@ var app = {
               "bPaginate": false,
               "aaData": aDataSet,
               "bDestroy": true,
-              //aoColumns: thecategories
-              "aoColumns": theaoColumns,
-              "fnDrawCallback": function() {
-                $('#dtable thead').html('');
-              }
+              "aoColumns": theaoColumns
             });
           }
         }
