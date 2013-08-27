@@ -4,7 +4,7 @@ $(document).bind("mobileinit", function() {
 
 var app = {
 
-  name: "Saludatos",
+  name: "SaluDatos",
 
   authors: "Alejandro Zarate: azarate@cool4code.com, Marcos Aguilera: maguilera@cool4code.com, Paola Vanegas: pvanegas@cool4code.com, David Alméciga: walmeciga@cool4code.com",
 
@@ -1418,6 +1418,10 @@ var app = {
 
     lineal: function() {
 
+      if (app.selection.departamento.cols.iddepto.length > 0 && app.selection.departamento.cols.iddepto.indexOf("170") === -1) {
+        app.selection.departamento.cols.iddepto.push("170");
+      }
+
       app.openDB(query);
 
       function query(tx) {
@@ -1731,6 +1735,10 @@ var app = {
     },
 
     bars: function() {
+
+      if (app.selection.departamento.cols.iddepto.length > 0 && app.selection.departamento.cols.iddepto.indexOf("170") === -1) {
+        app.selection.departamento.cols.iddepto.push("170");
+      }
 
       app.openDB(query);
 
@@ -2184,6 +2192,10 @@ var app = {
     },
 
     table: function() {
+
+      if (app.selection.departamento.cols.iddepto.length > 0 && app.selection.departamento.cols.iddepto.indexOf("170") === -1) {
+        app.selection.departamento.cols.iddepto.push("170");
+      }
 
       if (typeof app.dataTable === "object") {
         app.dataTable.fnDestroy();
