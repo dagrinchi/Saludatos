@@ -1422,9 +1422,9 @@ var app = {
 
     lineal: function() {
 
-      if (app.selection.departamento.cols.iddepto.length > 0 && app.selection.departamento.cols.iddepto.indexOf("170") === -1) {
-        app.selection.departamento.cols.iddepto.push("170");
-      }
+      // if (app.selection.departamento.cols.iddepto.length > 0 && app.selection.departamento.cols.iddepto.indexOf("170") === -1) {
+      //   app.selection.departamento.cols.iddepto.push("170");
+      // }
 
       app.openDB(query);
 
@@ -1740,9 +1740,9 @@ var app = {
 
     bars: function() {
 
-      if (app.selection.departamento.cols.iddepto.length > 0 && app.selection.departamento.cols.iddepto.indexOf("170") === -1) {
-        app.selection.departamento.cols.iddepto.push("170");
-      }
+      // if (app.selection.departamento.cols.iddepto.length > 0 && app.selection.departamento.cols.iddepto.indexOf("170") === -1) {
+      //   app.selection.departamento.cols.iddepto.push("170");
+      // }
 
       app.openDB(query);
 
@@ -2197,9 +2197,9 @@ var app = {
 
     table: function() {
 
-      if (app.selection.departamento.cols.iddepto.length > 0 && app.selection.departamento.cols.iddepto.indexOf("170") === -1) {
-        app.selection.departamento.cols.iddepto.push("170");
-      }
+      // if (app.selection.departamento.cols.iddepto.length > 0 && app.selection.departamento.cols.iddepto.indexOf("170") === -1) {
+      //   app.selection.departamento.cols.iddepto.push("170");
+      // }
 
       if (typeof app.dataTable === "object") {
         app.dataTable.fnDestroy();
