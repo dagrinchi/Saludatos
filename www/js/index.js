@@ -397,6 +397,10 @@ var app = {
   getTotal: function(cb) {
     var url = "http://servicedatosabiertoscolombia.cloudapp.net/v1/Ministerio_de_Salud/indicadoresdesalud/consecutivo?$top=1&$orderby=consecutivo%20desc&$format=json";
     var xhr = app.getJson2(url);
+    app.total = 0;
+    app.count = 0;
+    app.totalCount = 0;
+    app.totalCount2 = 1000;
     xhr.success(function(r) {
       app.totalCount = parseInt(r.d[0]["consecutivo"]);
       app.total = parseInt(r.d[0]["consecutivo"]);
