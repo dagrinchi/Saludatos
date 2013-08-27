@@ -2276,11 +2276,9 @@ var app = {
                 geograficas.push(dataresults["nomregion"]);
                 for (var l = 0; l < app.years.length; l++) {
                   if (yearstoprint[l]) {
-                    if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
-                      rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
-                    } else {
-                      rowdata.push(0.0);
-                    }
+                    
+                      rowdata.push(dataresults["yea" + app.years[l]]);
+                    
                   }
                 }
 
@@ -2296,11 +2294,9 @@ var app = {
                 geograficas.push(dataresults["nomsubregion"]);
                 for (var l = 0; l < app.years.length; l++) {
                   if (yearstoprint[l]) {
-                    if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
-                      rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
-                    } else {
-                      rowdata.push(0.0);
-                    }
+                    
+                      rowdata.push(dataresults["yea" + app.years[l]]);
+                    
                   }
                 }
 
@@ -2317,11 +2313,9 @@ var app = {
 
                 for (var l = 0; l < app.years.length; l++) {
                   if (yearstoprint[l]) {
-                    if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
-                      rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
-                    } else {
-                      rowdata.push(0.0);
-                    }
+                    
+                      rowdata.push(dataresults["yea" + app.years[l]]);
+                    
                   }
                 }
 
@@ -2336,12 +2330,9 @@ var app = {
                 geograficas.push(dataresults["nomdepto"]);
                 for (var l = 0; l < app.years.length; l++) {
                   if (yearstoprint[l]) {
-                    if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
-                      rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
-                    } else {
-                      rowdata.push(0.0);
-                    }
-                  }
+                    
+                      rowdata.push(dataresults["yea" + app.years[l]]);
+                                      }
                 }
 
                 serie["name"] = dataresults["nomdepto"] + " " + thestring;
@@ -2356,25 +2347,18 @@ var app = {
                 console.log("Numero de años:" + app.years.length);
                 for (var l = 0; l < app.years.length; l++) {
                   if (yearstoprint[l]) {
-                    if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
-                      rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
-                    } else {
-                      rowdata.push(0.0);
-                    }
+                      rowdata.push(dataresults["yea" + app.years[l]]);
                   }
                 }
 
                 serie["name"] = dataresults["nomzona"] + " " + thestring;
                 serie["data"] = rowdata;
                 theseries.push(serie);
-              } else {
+              }
+              else {
                 for (var l = 0; l < app.years.length; l++) {
                   if (yearstoprint[l]) {
-                    if (dataresults["yea" + app.years[l]] !== '' && dataresults["yea" + app.years[l]] !== null && dataresults["yea" + app.years[l]] !== '-') {
-                      rowdata.push(parseFloat(dataresults["yea" + app.years[l]]));
-                    } else {
-                      rowdata.push(0.0);
-                    }
+                      rowdata.push(dataresults["yea" + app.years[l]]);
                   }
                 }
 
