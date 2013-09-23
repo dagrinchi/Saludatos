@@ -132,7 +132,8 @@ var app = {
 
     app.buttonHeight();
     app.btnsEvents(app.sliderEvents);
-    app.pageEvents();
+    app.pageEvents();   
+
     $("#options").on("change", function(e) {
       $.mobile.changePage($(this).val());
     });
@@ -556,7 +557,7 @@ var app = {
       app.years = [];
       tx.executeSql('SELECT DISTINCT columnName FROM columnNames WHERE columnName LIKE "yea%"', [], app.yea, app.errorCB);
 
-      tx.executeSql("SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> ''  AND iddepto <> '170' AND iddepto <> '09' AND iddepto <> '75' AND iddepto <> '11' GROUP BY iddepto ORDER BY nomdepto", [], function(tx, results) {
+      tx.executeSql("SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> ''  AND iddepto <> '170' AND iddepto <> '09' AND iddepto <> '75' GROUP BY iddepto ORDER BY nomdepto", [], function(tx, results) {
         app.counters["counter-dep"] = results.rows.length;
       }, app.errorCB);
 
@@ -584,7 +585,7 @@ var app = {
         app.ent.region(tx, "SELECT DISTINCT idregion, nomregion FROM (" + app.buildSQL() + ") WHERE nomregion <> '' GROUP BY idregion ORDER BY nomregion", function(tx) {
           app.ent.subregion(tx, "SELECT DISTINCT idsubregion, nomsubregion FROM (" + app.buildSQL() + ") WHERE nomsubregion <> '' GROUP BY idsubregion ORDER BY nomsubregion", function(tx) {
             app.ent.departamento(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' AND iddepto <> '170' AND iddepto <> '09' AND iddepto <> '75' GROUP BY iddepto ORDER BY nomdepto", function(tx) {
-              app.ent.municipio(tx, "SELECT DISTINCT idmpio, nommpio FROM (" + app.buildSQL() + ") WHERE nommpio <> '' GROUP BY idmpio ORDER BY nommpio LIMIT 25", function(tx) {
+              app.ent.municipio(tx, "SELECT DISTINCT idmpio, nommpio FROM (" + app.buildSQL() + ") WHERE nommpio <> '' GROUP BY idmpio ORDER BY nommpio", function(tx) {
                 app.ent.zona(tx, "SELECT DISTINCT idzona, nomzona FROM (" + app.buildSQL() + ") WHERE nomzona <> '' GROUP BY idzona ORDER BY nomzona", function(tx) {
                   app.hideLoadingBox();
                 });
@@ -861,6 +862,8 @@ var app = {
 
     departamento: function(tx, sql, cb) {
 
+      app["scroll"] = false;
+
       console.log("ent.departamento: Construye departamentos!");
 
       tx.executeSql(sql, [], departamento, app.errorCB);
@@ -894,12 +897,13 @@ var app = {
 
     municipio: function(tx, sql, cb) {
 
-      console.log("ent.municipio: Construye municipios!");
+      console.log("ent.municipio: Construye municipios!");      
 
       tx.executeSql(sql, [], municipio, app.errorCB);
 
       function municipio(tx, results) {
         var list = "#munList";
+        $(list).empty();
         var len = results.rows.length;
         var html = "<legend>Seleccione uno varios municipios para evaluar:</legend> \n";
         html += '<input name="selectall-municipio" id="selectall-municipio" data-vista="municipio" data-col="idmpio" data-checkall="munList" type="checkbox" /> \n';
@@ -914,12 +918,39 @@ var app = {
         }
         $("#municipioCount").html(len);
 
-        for (var i = 0; i < len; i++) {
-          html += '<input type="checkbox" data-vista="municipio" data-col="idmpio" name="municipio-' + results.rows.item(i).idmpio + '" id="municipio-' + results.rows.item(i).idmpio + '" value="' + results.rows.item(i).idmpio + '"/> \n';
-          html += '<label for="municipio-' + results.rows.item(i).idmpio + '">' + results.rows.item(i).nommpio + '</label> \n';
+        var h = $(window).height();
+        var unit = h / 30;
+        var init = 0;
+        app["scroll"] = true;
+        draw(init, unit);
+        $(window).on("scroll", function(e) {      
+          var st = $(this).scrollTop();
+          console.log(st + " >>>>>> " + h);
+          if (st >= h / 2) {
+            h += $(window).height();
+            draw(init, unit);            
+          } 
+        });
+
+        function draw(a, b) {
+          console.log("Draw: " + parseInt(a, 10) + " >>>>> " + parseInt(b, 10));
+          //console.log("SELECT DISTINCT idmpio, nommpio FROM (" + app.buildSQL() + ") WHERE nommpio <> '' GROUP BY idmpio ORDER BY nommpio");
+          for (var i = parseInt(a, 10); i < parseInt(b, 10); i++) {            
+            html += '<input type="checkbox" data-vista="municipio" data-col="idmpio" name="municipio-' + results.rows.item(i).idmpio + '" id="municipio-' + results.rows.item(i).idmpio + '" value="' + results.rows.item(i).idmpio + '"/> \n';
+            html += '<label for="municipio-' + results.rows.item(i).idmpio + '">' + results.rows.item(i).nommpio + '</label> \n';
+          }
+          init = b;
+          unit += $(window).height() / 30;
+          $(list).html(html).trigger('create');
+          app.registerInputs(list, "checkbox");
         }
-        $(list).html(html).trigger('create');
-        app.registerInputs(list, "checkbox");
+
+        // for (var i = 0; i < len; i++) {
+        //   html += '<input type="checkbox" data-vista="municipio" data-col="idmpio" name="municipio-' + results.rows.item(i).idmpio + '" id="municipio-' + results.rows.item(i).idmpio + '" value="' + results.rows.item(i).idmpio + '"/> \n';
+        //   html += '<label for="municipio-' + results.rows.item(i).idmpio + '">' + results.rows.item(i).nommpio + '</label> \n';
+        // }
+        //$(list).html(html).trigger('create');
+        //app.registerInputs(list, "checkbox");
         cb(tx);
       }
 
