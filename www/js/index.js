@@ -2166,14 +2166,14 @@ var app = {
           var options = {
             legend: 'none',
             region: 'CO',
-            resolution: 'provinces',
-            displayMode: 'regions',
+            //resolution: 'provinces',
+            displayMode: 'markers',
             height: app.homeheight - 150,
             width: $(document).width(),
-            // magnifyingGlass: {
-            //   enable: "true",
-            //   zoomFactor: "10.0"
-            // },
+             magnifyingGlass: {
+               enable: "true",
+               zoomFactor: "10.0"
+             },
             backgroundColor: {
               fill: "transparent"
             },
