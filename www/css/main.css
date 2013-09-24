@@ -49,6 +49,11 @@ body {
         margin:-98px 0px 0px -98px;  /* offset vertical: half of image height */
                                      /* offset horizontal: half of image width and text area width */
     }
+
+    #counter-reg, #counter-dep, #counter-mun {
+		font-size: 3.5em;
+		color: #ccc;
+	}
 }
 
 .title{
@@ -115,6 +120,11 @@ body {
 		height: 355px;
 		margin: 0px 60% 0px 0px !important;
 	}
+
+	#counter-reg, #counter-dep, #counter-mun {
+		font-size: 2.4em;
+		color: #ccc;
+	}
 }
 /*iPhone 5:*/
 @media screen and (device-aspect-ratio: 40/71) {
@@ -122,6 +132,11 @@ body {
 	width: 330px;
 	height: 355px;
 	margin: 0px 60% 0px 0px !important;
+	}
+
+	#counter-reg, #counter-dep, #counter-mun {
+		font-size: 3.5em;
+		color: #ccc;
 	}
 }
 /*iPad:*/
@@ -131,71 +146,16 @@ body {
 	height: 355px;
 	margin: 0px 33.3% 0px 28.3% !important;
 	}
+
+	#counter-reg, #counter-dep, #counter-mun {
+		font-size: 5.5em;
+		color: #ccc;
+	}
 }
-/* Smartphones (portrait and landscape) ———– */
-/*@media only screen and (min-width : 320px) and (max-width : 480px) {
-/* Styles 
-
-}*/
-/* Smartphones (landscape) ———– */
-/*@media only screen and (min-width : 321px) {
-/* Styles 
-}*/
-/* Smartphones (portrait) ———– */
-/*@media only screen and (max-width : 320px) {
-/* Styles 
-}*/
-/* iPads (portrait and landscape) ———– */
-/*@media only screen and (min-width : 768px) and (max-width : 1024px) {
-/* Styles 
-	.animation-size-for-iframe {
-	width: 330px;
-	height: 355px;
-	margin: 0px 33.3% 0px 28.3% !important;
-	}
-}*/
-/* iPads (landscape) ———– */
-/*@media only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : landscape) {
- Styles 
-	/*.animation-size-for-iframe {
-	width: 330px;
-	height: 355px;
-	margin: 0px 33.3% 0px 23.3% !important;
-	}
-}*/
-/* iPads (portrait) ———– */
-/*@media only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : portrait) {
-/* Styles */
-   /*.animation-size-for-iframe {
-	width: 330px;
-	height: 355px;
-	margin: 0px 33.3% 0px 23.3% !important;
-	}
-}*/
-/* Desktops and laptops ———– */
-/*@media only screen and (min-width : 1224px) {*/
-/* Styles 
-
-}
-/* Large screens ———– */
-/*@media only screen and (min-width : 1824px) {
-/* Styles 
-
-}*/
-/* iPhone 4 ———– */
-/*@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
- Styles 
-	/*.animation-size-for-iframe {
-	width: 330px;
-	height: 355px;
-	margin: 0px 33.3% 0px 23.3% !important;
-	} 
-}*/
-/*****End Media screen types******/
 
 /*Tutorial screen*/
 #help_step1 > div{
-	background:url(../img/tutoriales/tuto_home.jpg) no-repeat top center; /* 170px x 200px */ 
+	background:url(../img/tutoriales/tuto_home.jpg) no-repeat top center;  
 }
 
 #help_step2 > div{
@@ -230,7 +190,7 @@ body {
     padding: 0 !important;
 }
 
-.help_btns{
+/*.help_btns{
 	position: absolute;
 	bottom: 20px;
 	left: 50%;
@@ -245,7 +205,7 @@ body {
 
 .help_btns a{
 	background: #29abe2 !important;
-}
+}*/
 
 /* Reponsive chart */
 .chart-wrapper {
@@ -359,11 +319,6 @@ fieldset label {
 	padding: 0;
 }
 
-#counter-reg, #counter-dep, #counter-mun {
-	font-size: 350%;
-	color: #ccc;
-}
-
 #pie .ui-content, #lineal .ui-content, #bars .ui-content, #maps .ui-content, #table .ui-content {
 	padding: 0;
 	margin: 0;
@@ -427,7 +382,19 @@ div[data-role="header"] {
 	width: 100%;	
 }
 
-
 .dataTables_wrapper {	
 	background-color: #000;
 }
+
+.styled-select select {
+   background-color: #29abe2 !important;
+  /* width: 268px;
+   padding: 5px;
+   font-size: 16px;
+   line-height: 1;
+   border: 0;
+   border-radius: 0;
+   height: 34px;
+   -webkit-appearance: none;*/
+   }
+

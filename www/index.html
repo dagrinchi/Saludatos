@@ -32,45 +32,69 @@
                 </div>
             </div>
         </div>
-        <!-- START PAGE TUTORIAL -->
-        <div data-role="page" id="help_step1">    
+        <!--START PAGE TUTORIAL-->
+         <div data-role="page" id="help_step1">    
             <div class="tutorial" data-role="content"></div>
-            <div class="help_btns" data-role="controlgroup" data-type="horizontal">
-                <a href="#home" data-role="button" data-theme="b" data-icon="forward" data-iconpos="right">Omitir</a>
-                <a href="#help_step2" data-role="button" data-theme="b" data-icon="arrow-r" data-iconpos="right">Siguiente</a>
+            <div data-role="footer" data-position="fixed">
+                <div data-role="navbar" data-iconpos="left" >
+                    <ul>
+                        <li><a href="#home" data-icon="star"  style="background: #29abe2 !important; color: #ffffff !important;">Omitir</a></li>
+                        <li><a href="#help_step2" data-icon="gear"  style="background: #29abe2 !important; color: #ffffff !important;">Siguiente</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div data-role="page" id="help_step2">    
             <div class="tutorial" data-role="content"></div>
-            <div class="help_btns" data-role="controlgroup" data-type="horizontal">
-                <a href="#home" data-role="button" data-theme="b" data-icon="forward" data-iconpos="right">Omitir</a>
-                <a href="#help_step3" data-role="button" data-theme="b" data-icon="arrow-r" data-iconpos="right">Siguiente</a>            
+            <div data-role="footer" data-position="fixed">
+                <div data-role="navbar" data-iconpos="left" >
+                    <ul>
+                        <li><a href="#help_step1" data-icon="arrow-l" style="background: #29abe2 !important; color: #ffffff !important;">Atras</a></li>
+                        <li><a href="#home" data-icon="forward" style="background: #29abe2 !important; color: #ffffff !important;">Omitir</a></li>
+                        <li><a href="#help_step3" data-icon="arrow-r" style="background: #29abe2 !important; color: #ffffff !important;">Siguiente</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div data-role="page" id="help_step3">    
             <div class="tutorial" data-role="content"></div>
-            <div class="help_btns" data-role="controlgroup" data-type="horizontal">
-                <a href="#home" data-role="button" data-theme="b" data-icon="forward" data-iconpos="right">Omitir</a>
-                <a href="#help_step4" data-role="button" data-theme="b" data-icon="arrow-r" data-iconpos="right">Siguiente</a>            
+            <div data-role="footer" data-position="fixed">
+                <div data-role="navbar" data-iconpos="left" >
+                    <ul>
+                        <li><a href="#help_step2" data-icon="arrow-l" style="background: #29abe2 !important; color: #ffffff !important;">Atras</a></li>
+                        <li><a href="#home" data-icon="forward" style="background: #29abe2 !important; color: #ffffff !important;">Omitir</a></li>
+                        <li><a href="#help_step4" data-icon="arrow-r" style="background: #29abe2 !important; color: #ffffff !important;">Siguiente</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div data-role="page" id="help_step4">    
             <div class="tutorial" data-role="content"></div>
-            <div class="help_btns" data-role="controlgroup" data-type="horizontal">
-                <a href="#home" data-role="button" data-theme="b" data-icon="forward" data-iconpos="right">Omitir</a>
-                <a href="#help_step5" data-role="button" data-theme="b" data-icon="arrow-r" data-iconpos="right">Siguiente</a>
+            <div data-role="footer" data-position="fixed">
+                <div data-role="navbar" data-iconpos="left" >
+                    <ul>
+                        <li><a href="#help_step3" data-icon="arrow-l" style="background: #29abe2 !important; color: #ffffff !important;">Atras</a></li>
+                        <li><a href="#home" data-icon="forward" style="background: #29abe2 !important; color: #ffffff !important;">Omitir</a></li>
+                        <li><a href="#help_step5" data-icon="arrow-r" style="background: #29abe2 !important; color: #ffffff !important;">Siguiente</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div data-role="page" id="help_step5">    
             <div class="tutorial" data-role="content"></div>
-            <div class="help_btns" data-role="controlgroup" data-type="horizontal">
-                <a href="#home" data-role="button" data-theme="b" data-icon="check" data-iconpos="right" style="width: 100%;">Terminar</a>            
+            <div data-role="footer" data-position="fixed">
+                <div data-role="navbar" data-iconpos="left" >
+                    <ul>
+                        <li><a href="#help_step4" data-icon="arrow-l" style="background: #29abe2 !important; color: #ffffff !important;">Atras</a></li>
+                        <li><a href="#home" data-icon="forward" style="background: #29abe2 !important; color: #ffffff !important;">Terminar</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <!-- START PAGE HOME -->
         <div data-role="page" id="home" data-add-back-btn="true"> 
             <div data-role="header" data-position="fixed" data-add-back-btn="true">
-                <a href="#acerca" class="ui-btn-left" data-mini="true" data-icon="info" data-rel="dialog">Acerca</a>
+                <a href="#acerca"  style="background: #29abe2 !important; color: #ffffff !important;" class="ui-btn-left" data-mini="true" data-icon="info" data-rel="dialog">Acerca</a>
                 <select id="options" class="ui-btn-right" data-mini="true" data-icon="gear" data-native-menu="false" data-iconpos="right">
                     <option value="">Opciones</option>
                     <option value="#help_step1">Ayuda</option>
@@ -86,7 +110,7 @@
                     <p>Número de Municipios:</p>
                     <span id="counter-mun">0</span>
                     <br />
-                    <a href="#popupDialog" data-rel="dialog" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-icon="delete" data-theme="b">Restablecer</a>
+                    <a href="#popupDialog" data-rel="dialog" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-icon="delete" data-theme="b" style="background: #ed1e79 !important; color: #ffffff !important;">Restablecer</a>
                 </div>
                 <div class="ui-block-b sidebar">
                     <!-- INDICADORES DE SALUD -->
@@ -132,7 +156,7 @@
         <!-- START PAGE UBICACIONES -->
         <div data-role="page" id="ubicaciones" data-theme="c"> 
             <div data-role="header" data-position="fixed" data-theme="c">
-                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>           
+                <a href="#home" class="ui-btn-left" data-icon="back" style="background: #ed1e79 !important; color: #ffffff !important;">Volver</a>           
                 <h1>Ubicación Geográfica</h1>        
             </div>
             <div data-role="content">
@@ -229,7 +253,7 @@
         <!-- START PAGE DEMOGRAFÍA -->
         <div data-role="page" id="demografia"> 
             <div data-role="header" data-position="fixed" data-theme="d">
-                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
+                <a style="background: #f2ed21 !important; color: #ffffff !important;" href="#home" class="ui-btn-left" data-icon="back">Volver</a>
                 <h1>Variables de desagregación</h1>        
             </div>
             <div data-role="content">
@@ -368,8 +392,8 @@
         <!-- START PAGE PIE -->
         <div data-role="page" id="pie"> 
             <div data-role="header" data-position="fixed">
-                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
-                <a href="#" class="ui-btn-right share" data-icon="arrow-d" data-chart="pie">Compartir</a>
+                <a href="#home" style="background: #29abe2 !important; color: #ffffff !important;" class="ui-btn-left" data-icon="back">Volver</a>
+                <a href="#" style="background: #29abe2 !important; color: #ffffff !important;" class="ui-btn-right share" data-icon="arrow-d" data-chart="pie">Compartir</a>
             </div>
             <div data-role="content">
                 <div class="chart-inner">
@@ -407,8 +431,8 @@
         <!-- START PAGE LINEAL -->
         <div data-role="page" id="lineal"> 
             <div data-role="header" data-position="fixed">
-                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
-                <a href="#" class="ui-btn-right share" data-icon="arrow-d" data-chart="lineal">Compartir</a>
+                <a href="#home" style="background: #29abe2 !important; color: #ffffff !important;" class="ui-btn-left" data-icon="back">Volver</a>
+                <a href="#" style="background: #29abe2 !important; color: #ffffff !important;" class="ui-btn-right share" data-icon="arrow-d" data-chart="lineal">Compartir</a>
             </div>
             <div data-role="content">
                 <div class="chart-inner">
@@ -442,8 +466,8 @@
         <!-- START PAGE BARS -->
         <div data-role="page" id="bars"> 
             <div data-role="header" data-position="fixed">
-                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
-                <a href="#" class="ui-btn-right share" data-icon="arrow-d" data-chart="bars">Compartir</a>
+                <a href="#home" style="background: #29abe2 !important; color: #ffffff !important;" class="ui-btn-left" data-icon="back">Volver</a>
+                <a href="#" style="background: #29abe2 !important; color: #ffffff !important;" class="ui-btn-right share" data-icon="arrow-d" data-chart="bars">Compartir</a>
             </div>
             <div data-role="content">
                 <div class="chart-inner">
@@ -477,8 +501,8 @@
         <!-- START PAGE MAP -->
         <div data-role="page" id="maps"> 
             <div data-role="header" data-position="fixed">
-                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
-                <a href="#" class="ui-btn-right share" data-icon="arrow-d" data-chart="maps">Compartir</a>
+                <a href="#home" style="background: #29abe2 !important; color: #ffffff !important;" class="ui-btn-left" data-icon="back">Volver</a>
+                <a href="#" style="background: #29abe2 !important; color: #ffffff !important;" class="ui-btn-right share" data-icon="arrow-d" data-chart="maps">Compartir</a>
             </div>
             <div data-role="content">
                 <div class="chart-inner">
@@ -517,8 +541,8 @@
         <!-- START PAGE TABLE -->
         <div data-role="page" id="table"> 
             <div data-role="header" data-position="fixed">
-                <a href="#home" class="ui-btn-left" data-icon="back">Volver</a>
-                <a href="#" class="ui-btn-right share" data-icon="arrow-d" data-chart="table">Compartir</a>
+                <a href="#home" style="background: #29abe2 !important; color: #ffffff !important;" class="ui-btn-left" data-icon="back">Volver</a>
+                <a href="#" style="background: #29abe2 !important; color: #ffffff !important;" class="ui-btn-right share" data-icon="arrow-d" data-chart="table">Compartir</a>
             </div>
             <div data-role="content">
                 <p class="Title-Size"></p>
