@@ -583,28 +583,27 @@ var app = {
       console.log("queryDB: Consultas!");
       app.showLoadingBox("Consultando!");
 
-      app.ent.pais(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' AND iddepto = '170' OR iddepto = '09' OR iddepto = '75' GROUP BY iddepto ORDER BY nomdepto");
-      app.ent.region(tx, "SELECT DISTINCT idregion, nomregion FROM (" + app.buildSQL() + ") WHERE nomregion <> '' GROUP BY idregion ORDER BY nomregion");
-      app.ent.subregion(tx, "SELECT DISTINCT idsubregion, nomsubregion FROM (" + app.buildSQL() + ") WHERE nomsubregion <> '' GROUP BY idsubregion ORDER BY nomsubregion");
-      app.ent.departamento(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' AND iddepto <> '170' AND iddepto <> '09' AND iddepto <> '75' GROUP BY iddepto ORDER BY nomdepto");
-      app.ent.municipio(tx, "SELECT DISTINCT idmpio, nommpio FROM (" + app.buildSQL() + ") WHERE nommpio <> '' GROUP BY idmpio ORDER BY nommpio");
-      app.ent.zona(tx, "SELECT DISTINCT idzona, nomzona FROM (" + app.buildSQL() + ") WHERE nomzona <> '' GROUP BY idzona ORDER BY nomzona");
+      // app.ent.pais(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' AND iddepto = '170' OR iddepto = '09' OR iddepto = '75' GROUP BY iddepto ORDER BY nomdepto");
+      // app.ent.region(tx, "SELECT DISTINCT idregion, nomregion FROM (" + app.buildSQL() + ") WHERE nomregion <> '' GROUP BY idregion ORDER BY nomregion");
+      // app.ent.subregion(tx, "SELECT DISTINCT idsubregion, nomsubregion FROM (" + app.buildSQL() + ") WHERE nomsubregion <> '' GROUP BY idsubregion ORDER BY nomsubregion");
+      // app.ent.departamento(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' AND iddepto <> '170' AND iddepto <> '09' AND iddepto <> '75' GROUP BY iddepto ORDER BY nomdepto");
+      // app.ent.municipio(tx, "SELECT DISTINCT idmpio, nommpio FROM (" + app.buildSQL() + ") WHERE nommpio <> '' GROUP BY idmpio ORDER BY nommpio");
+      // app.ent.zona(tx, "SELECT DISTINCT idzona, nomzona FROM (" + app.buildSQL() + ") WHERE nomzona <> '' GROUP BY idzona ORDER BY nomzona");
+      // app.hideLoadingBox();
 
-      app.hideLoadingBox();
-
-      // app.ent.pais(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' AND iddepto = '170' OR iddepto = '09' OR iddepto = '75' GROUP BY iddepto ORDER BY nomdepto", function(tx) {
-      //   app.ent.region(tx, "SELECT DISTINCT idregion, nomregion FROM (" + app.buildSQL() + ") WHERE nomregion <> '' GROUP BY idregion ORDER BY nomregion", function(tx) {
-      //     app.ent.subregion(tx, "SELECT DISTINCT idsubregion, nomsubregion FROM (" + app.buildSQL() + ") WHERE nomsubregion <> '' GROUP BY idsubregion ORDER BY nomsubregion", function(tx) {
-      //       app.ent.departamento(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' AND iddepto <> '170' AND iddepto <> '09' AND iddepto <> '75' GROUP BY iddepto ORDER BY nomdepto", function(tx) {
-      //         app.ent.municipio(tx, "SELECT DISTINCT idmpio, nommpio FROM (" + app.buildSQL() + ") WHERE nommpio <> '' GROUP BY idmpio ORDER BY nommpio", function(tx) {
-      //           app.ent.zona(tx, "SELECT DISTINCT idzona, nomzona FROM (" + app.buildSQL() + ") WHERE nomzona <> '' GROUP BY idzona ORDER BY nomzona", function(tx) {
-      //             app.hideLoadingBox();
-      //           });
-      //         });
-      //       });
-      //     });
-      //   });
-      // });
+      app.ent.pais(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' AND iddepto = '170' OR iddepto = '09' OR iddepto = '75' GROUP BY iddepto ORDER BY nomdepto", function() {
+        app.ent.region(tx, "SELECT DISTINCT idregion, nomregion FROM (" + app.buildSQL() + ") WHERE nomregion <> '' GROUP BY idregion ORDER BY nomregion", function() {
+          app.ent.subregion(tx, "SELECT DISTINCT idsubregion, nomsubregion FROM (" + app.buildSQL() + ") WHERE nomsubregion <> '' GROUP BY idsubregion ORDER BY nomsubregion", function() {
+            app.ent.departamento(tx, "SELECT DISTINCT iddepto, nomdepto FROM (" + app.buildSQL() + ") WHERE nomdepto <> '' AND iddepto <> '170' AND iddepto <> '09' AND iddepto <> '75' GROUP BY iddepto ORDER BY nomdepto", function() {
+              app.ent.municipio(tx, "SELECT DISTINCT idmpio, nommpio FROM (" + app.buildSQL() + ") WHERE nommpio <> '' GROUP BY idmpio ORDER BY nommpio", function() {
+                app.ent.zona(tx, "SELECT DISTINCT idzona, nomzona FROM (" + app.buildSQL() + ") WHERE nomzona <> '' GROUP BY idzona ORDER BY nomzona", function() {
+                  app.hideLoadingBox();
+                });
+              });
+            });
+          });
+        });
+      });
     },
     demografia: function(tx) {
 
@@ -774,7 +773,7 @@ var app = {
       }
     },
 
-    pais: function(tx, sql) {
+    pais: function(tx, sql, cb) {
 
       console.log("ent.region: Construye paises!");
 
@@ -804,10 +803,11 @@ var app = {
         $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         
+        cb();
       }
     },
 
-    region: function(tx, sql) {
+    region: function(tx, sql, cb) {
 
       console.log("ent.region: Construye regiones!");
 
@@ -837,10 +837,11 @@ var app = {
         $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         
+        cb();
       }
     },
 
-    subregion: function(tx, sql) {
+    subregion: function(tx, sql, cb) {
 
       console.log("ent.subregion: Construye subregiones!");
 
@@ -868,10 +869,11 @@ var app = {
         $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         
+        cb();
       }
     },
 
-    departamento: function(tx, sql) {
+    departamento: function(tx, sql, cb) {
 
       app["scroll"] = false;
 
@@ -901,11 +903,13 @@ var app = {
         }
         $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");        
+
+        cb();
       }
 
     },
 
-    municipio: function(tx, sql) {
+    municipio: function(tx, sql, cb) {
 
       console.log("ent.municipio: Construye municipios!");      
 
@@ -963,12 +967,13 @@ var app = {
           $(list).html(html).trigger('create');
           app.registerInputs(list, "checkbox");  
         }
-        
+
+        cb();        
       }
 
     },
 
-    zona: function(tx, sql) {
+    zona: function(tx, sql, cb) {
 
       console.log("ent.zona: Construye zonas!");
 
@@ -996,6 +1001,7 @@ var app = {
         $(list).html(html).trigger('create');
         app.registerInputs(list, "checkbox");
         
+        cb();
       }
 
     },
@@ -2490,6 +2496,7 @@ var app = {
         $(selector).css({
           color: '#ddd'
         });
+        $(selector).html(number);
       }
     });
   },
