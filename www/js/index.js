@@ -2189,8 +2189,13 @@ var app = {
                 //printstate = false;
                 console.log("Ubicacion " + results.rows.item(j).nommpio + " valor: " + parseFloat(dataresults["yea" + theyear]))
               } else if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && dataresults["nomdepto"] !== '-' && printstate) {
-                datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);
+                if(dataresults["iddepto"] === '170'){
+                  datatoprint.push(["COLOMBIA", parseFloat(dataresults["yea" + theyear])]);
+                }else{
+                datatoprint.push([results.rows.item(j).nomdepto, parseFloat(dataresults["yea" + theyear])]);}
                 console.log("Ubicacion " + results.rows.item(j).nomdepto + " valor: " + parseFloat(dataresults["yea" + theyear]))
+              
+
               } else if (dataresults["nomzona"] !== null && dataresults["nomzona"] !== '' && dataresults["nomzona"] !== '-' && printzone) {
                 datatoprint.push([results.rows.item(j).nomzona, parseFloat(dataresults["yea" + theyear])]);
                 console.log("Ubicacion " + results.rows.item(j).nomzona + " valor: " + parseFloat(dataresults["yea" + theyear]))
@@ -2210,12 +2215,12 @@ var app = {
 
             }
           }
-          var data = google.visualization.arrayToDataTable(datatoprint);
-          var map = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
-          var options = {
+          app["mapdata"] = new google.visualization.arrayToDataTable(datatoprint);
+          app["mapobj"] = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
+          app["mapopt"] = {
             legend: 'none',
             region: 'CO',
-            //resolution: 'provinces',
+            resolution: 'provinces',
             displayMode: 'markers',
             height: app.homeheight - 150,
             width: $(document).width(),
@@ -2237,7 +2242,8 @@ var app = {
             ]
           };
 
-          map.draw(data, options);
+          
+          app["mapobj"].draw(app["mapdata"], app["mapopt"]);
         }
       }
       app.hideLoadingBox();
