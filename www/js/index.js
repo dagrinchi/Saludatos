@@ -468,7 +468,7 @@ var app = {
       dataType: 'json',
       error: function() {
         navigator.notification.alert('El repositorio de datos Open Data no está disponible ó se ha perdido la conexión con la red, inténtalo más tarde!', function() {
-          app.getTotal(app.load);
+          app.load();
         }, 'Atención', 'Reintentar');
       },
       progress: function(evt) {
@@ -2218,6 +2218,9 @@ var app = {
           app["mapdata"] = new google.visualization.arrayToDataTable(datatoprint);
           app["mapobj"] = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
           app["mapopt"] = {
+            sizeAxis: { 
+              minSize : 10
+            },
             legend: 'none',
             region: 'CO',
             resolution: 'provinces',
