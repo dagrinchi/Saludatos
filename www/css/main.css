@@ -156,22 +156,27 @@ body {
 /*Tutorial screen*/
 #help_step1 > div{
 	background:url(../img/tutoriales/tuto_home.jpg) no-repeat top center;  
+	background-size: 100%;
 }
 
 #help_step2 > div{
 	background:url(../img/tutoriales/tuto_categorias.jpg) no-repeat top center; /* 170px x 200px */ 
+	background-size: 100%;
 }
 
 #help_step3 > div{
 	background:url(../img/tutoriales/tuto_geografica.jpg) no-repeat top center; /* 170px x 200px */ 
+	background-size: 100%;
 }
 
 #help_step4 > div{
 	background:url(../img/tutoriales/tuto_demografica.jpg) no-repeat top center; /* 170px x 200px */ 
+	background-size: 100%;
 }
 
 #help_step5 > div{
 	background:url(../img/tutoriales/tuto_lineal.jpg) no-repeat top center; /* 170px x 200px */ 
+	background-size: 100%;
 }
 
 .tutorial {      
@@ -398,3 +403,37 @@ div[data-role="header"] {
    -webkit-appearance: none;*/
    }
 
+#geochartdiv {
+	position: absolute;
+	bottom: 106px;
+	right: 0;
+	overflow: scroll;
+}
+
+.mapzoom {
+	width: 120px;
+	height: 40px;
+	display: block;
+	position: absolute;
+	border: 2px solid #fff;
+	right: 5px;
+	bottom: 120px;
+	border-radius: 15px;
+	background-color: #000;
+}
+
+#inczoom, #deczoom {
+	display: block;
+	width: 50%;
+	height: 40px;
+	float: right;	
+}
+
+#inczoom {
+	background: url("images/inc_zoom.png") no-repeat center;
+	background-size: 40px;
+}
+#deczoom {
+	background: url("images/dec_zoom.png") no-repeat center;
+	background-size: 35px;
+}

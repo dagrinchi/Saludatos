@@ -133,6 +133,7 @@ var app = {
     app.buttonHeight();
     app.btnsEvents(app.sliderEvents);
     app.pageEvents();   
+    app.chartSize();
 
     $("#options").on("change", function(e) {
       $.mobile.changePage($(this).val());
@@ -152,11 +153,17 @@ var app = {
     console.log('Received Event: ' + id);
   },
 
-  chartHeight: function() {
-    var charts = ["#linealchartdiv", "#piechartdiv", "#columnchartdiv", "#geochartdiv"];
+  chartSize: function() {
+    var charts = ["#linealchartdiv", "#piechartdiv", "#columnchartdiv"];
+    var ww = $(window).width();
+    var wh = $(window).height();
     $.each(charts, function(k, v) {
-      $($(v).parents()[1]).width();
+      //$(v).width($($(v).parents()[1]).width());
+      $(v).width(ww);
+      $(v).height(wh - 106);
     });
+    $("#geochartdiv").width(ww);
+    $("#geochartdiv").height(ww);
   },
 
   buttonHeight: function() {
@@ -171,6 +178,17 @@ var app = {
   btnsEvents: function(cb) {
 
     console.log("btnsEvents: Asignando eventos a los botones de las gráficas!");
+
+    $("#inczoom").on("click", function() {
+        app["mapopt"].width = app["mapopt"].width * 2;
+        app["mapopt"].height = app["mapopt"].height * 2;
+        app["mapobj"].draw(app["mapdata"], app["mapopt"]);
+    });
+    $("#deczoom").on("click", function() {
+        app["mapopt"].width = app["mapopt"].width / 2;
+        app["mapopt"].height = app["mapopt"].height / 2;
+        app["mapobj"].draw(app["mapdata"], app["mapopt"]);
+    });
 
     $("#update").on("click", function() {
       app.start = false;
@@ -1770,7 +1788,7 @@ var app = {
               align: "center",
               verticalAlign: "top",
               borderWidth: 1,
-              margin: 5,
+              //margin: 5,
               x: 15,
             },
             series: theseries
@@ -2075,7 +2093,7 @@ var app = {
               align: "center",
               verticalAlign: "top",
               borderWidth: 0,
-              margin: 5,
+              //margin: 5,
               x: 10
             },
             title: {
@@ -2225,11 +2243,12 @@ var app = {
             region: 'CO',
             resolution: 'provinces',
             displayMode: 'markers',
-            height: app.homeheight - 150,
-            width: $(document).width(),
+            height: $(window).width(),
+            width: $(window).width(),
+            //keepAspectRatio: false,
              magnifyingGlass: {
                enable: "true",
-               zoomFactor: "10.0"
+               zoomFactor: "20.0"
              },
             backgroundColor: {
               fill: "transparent"
