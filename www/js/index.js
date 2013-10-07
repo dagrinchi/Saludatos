@@ -2421,16 +2421,20 @@ var app = {
               else if (dataresults["nomdepto"] !== null && dataresults["nomdepto"] !== '' && printstate) {
                 departamentos.push(dataresults["nomdepto"]);
                 geograficas.push(dataresults["nomdepto"]);
+
                 for (var l = 0; l < app.years.length; l++) {
-                  if (yearstoprint[l]) {
-                    
-                      rowdata.push(dataresults["yea" + app.years[l]]);
-                                      }
-                }
+                  if (yearstoprint[l]) {                    
+                      rowdata.push(dataresults["yea" + app.years[l]]);                                      }
+                }                
 
                 serie["name"] = dataresults["nomdepto"] + " " + thestring;
                 serie["data"] = rowdata;
-                theseries.push(serie);
+                
+                if (dataresults["iddepto"] === "170") {
+                  theseries.unshift(serie);
+                } else {
+                  theseries.push(serie);
+                }
               }
 
               //Verificación de zonas
@@ -2480,6 +2484,7 @@ var app = {
 
             var theaoColumns = [];
             theaoColumns.push({
+              "bSortable": false,
               sTitle: "Ubicación Geográfica"
             });
             for (q = 0; q < thecategories.length; q++) {
@@ -2501,7 +2506,8 @@ var app = {
               "bPaginate": false,
               "aaData": aDataSet,
               "bDestroy": true,
-              "aoColumns": theaoColumns
+              "aoColumns": theaoColumns,
+              "aaSorting": [],
             });
           }
         }
