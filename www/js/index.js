@@ -2237,7 +2237,7 @@ var app = {
           app["mapobj"] = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
           app["mapopt"] = {
             sizeAxis: { 
-              minSize : 18
+              minSize : 12
             },
             legend: 'none',
             region: 'CO',
