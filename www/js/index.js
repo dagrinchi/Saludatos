@@ -179,16 +179,37 @@ var app = {
 
     console.log("btnsEvents: Asignando eventos a los botones de las gráficas!");
 
-    $("#inczoom").on("click", function() {
+    $("#inczoom").on("click", increase);
+    function increase() {
         app["mapopt"].width = app["mapopt"].width * 2;
         app["mapopt"].height = app["mapopt"].height * 2;
         app["mapobj"].draw(app["mapdata"], app["mapopt"]);
-    });
-    $("#deczoom").on("click", function() {
+
+        centerGeoChart();
+        $("#inczoom").off("click");
+        $("#deczoom").on("click", decrease);
+    }
+
+    //$("#deczoom").on("click", decrease);
+    function decrease() {
         app["mapopt"].width = app["mapopt"].width / 2;
         app["mapopt"].height = app["mapopt"].height / 2;
         app["mapobj"].draw(app["mapdata"], app["mapopt"]);
-    });
+
+        centerGeoChart();
+        $("#deczoom").off("click");
+        $("#inczoom").on("click", increase);
+    }
+
+    function centerGeoChart() {
+      var myDiv = $("#geochartdiv");
+      var scrollTop = myDiv.height() / 2;
+      var scrollLeft = myDiv.width() / 2;
+      myDiv.animate({
+        scrollTop: scrollTop,
+        scrollLeft: scrollLeft
+      });
+    }
 
     $("#update").on("click", function() {
       app.start = false;
@@ -2181,8 +2202,9 @@ var app = {
           var theyear = thecategories[$("#maps-slider").val()];
 
           var indicator = results.rows.item(0).idindicador;
+          var nomindicador = results.rows.item(0).nomindicador;
 
-          $("#maps .Title-Size").html(results.rows.item(0).nomindicador);
+          $("#maps .Title-Size").html(nomindicador);
 
           $("#maps-slider-label").html(theyear);
 
@@ -2236,6 +2258,7 @@ var app = {
           app["mapdata"] = new google.visualization.arrayToDataTable(datatoprint);
           app["mapobj"] = new google.visualization.GeoChart(document.getElementById('geochartdiv'));
           app["mapopt"] = {
+            tooltip : { trigger : 'none' },
             sizeAxis: { 
               minSize : 12
             },
@@ -2266,6 +2289,21 @@ var app = {
 
           
           app["mapobj"].draw(app["mapdata"], app["mapopt"]);
+
+          google.visualization.events.addListener(app["mapobj"], 'select', function() {
+            var message = '';
+            var selection = app["mapobj"].getSelection();
+            for (var i = 0; i < selection.length; i++) {
+              var item = selection[i];
+              if (item.row != null) {
+                message += app["mapdata"].getValue(item.row, 0) + ": " + app["mapdata"].getValue(item.row, 1) + " " + app["mapdata"].getColumnLabel(1);
+              } 
+            }
+            if (message == '') {
+              message = 'Selecciona el marcador nuevamente!';
+            }
+            navigator.notification.alert(message, function() {}, nomindicador, 'Aceptar');
+          });
         }
       }
       app.hideLoadingBox();
