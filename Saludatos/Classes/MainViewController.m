@@ -41,6 +41,10 @@
     return self;
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 - (id)init
 {
     self = [super init];
